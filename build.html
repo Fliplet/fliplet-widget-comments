@@ -5,8 +5,8 @@
 </div> -->
 
 <div name="comments" data-widget-name="comments" data-comments-id="{{ id }}" id="app-comments">
-  <div v-if="commentsLength">
-    <p>/{{commentsLength}} COMMENTS</p>
+  <div v-if="comments.length">
+    <p>/{{comments.length}} COMMENTS</p>
     <div v-for="comment in comments" :key="comment.id">
       <p>\{{comment.text}}</p>
     </div>

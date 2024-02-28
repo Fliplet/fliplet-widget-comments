@@ -61,11 +61,6 @@ Fliplet.Widget.instance('comments', function(widgetData) {
           }
         ]
       },
-      computed: {
-        commentsLength: function() {
-          return this.comments.length;
-        }
-      },
       methods: {
         addComment: function() {
           if (this.newComment) {
