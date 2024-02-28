@@ -44,7 +44,38 @@ Fliplet.Widget.instance('comments', function(widgetData) {
     new Vue({
       el: '#app-comments',
       data: {
-        message: 'Hello, Vue!'
+        newComment: '',
+        message: 'Hello, Vue!',
+        comments: [
+          {
+            id: 1,
+            text: 'Comment 1'
+          },
+          {
+            id: 2,
+            text: 'Comment 2'
+          },
+          {
+            id: 3,
+            text: 'Comment 3'
+          }
+        ]
+      },
+      computed: {
+        commentsLength: function() {
+          return this.comments.length;
+        }
+      },
+      methods: {
+        addComment: function() {
+          if (this.newComment) {
+            this.comments.push({
+              id: this.commentsLength + 1,
+              text: this.newComment
+            });
+            this.newComment = '';
+          }
+        }
       }
     });
   });
