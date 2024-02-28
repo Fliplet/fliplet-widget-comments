@@ -1,5 +1,16 @@
 <!-- <fl-helper name="comments" data-widget-name="comments" data-comments-id="{{id}}"></fl-helper> -->
 
-<div id="comments-container">
+<!-- <div id="comments-container">
   {{ message }}
-</div>
+</div> -->
+
+<template style="display:none" name="row" data-view="content" data-node-name="Content">{{{content}}}</template>
+
+<fl-comments name="comments" data-widget-name="comments" data-comments-id="{{id}}">
+  <row
+    v-for="(row, index) in rows"
+    v-bind:row="row"
+    v-bind:key="row.id"
+    v-bind:index="index"
+  />
+</fl-comments>
