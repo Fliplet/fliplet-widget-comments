@@ -19,7 +19,7 @@ Fliplet.Widget.instance('comments', function(data) {
     });
 
     function getTemplateForHtml() {
-      return `<fl-list-repeater-row :data-row-id="key" :key="key" :class="classes" v-bind="attrs">${rowTemplate}</fl-list-repeater-row>`;
+      return `<fl-comment-row :data-row-id="key" :key="key" :class="classes" v-bind="attrs">${rowTemplate}</fl-comment-row>`;
     }
 
     compiledRowTemplate = Vue.compile(getTemplateForHtml());
@@ -47,24 +47,24 @@ Fliplet.Widget.instance('comments', function(data) {
       mounted() {
         Fliplet.Widget.initializeChildren(this.$el, this, '[data-fl-widget-instance], fl-comments');
 
-        // if (isInteract) {
-        //   if (this.index === 0) {
-        //     this.$nextTick(() => {
-        //       Fliplet.Studio.emit('update-dom');
-        //     });
-        //   }
+        if (isInteract) {
+          if (this.index === 0) {
+            this.$nextTick(() => {
+              Fliplet.Studio.emit('update-dom');
+            });
+          }
 
-        //   Fliplet.Studio.onEvent((event) => {
-        //     if (event.detail && event.detail.type === 'domUpdated') {
-        //       if (this.index === 0) {
-        //         rowTemplate = this.$el.innerHTML;
-        //         compiledRowTemplate = Vue.compile(getTemplateForHtml());
-        //       }
+          Fliplet.Studio.onEvent((event) => {
+            if (event.detail && event.detail.type === 'domUpdated') {
+              if (this.index === 0) {
+                rowTemplate = this.$el.innerHTML;
+                compiledRowTemplate = Vue.compile(getTemplateForHtml());
+              }
 
-        //       this.$forceUpdate();
-        //     }
-        //   });
-        // }
+              this.$forceUpdate();
+            }
+          });
+        }
       },
       beforeDestroy() {
         Fliplet.Widget.destroyChildren(this.$el);
