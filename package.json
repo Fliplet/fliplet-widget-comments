@@ -14,8 +14,6 @@
     "eslint-config-fliplet": "^1.0.9",
     "gulp": "^4.0.2",
     "vinyl-named": "^1.1.0",
-    "vue-multiselect": "^2.1.6",
-    "vue-sortable": "^0.1.3",
     "webpack-stream": "^5.2.1"
   },
   "scripts": {
