@@ -1,6 +1,6 @@
 const isInteract = Fliplet.Env.get('interact');
 
-Fliplet.Widget.instance('comments', function(data) {
+Fliplet.Widget.instance('comments', function(data, parent) {
   const $rowTemplate = $(this).find('> template[name="row"]');
   let compiledRowTemplate;
 
