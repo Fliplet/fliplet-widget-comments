@@ -16,7 +16,7 @@
 // });
 
 
-Fliplet.Widget.instance('interactive-map', function(widgetData) {
+Fliplet.Widget.instance('comments', function(widgetData) {
   // Fliplet.Widget.initializeChildren(this.$el, this);
 
   const selector = `[data-comments-id="${widgetData.id}"]`;
