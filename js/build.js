@@ -15,6 +15,25 @@
 //   });
 // });
 
+// Fliplet.Widget.instance({
+//   name: 'comments',
+//   render: {
+//     template: [
+//       '<div id="app-comments">',
+//       '</div>'
+//     ].join(''),
+//     ready: async function() {
+//       Fliplet().then(function() {
+//         new Vue({
+//           el: '#id',
+//           data: {
+//             message: 'Hello, Vue!'
+//           }
+//         });
+//       });
+//     }
+//   }
+
 
 Fliplet.Widget.instance('comments', function(widgetData) {
   // Fliplet.Widget.initializeChildren(this.$el, this);
@@ -24,7 +43,7 @@ Fliplet.Widget.instance('comments', function(widgetData) {
   debugger;
   Fliplet().then(function() {
     new Vue({
-      el: '#id',
+      el: '#app',
       data: {
         message: 'Hello, Vue!'
       }
