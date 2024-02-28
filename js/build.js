@@ -41,7 +41,7 @@ Fliplet.Widget.instance('comments', function(widgetData) {
 
   debugger;
   Fliplet().then(function() {
-    var app = new Vue({
+    new Vue({
       el: '#app-comments',
       data: {
         message: 'Hello, Vue!'
