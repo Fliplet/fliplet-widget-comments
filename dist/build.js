@@ -95,15 +95,41 @@
 
 Fliplet.Widget.instance('comments', function (widgetData) {
   // Fliplet.Widget.initializeChildren(this.$el, this);
-
   // const selector = `[data-comments-id="${widgetData.id}"]`;
 
   debugger;
   Fliplet().then(function () {
-    var app = new Vue({
+    new Vue({
       el: '#app-comments',
       data: {
-        message: 'Hello, Vue!'
+        newComment: '',
+        message: 'Hello, Vue!',
+        comments: [{
+          id: 1,
+          text: 'Comment 1'
+        }, {
+          id: 2,
+          text: 'Comment 2'
+        }, {
+          id: 3,
+          text: 'Comment 3'
+        }]
+      },
+      computed: {
+        commentsLength: function commentsLength() {
+          return this.message + ' text';
+        }
+      },
+      methods: {
+        addComment: function addComment() {
+          if (this.newComment) {
+            this.comments.push({
+              id: this.commentsLength + 1,
+              text: this.newComment
+            });
+            this.newComment = '';
+          }
+        }
       }
     });
   });
