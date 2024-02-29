@@ -10,7 +10,7 @@
   data-comments-id="{{ id }}"
   id="app-comments"
 >
-  <p>\{{comments.length}} COMMENTS</p>
+  <p class="comment-length">\{{comments.length}} COMMENTS</p>
   <div v-if="comments.length">
     <div v-for="(comment, index) in comments" :key="comment.id">
       <div class="comment">
@@ -34,7 +34,7 @@
           <div class="commentText">\{{comment.data.text}}</div>
         </div>
         <div class="last-row">
-          <div>
+          <div class="actions">
             <div>
               <i class="fa fa-comment"></i>
               Reply
@@ -47,6 +47,9 @@
           <div>
             ...
           </div>
+        </div>
+        <div class="show-more-less" v-if="comment.threads.length">
+          <i class="fa fa-sort-down"></i> Show \{{comment.threads.length}} replies
         </div>
       </div>
       <div>

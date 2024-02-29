@@ -6,20 +6,18 @@
   line-height: 8px;
 }
 
-
 [name="comments"] .comment {
   border-bottom: 1px solid #dcdcdc;
   padding: 5px 0 10px 0;
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  padding: 7px;
 }
 
 [name="comments"] .comment.answer {
   margin-left: 20px;
   margin-top: 5px;
-}
-
-[name="comments"] .comment:not(.system) {
-  display: flex;
-  align-items: flex-start;
 }
 
 [name="comments"] .comment .comment-first-line {
@@ -126,5 +124,23 @@
 
 [name="comments"] .last-row {
   display: flex;
+  flex: 0 0 100%;
   justify-content: space-between;
+}
+
+[name="comments"] .last-row .actions {
+  display: flex;
+}
+
+[name="comments"] .last-row .actions > div {
+  cursor: pointer;
+}
+
+[name="comments"] .show-more-less {
+  cursor: pointer;
+  display: flex;
+}
+
+[name="comments"] .comment-length {
+  padding-left: 10px;
 }
