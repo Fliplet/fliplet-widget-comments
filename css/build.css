@@ -130,17 +130,46 @@
 
 [name="comments"] .last-row .actions {
   display: flex;
+  margin: 10px 0 10px 50px;
 }
 
 [name="comments"] .last-row .actions > div {
   cursor: pointer;
+  margin-right: 10px;
 }
 
 [name="comments"] .show-more-less {
   cursor: pointer;
   display: flex;
+  margin-left: 50px;
 }
 
 [name="comments"] .comment-length {
   padding-left: 10px;
+}
+
+[name="comments"] .add-comment-container {
+  margin: 40px 10px 10px 10px;
+  display: flex;
+}
+
+[name="comments"] .input-comment {
+  height: 52px;
+  border-radius: 33px;
+  flex: 1 0 auto;
+  border: none;
+  padding-left: 15px;
+}
+
+[name="comments"] .btn-post-comment {
+  background: #474975;
+  border-radius: 24px;
+  padding: 10px;
+  width: 65px;
+  color: #fff;
+  display: none;
+}
+
+[name="comments"] .btn-post-comment.show {
+  display: block;
 }
