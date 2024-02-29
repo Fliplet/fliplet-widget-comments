@@ -1,4 +1,4 @@
-fl-helper[name="comments"] .no-comments {
+[name="comments"] .no-comments {
   color: #7D7D7D;
   font-family: Helvetica;
   font-size: 12px;
@@ -7,22 +7,22 @@ fl-helper[name="comments"] .no-comments {
 }
 
 
-fl-helper[name="comments"] .comment {
+[name="comments"] .comment {
   border-bottom: 1px solid #dcdcdc;
   padding: 5px 0 10px 0;
 }
 
-fl-helper[name="comments"] .comment.answer {
+[name="comments"] .comment.answer {
   margin-left: 20px;
   margin-top: 5px;
 }
 
-fl-helper[name="comments"] .comment:not(.system) {
+[name="comments"] .comment:not(.system) {
   display: flex;
   align-items: flex-start;
 }
 
-fl-helper[name="comments"] .comment .comment-first-line {
+[name="comments"] .comment .comment-first-line {
   /* font-family: $newsFeedDetailSecondDescriptionFontFamily;
     color: $newsFeedDetailSecondDescriptionFontColor;
     line-height: $newsFeedDetailSecondDescriptionLineHeight;
@@ -34,15 +34,15 @@ fl-helper[name="comments"] .comment .comment-first-line {
 
 }
 
-fl-helper[name="comments"] .comment .comment-first-line .comment-type {
+[name="comments"] .comment .comment-first-line .comment-type {
   text-transform: uppercase;
 }
 
-fl-helper[name="comments"] .comment .comment-first-line .comment-timestamp {
+[name="comments"] .comment .comment-first-line .comment-timestamp {
   margin-left: 15px;
 }
 
-fl-helper[name="comments"] .comment .commentText {
+[name="comments"] .comment .commentText {
   /* font-family: $newsFeedDetailTextFontFamily;
     font-size: $newsFeedDetailTextFontSize;
     line-height: $newsFeedDetailTextLineHeight;
@@ -55,17 +55,17 @@ fl-helper[name="comments"] .comment .commentText {
   }
 }
 
-fl-helper[name="comments"] .comment .comment-user-name {
+[name="comments"] .comment .comment-user-name {
   /* font-family: $headingFiveFontFamily; */
   margin: 0;
 }
 
-fl-helper[name="comments"] .comment .comment-avatar {
+[name="comments"] .comment .comment-avatar {
   display: flex;
   align-items: flex-start;
 }
 
-fl-helper[name="comments"] .comment .comment-avatar .user-avatar {
+[name="comments"] .comment .comment-avatar .user-avatar {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -87,14 +87,14 @@ fl-helper[name="comments"] .comment .comment-avatar .user-avatar {
     } */
 }
 
-fl-helper[name="comments"] .comment .comment-data {
+[name="comments"] .comment .comment-data {
   display: flex;
   flex-direction: column;
   flex-grow: 1;
   max-width: calc(100% - 53px);
 }
 
-fl-helper[name="comments"] .comment .comment-buttons {
+[name="comments"] .comment .comment-buttons {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -104,20 +104,20 @@ fl-helper[name="comments"] .comment .comment-buttons {
   margin-top: 10px;
 }
 
-fl-helper[name="comments"] .comment .comment-buttons .like {
+[name="comments"] .comment .comment-buttons .like {
   text-decoration: underline;
   cursor: pointer;
   margin-left: 5px;
 }
 
-fl-helper[name="comments"] .comment .comment-buttons p {
+[name="comments"] .comment .comment-buttons p {
   margin-bottom: 0;
 }
 
-fl-helper[name="comments"] .comment .comment-buttons .edit-comment {
+[name="comments"] .comment .comment-buttons .edit-comment {
   margin-left: 10px;
 }
 
-fl-helper[name="comments"] .comment .comment-buttons .delete-comment {
+[name="comments"] .comment .comment-buttons .delete-comment {
   margin-left: 10px;
 }
