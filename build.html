@@ -19,9 +19,11 @@
             v-if="comment.data.userAvatar"
             class="user-avatar"
             :style="'background-image: url(' + comment.data.userAvatar + ')'"
-            ></div>
-            <!-- style="background-mage: url({{comment.data.userAvatar}})" -->
-          <div v-else class="user-avatar"><span>\{{comment.data.userInitials}}</span></div>
+          ></div>
+          <!-- style="background-mage: url({{comment.data.userAvatar}})" -->
+          <div v-else class="user-avatar">
+            <span>\{{comment.data.userInitials}}</span>
+          </div>
         </div>
         <div class="comment-data">
           <div class="comment-first-line">
@@ -40,16 +42,16 @@
               Reply
             </div>
             <div>
-              <i class="fa fa-heart"></i>
+              <i class="fa" :class="{'fa-heart': comment.liked, 'fa-heart-o': !comment.liked}"></i>
               Like
+              <span v-if="comment.likeCount">\{{comment.likeCount}}</span>
             </div>
           </div>
-          <div>
-            ...
-          </div>
+          <div>...</div>
         </div>
         <div class="show-more-less" v-if="comment.threads.length">
-          <i class="fa fa-sort-down"></i> Show \{{comment.threads.length}} replies
+          <i class="fa fa-sort-down"></i> Show \{{comment.threads.length}}
+          replies
         </div>
       </div>
       <div>
@@ -64,7 +66,7 @@
                 v-if="thread.data.userAvatar"
                 class="user-avatar"
                 :style="'background-image: url(' + thread.data.userAvatar + ')'"
-                ></div>
+              ></div>
               <div v-else class="user-avatar">
                 <span>\{{thread.data.userInitials}}</span>
               </div>
@@ -79,6 +81,16 @@
               </div>
               <div class="commentText">\{{thread.data.text}}</div>
             </div>
+            <div class="last-row">
+              <div class="actions">
+                <div>
+                  <i class="fa" :class="{'fa-heart': thread.liked, 'fa-heart-o': !thread.liked}"></i>
+                  Like
+                  <span v-if="thread.likeCount">\{{thread.likeCount}}</span>
+                </div>
+              </div>
+              <div>...</div>
+            </div>
           </div>
         </div>
       </div>
@@ -88,7 +100,12 @@
     <p>No comments yet</p>
   </div>
   <div class="add-comment-container">
-    <input class="input-comment" type="text" v-model="newComment" placeholder="Add a comment..." />
+    <input
+      class="input-comment"
+      type="text"
+      v-model="newComment"
+      placeholder="Add a comment..."
+    />
     <button class="btn-post-comment show" @click="addComment()">Post</button>
   </div>
 </div>

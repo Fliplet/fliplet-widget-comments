@@ -173,3 +173,7 @@
 [name="comments"] .btn-post-comment.show {
   display: block;
 }
+
+[name="comments"] .fa-heart {
+  color: red;
+}

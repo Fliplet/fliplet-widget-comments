@@ -142,6 +142,8 @@ Fliplet.Widget.instance('comments', function (widgetData) {
         message: 'Hello, Vue!',
         comments: [{
           id: 1,
+          liked: true,
+          likeCount: 5,
           data: {
             text: 'Comment 1',
             userInitials: 'AB',
@@ -152,6 +154,8 @@ Fliplet.Widget.instance('comments', function (widgetData) {
           threads: []
         }, {
           id: 2,
+          liked: true,
+          likeCount: 3,
           data: {
             text: 'Comment 2',
             userInitials: 'CD',
@@ -161,6 +165,8 @@ Fliplet.Widget.instance('comments', function (widgetData) {
           },
           threads: [{
             id: 2,
+            liked: true,
+            likeCount: 3,
             data: {
               text: 'Comment 2',
               userInitials: 'CD',
@@ -171,6 +177,8 @@ Fliplet.Widget.instance('comments', function (widgetData) {
           }]
         }, {
           id: 3,
+          liked: false,
+          likeCount: 7,
           data: {
             text: 'Comment 3',
             userInitials: 'EF',
@@ -180,6 +188,8 @@ Fliplet.Widget.instance('comments', function (widgetData) {
           },
           threads: [{
             id: 3,
+            liked: false,
+            likeCount: 0,
             data: {
               text: 'Comment 3',
               userInitials: 'EF',
