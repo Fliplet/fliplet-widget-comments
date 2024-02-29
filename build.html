@@ -30,7 +30,7 @@
               {{getTimeFromTimestamp(comment.data.datetime)}}
             </h5>
           </div>
-          <div class="commentText">{{{comment.data.text}}}</div>
+          <div class="commentText">{{comment.data.text}}</div>
         </div>
       </div>
     </div>
@@ -45,7 +45,7 @@
             <div
               v-if="thread.data.userAvatar"
               class="task-assigned-user-avatar"
-              style="background-image: url({{UserAvatar}})"
+              style="background-image: url({{thread.data.userAvatar}})"
             ></div>
             <div v-else class="task-assigned-user-avatar">
               <span>{{thread.data.userInitionals}}</span>
@@ -59,7 +59,7 @@
                 {{getTimeFromTimestamp(thread.data.datetime)}}
               </h5>
             </div>
-            <div class="commentText">{{{thread.data.text}}}</div>
+            <div class="commentText">{{thread.data.text}}</div>
           </div>
         </div>
       </div>
