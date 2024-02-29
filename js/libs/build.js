@@ -114,7 +114,7 @@ Fliplet.Widget.instance('comments', function(widgetData) {
         // getDateFromTimestamp: function(timestamp) {
         //   return moment(timestamp).format('MM/DD/YYYY');
         // },
-        addComment: function() {
+        addComment() {
           if (this.newComment) {
             this.comments.push({
               id: this.commentsLength + 1,
