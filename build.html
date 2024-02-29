@@ -15,56 +15,9 @@
     <div v-for="(comment, index) in comments" :key="comment.id">
       <p>\{{comment.data}}</p>
       <p>\{{index}}</p>
-      <div class="comment">
-        <!-- <div class="comment-avatar">
-          <div
-            v-if="comment.data.userAvatar"
-            class="user-avatar"
-            ></div>
-            style="background-image: url({{comment.data.userAvatar}})"
-          <div v-else class="user-avatar"><span>\{{comment.data.userInitials}}</span></div>
-        </div> -->
-        <!-- <div class="comment-data">
-          <div class="comment-first-line">
-            <h5 class="comment-user-name">\{{comment.data.userFullName}}</h5>
-            <h5 class="comment-timestamp">
-              \{{getDateFromTimestamp(comment.data.timestamp)}} at
-              \{{getTimeFromTimestamp(comment.data.timestamp)}}
-            </h5>
-          </div>
-          <div class="commentText">\{{comment.data.text}}</div>
-        </div> -->
-      </div>
+      <div class="comment"></div>
       <div>
-        <!-- <div v-if="comment.threads.length">
-          <div
-            class="comment answer"
-            v-for="(thread, index) in comment.threads"
-            :key="'thread' + thread.id"
-          >
-            <div class="comment-avatar">
-              <div
-                v-if="thread.data.userAvatar"
-                class="task-assigned-user-avatar"
-                style="background-image: url({{thread.data.userAvatar}})"
-                ></div>
-              <div v-else class="task-assigned-user-avatar">
-                <span>{{thread.data.userInitials}}</span>
-              </div>
-            </div>
-            <div class="comment-data">
-              <div class="comment-first-line">
-                <h5 class="comment-user-name">{{thread.data.userFullName}}</h5>
-                <h5 class="comment-timestamp">
-                  {{getDateFromTimestamp(thread.data.timestamp)}} at
-                  {{getTimeFromTimestamp(thread.data.timestamp)}}
-                </h5>
-              </div>
-              <div class="commentText">{{thread.data.text}}</div>
-            </div>
-          </div>
-        </div> -->
-      </div>
+        </div>
     </div>
   </div>
   <div v-else class="no-comments">
