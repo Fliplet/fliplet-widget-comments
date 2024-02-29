@@ -26,8 +26,9 @@
           <div class="comment-first-line">
             <h5 class="comment-user-name">{{comment.data.userFullName}}</h5>
             <h5 class="comment-timestamp">
-              {{getDateFromTimestamp(comment.data.timestamp)}} at
-              {{getTimeFromTimestamp(comment.data.timestamp)}}
+              {{comment.data.timestamp}}
+              <!-- {{getDateFromTimestamp(comment.data.timestamp)}} at
+              {{getTimeFromTimestamp(comment.data.timestamp)}} -->
             </h5>
           </div>
           <div class="commentText">{{comment.data.text}}</div>
@@ -55,8 +56,9 @@
             <div class="comment-first-line">
               <h5 class="comment-user-name">{{thread.data.userFullName}}</h5>
               <h5 class="comment-timestamp">
-                {{getDateFromTimestamp(thread.data.timestamp)}} at
-                {{getTimeFromTimestamp(thread.data.timestamp)}}
+                {{thread.data.timestamp}}
+                <!-- {{getDateFromTimestamp(thread.data.timestamp)}} at
+                {{getTimeFromTimestamp(thread.data.timestamp)}} -->
               </h5>
             </div>
             <div class="commentText">{{thread.data.text}}</div>
