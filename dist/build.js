@@ -147,7 +147,7 @@ Fliplet.Widget.instance('comments', function (widgetData) {
             userInitials: 'AB',
             userFullName: 'Alicia B',
             timestamp: '2020-01-01T00:00:00Z',
-            userAvatar: 'https://randomuser.me/api/portraits'
+            userAvatar: 'https://variety.com/wp-content/uploads/2020/12/Brad_Pitt.png'
           },
           threads: []
         }, {
@@ -185,7 +185,7 @@ Fliplet.Widget.instance('comments', function (widgetData) {
               userInitials: 'EF',
               userFullName: 'Evan F',
               timestamp: '2020-01-03T00:00:00Z',
-              userAvatar: 'https://randomuser.me/api/portraits'
+              userAvatar: 'https://variety.com/wp-content/uploads/2020/12/Brad_Pitt.png'
             }
           }]
         }]
@@ -197,12 +197,10 @@ Fliplet.Widget.instance('comments', function (widgetData) {
       },
       methods: {
         getTimeFromTimestamp: function getTimeFromTimestamp(timestamp) {
-          return timestamp;
-          // return moment(timestamp).format('HH:mm:ss');
+          return moment(timestamp).format('HH:mm:ss');
         },
         getDateFromTimestamp: function getDateFromTimestamp(timestamp) {
-          return timestamp;
-          // return moment(timestamp).format('MM/DD/YYYY');
+          return moment(timestamp).format('MM/DD/YYYY');
         },
         addComment: function addComment() {
           if (this.newComment) {
