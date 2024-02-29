@@ -10,7 +10,7 @@
   data-comments-id="{{ id }}"
   id="app-comments"
 >
-  <p>{{comments.length ? comments.length + ' ' : ''}}COMMENTS</p>
+  <p>{{comments.length}} COMMENTS</p>
   <div v-if="comments.length">
     <div v-for="(comment, index) in comments" :key="comment.id">
       <div class="comment">
