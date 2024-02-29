@@ -33,6 +33,21 @@
           </div>
           <div class="commentText">\{{comment.data.text}}</div>
         </div>
+        <div class="last-row">
+          <div>
+            <div>
+              <i class="fa fa-comment"></i>
+              Reply
+            </div>
+            <div>
+              <i class="fa fa-heart"></i>
+              Like
+            </div>
+          </div>
+          <div>
+            ...
+          </div>
+        </div>
       </div>
       <div>
         <div v-if="comment.threads.length">
@@ -44,10 +59,10 @@
             <div class="comment-avatar">
               <div
                 v-if="thread.data.userAvatar"
-                class="task-assigned-user-avatar"
-                style="background-image: url({{thread.data.userAvatar}})"
+                class="user-avatar"
+                :style="'background-image: url(' + thread.data.userAvatar + ')'"
                 ></div>
-              <div v-else class="task-assigned-user-avatar">
+              <div v-else class="user-avatar">
                 <span>\{{thread.data.userInitials}}</span>
               </div>
             </div>

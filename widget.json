@@ -29,7 +29,8 @@
       "fliplet-core",
       "fliplet-helper",
       "vue.js",
-      "moment"
+      "moment",
+      "font-awesome"
     ],
     "assets": [
       "css/build.css",

@@ -123,3 +123,8 @@
 [name="comments"] .comment .comment-buttons .delete-comment {
   margin-left: 10px;
 }
+
+[name="comments"] .last-row {
+  display: flex;
+  justify-content: space-between;
+}
