@@ -28,7 +28,8 @@
       "bootstrap",
       "fliplet-core",
       "fliplet-helper",
-      "vue.js"
+      "vue.js",
+      "moment"
     ],
     "assets": [
       "css/build.css",
