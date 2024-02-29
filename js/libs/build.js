@@ -109,10 +109,12 @@ Fliplet.Widget.instance('comments', function(widgetData) {
       },
       methods: {
         getTimeFromTimestamp: function(timestamp) {
-          return moment(timestamp).format('HH:mm:ss');
+          return timestamp;
+          // return moment(timestamp).format('HH:mm:ss');
         },
         getDateFromTimestamp: function(timestamp) {
-          return moment(timestamp).format('MM/DD/YYYY');
+          return timestamp;
+          // return moment(timestamp).format('MM/DD/YYYY');
         },
         addComment() {
           if (this.newComment) {
