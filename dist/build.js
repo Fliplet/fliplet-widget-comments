@@ -196,14 +196,14 @@ Fliplet.Widget.instance('comments', function (widgetData) {
         }
       },
       methods: {
-        getTimeFromTimestamp: function getTimeFromTimestamp(timestamp) {
-          return timestamp;
-          // return moment(timestamp).format('HH:mm:ss');
-        },
-        getDateFromTimestamp: function getDateFromTimestamp(timestamp) {
-          return timestamp;
-          // return moment(timestamp).format('MM/DD/YYYY');
-        },
+        // getTimeFromTimestamp: function(timestamp) {
+        //   return timestamp;
+        //   // return moment(timestamp).format('HH:mm:ss');
+        // },
+        // getDateFromTimestamp: function(timestamp) {
+        //   return timestamp;
+        //   // return moment(timestamp).format('MM/DD/YYYY');
+        // },
         addComment: function addComment() {
           if (this.newComment) {
             this.comments.push({
