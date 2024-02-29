@@ -137,21 +137,29 @@ Fliplet.Widget.instance('comments', function (widgetData) {
   Fliplet().then(function () {
     new Vue({
       el: '#app-comments',
-      data: function data() {
-        return {
-          newComment: '',
-          message: 'Hello, Vue!',
-          comments: [{
-            id: 1,
-            data: {
-              text: 'Comment 1',
-              userInitials: 'AB',
-              userFullName: 'Alicia B',
-              timestamp: '2020-01-01T00:00:00Z',
-              userAvatar: 'https://randomuser.me/api/portraits'
-            },
-            threads: []
-          }, {
+      data: {
+        newComment: '',
+        message: 'Hello, Vue!',
+        comments: [{
+          id: 1,
+          data: {
+            text: 'Comment 1',
+            userInitials: 'AB',
+            userFullName: 'Alicia B',
+            timestamp: '2020-01-01T00:00:00Z',
+            userAvatar: 'https://randomuser.me/api/portraits'
+          },
+          threads: []
+        }, {
+          id: 2,
+          data: {
+            text: 'Comment 2',
+            userInitials: 'CD',
+            userFullName: 'Cory D',
+            timestamp: '2020-01-02T00:00:00Z',
+            userAvatar: null
+          },
+          threads: [{
             id: 2,
             data: {
               text: 'Comment 2',
@@ -159,38 +167,28 @@ Fliplet.Widget.instance('comments', function (widgetData) {
               userFullName: 'Cory D',
               timestamp: '2020-01-02T00:00:00Z',
               userAvatar: null
-            },
-            threads: [{
-              id: 2,
-              data: {
-                text: 'Comment 2',
-                userInitials: 'CD',
-                userFullName: 'Cory D',
-                timestamp: '2020-01-02T00:00:00Z',
-                userAvatar: null
-              }
-            }]
-          }, {
+            }
+          }]
+        }, {
+          id: 3,
+          data: {
+            text: 'Comment 3',
+            userInitials: 'EF',
+            userFullName: 'Evan F',
+            timestamp: '2020-01-03T00:00:00Z',
+            userAvatar: null
+          },
+          threads: [{
             id: 3,
             data: {
               text: 'Comment 3',
               userInitials: 'EF',
               userFullName: 'Evan F',
               timestamp: '2020-01-03T00:00:00Z',
-              userAvatar: null
-            },
-            threads: [{
-              id: 3,
-              data: {
-                text: 'Comment 3',
-                userInitials: 'EF',
-                userFullName: 'Evan F',
-                timestamp: '2020-01-03T00:00:00Z',
-                userAvatar: 'https://randomuser.me/api/portraits'
-              }
-            }]
+              userAvatar: 'https://randomuser.me/api/portraits'
+            }
           }]
-        };
+        }]
       },
       computed: {
         commentsLength: function commentsLength() {
