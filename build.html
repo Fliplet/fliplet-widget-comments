@@ -26,42 +26,40 @@
           <div class="comment-first-line">
             <h5 class="comment-user-name">{{comment.data.userFullName}}</h5>
             <h5 class="comment-timestamp">
-              <!-- {{comment.data.timestamp}} -->
-              <!-- {{getDateFromTimestamp(comment.data.timestamp)}} at
-              {{getTimeFromTimestamp(comment.data.timestamp)}} -->
+              {{getDateFromTimestamp(comment.data.timestamp)}} at
+              {{getTimeFromTimestamp(comment.data.timestamp)}}
             </h5>
           </div>
           <div class="commentText">{{comment.data.text}}</div>
         </div>
       </div>
-    </div>
-    <div>
-      <div v-if="comment.threads.length">
-        <div
-          class="comment answer"
-          v-for="(thread, index) in comment.threads"
-          :key="'thread' + thread.id"
-        >
-          <div class="comment-avatar">
-            <div
-              v-if="thread.data.userAvatar"
-              class="task-assigned-user-avatar"
-              style="background-image: url({{thread.data.userAvatar}})"
-            ></div>
-            <div v-else class="task-assigned-user-avatar">
-              <span>{{thread.data.userInitionals}}</span>
+      <div>
+        <div v-if="comment.threads.length">
+          <div
+            class="comment answer"
+            v-for="(thread, index) in comment.threads"
+            :key="'thread' + thread.id"
+          >
+            <div class="comment-avatar">
+              <div
+                v-if="thread.data.userAvatar"
+                class="task-assigned-user-avatar"
+                style="background-image: url({{thread.data.userAvatar}})"
+              ></div>
+              <div v-else class="task-assigned-user-avatar">
+                <span>{{thread.data.userInitionals}}</span>
+              </div>
             </div>
-          </div>
-          <div class="comment-data">
-            <div class="comment-first-line">
-              <h5 class="comment-user-name">{{thread.data.userFullName}}</h5>
-              <h5 class="comment-timestamp">
-                <!-- {{thread.data.timestamp}} -->
-                <!-- {{getDateFromTimestamp(thread.data.timestamp)}} at
-                {{getTimeFromTimestamp(thread.data.timestamp)}} -->
-              </h5>
+            <div class="comment-data">
+              <div class="comment-first-line">
+                <h5 class="comment-user-name">{{thread.data.userFullName}}</h5>
+                <h5 class="comment-timestamp">
+                  {{getDateFromTimestamp(thread.data.timestamp)}} at
+                  {{getTimeFromTimestamp(thread.data.timestamp)}}
+                </h5>
+              </div>
+              <div class="commentText">{{thread.data.text}}</div>
             </div>
-            <div class="commentText">{{thread.data.text}}</div>
           </div>
         </div>
       </div>
