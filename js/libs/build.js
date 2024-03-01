@@ -7,11 +7,15 @@ Fliplet.Widget.instance('comments', function(widgetData) {
 
   if (!QUERY.dataSourceEntryId) {
     showToastMessage('No data source entry ID provided');
-  } else if (loggedInUser()) {
-    initVue();
-  } else {
-    showToastMessage('You need to be logged in to see the comments');
   }
+
+  loggedInUser().then(function(user) {
+    if (user) {
+      initVue();
+    } else {
+      showToastMessage('You need to be logged in to see the comments');
+    }
+  });
 
   function loggedInUser() {
     Fliplet.Session.get().then(function onCachedSessionRetrieved(session) {
