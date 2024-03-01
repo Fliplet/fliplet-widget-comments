@@ -122,7 +122,7 @@ Fliplet.Widget.instance('comments', function (widgetData) {
       data: {
         newComment: '',
         message: 'Hello, Vue!',
-        comments: [
+        commentsData: [
           // {
           //   id: 1,
           //   liked: true,
@@ -189,6 +189,9 @@ Fliplet.Widget.instance('comments', function (widgetData) {
       computed: {
         commentsLength: function commentsLength() {
           return this.message + ' text';
+        },
+        comments: function comments() {
+          return this.commentsData;
         }
       },
       methods: {
@@ -215,7 +218,7 @@ Fliplet.Widget.instance('comments', function (widgetData) {
                   comments.push(el);
                 }
               });
-              this.comments = comments.map(function (el) {
+              this.commentsData = comments.map(function (el) {
                 el.showThreads = false;
                 el.threads = threads.filter(function (thread) {
                   return thread.data['Comment GUID'] === el.data['GUID'];
