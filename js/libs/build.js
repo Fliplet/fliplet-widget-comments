@@ -152,6 +152,9 @@ Fliplet.Widget.instance('comments', function(widgetData) {
             this.newComment = '';
           }
         }
+      },
+      mounted() {
+        this.getComments();
       }
     });
   }

@@ -243,6 +243,9 @@ Fliplet.Widget.instance('comments', function (widgetData) {
             this.newComment = '';
           }
         }
+      },
+      mounted: function mounted() {
+        this.getComments();
       }
     });
   }
