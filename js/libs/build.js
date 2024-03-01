@@ -5,9 +5,6 @@ Fliplet.Widget.instance('comments', function(widgetData) {
 
   Fliplet.Widget.initializeChildren(this.$el, this);
 
-  if (!QUERY.dataSourceEntryId) {
-    showToastMessage('No data source entry ID provided');
-  }
 
   loggedInUser().then(function(user) {
     if (user) {
@@ -16,6 +13,10 @@ Fliplet.Widget.instance('comments', function(widgetData) {
       showToastMessage('You need to be logged in to see the comments');
     }
   });
+
+  if (!QUERY.dataSourceEntryId) {
+    showToastMessage('No data source entry ID provided');
+  }
 
   function loggedInUser() {
     Fliplet.Session.get().then(function onCachedSessionRetrieved(session) {
@@ -30,6 +31,8 @@ Fliplet.Widget.instance('comments', function(widgetData) {
   }
 
   function initVue() {
+    $('[name="comments"]').removeClass('hidden');
+
     new Vue({
       el: '#app-comments',
       data: {

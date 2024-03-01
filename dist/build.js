@@ -98,12 +98,15 @@ Fliplet.Widget.instance('comments', function (widgetData) {
   var QUERY = Fliplet.Navigate.query;
   var loggedUser = null;
   Fliplet.Widget.initializeChildren(this.$el, this);
+  loggedInUser().then(function (user) {
+    if (user) {
+      initVue();
+    } else {
+      showToastMessage('You need to be logged in to see the comments');
+    }
+  });
   if (!QUERY.dataSourceEntryId) {
     showToastMessage('No data source entry ID provided');
-  } else if (loggedInUser()) {
-    initVue();
-  } else {
-    showToastMessage('You need to be logged in to see the comments');
   }
   function loggedInUser() {
     Fliplet.Session.get().then(function onCachedSessionRetrieved(session) {
@@ -115,6 +118,7 @@ Fliplet.Widget.instance('comments', function (widgetData) {
     return Fliplet.UI.Toast(message);
   }
   function initVue() {
+    $('[name="comments"]').removeClass('hidden');
     new Vue({
       el: '#app-comments',
       data: {

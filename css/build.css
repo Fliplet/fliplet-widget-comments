@@ -1,3 +1,7 @@
+[name="comments"].hidden {
+  display: none!important;
+}
+
 [name="comments"] .no-comments {
   color: #7D7D7D;
   font-family: Helvetica;
