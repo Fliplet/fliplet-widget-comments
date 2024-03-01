@@ -5,24 +5,21 @@ Fliplet.Widget.instance('comments', function(widgetData) {
 
   Fliplet.Widget.initializeChildren(this.$el, this);
 
-
-  loggedInUser().then(function(user) {
-    if (user) {
-      initVue();
-    } else {
-      showToastMessage('You need to be logged in to see the comments');
-    }
-  });
-
   if (!QUERY.dataSourceEntryId) {
     showToastMessage('No data source entry ID provided');
   }
+
+  loggedInUser();
 
   function loggedInUser() {
     Fliplet.Session.get().then(function onCachedSessionRetrieved(session) {
       loggedUser = _.get(session, 'entries.dataSource.data');
 
-      return loggedUser;
+      if (loggedUser) {
+        initVue();
+      } else {
+        showToastMessage('You need to be logged in to see the comments');
+      }
     });
   }
 
