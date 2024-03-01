@@ -29,11 +29,11 @@
           <div class="comment-first-line">
             <h5 class="comment-user-name">\{{comment.data.userFullName}}</h5>
             <h5 class="comment-timestamp">
-              \{{getDateFromTimestamp(comment.data.timestamp)}} at
-              \{{getTimeFromTimestamp(comment.data.timestamp)}}
+              \{{getDateFromTimestamp(comment.data.Timestamp)}} at
+              \{{getTimeFromTimestamp(comment.data.Timestamp)}}
             </h5>
           </div>
-          <div class="commentText">\{{comment.data.text}}</div>
+          <div class="commentText">\{{comment.data.Message}}</div>
         </div>
         <div class="last-row">
           <div class="actions">
@@ -42,9 +42,9 @@
               Reply
             </div>
             <div>
-              <i class="fa" :class="{'fa-heart': comment.liked, 'fa-heart-o': !comment.liked}"></i>
+              <i class="fa" :class="{'fa-heart': likedLoginByUser(comment.data.Likes), 'fa-heart-o': !likedLoginByUser(comment.data.Likes)}"></i>
               Like
-              <span v-if="comment.likeCount">\{{comment.likeCount}}</span>
+              <span v-if="comment.data.Likes.length">\{{comment.data.Likes.length}}</span>
             </div>
           </div>
           <div>...</div>
@@ -75,18 +75,18 @@
               <div class="comment-first-line">
                 <h5 class="comment-user-name">\{{thread.data.userFullName}}</h5>
                 <h5 class="comment-timestamp">
-                  \{{getDateFromTimestamp(thread.data.timestamp)}} at
-                  \{{getTimeFromTimestamp(thread.data.timestamp)}}
+                  \{{getDateFromTimestamp(thread.data.Timestamp)}} at
+                  \{{getTimeFromTimestamp(thread.data.Timestamp)}}
                 </h5>
               </div>
-              <div class="commentText">\{{thread.data.text}}</div>
+              <div class="commentText">\{{thread.data.Message}}</div>
             </div>
             <div class="last-row">
               <div class="actions">
                 <div>
-                  <i class="fa" :class="{'fa-heart': thread.liked, 'fa-heart-o': !thread.liked}"></i>
+                  <i class="fa" :class="{'fa-heart': likedLoginByUser(thread.data.Likes), 'fa-heart-o': !likedLoginByUser(thread.data.Likes)}"></i>
                   Like
-                  <span v-if="thread.likeCount">\{{thread.likeCount}}</span>
+                  <span v-if="thread.data.Likes.length">\{{thread.data.Likes.length}}</span>
                 </div>
               </div>
               <div>...</div>
