@@ -111,19 +111,33 @@ Fliplet.Widget.instance('comments', function(widgetData) {
           }
         },
         methods: {
+          showToastProgress(message = 'Processing') {
+            Fliplet.UI.Toast({
+              message,
+              position: 'center',
+              backdrop: true,
+              tapToDismiss: false,
+              duration: false
+            });
+          },
+          closeToastProgress() {
+            Fliplet.UI.Toast.dismiss();
+          },
           editComment(comment) {
             this.commentForEditing = comment;
           },
           flagComment(comment) {
+            this.showToastProgress('Flagging comment...');
             // todo notify admin from the component settings
             comment.data.flagged = true;
-            comment.data.openDropdown = false;
             Fliplet.DataSources.connectByName(DS_COMMENTS).then(function(
               connection
             ) {
               return connection.update(comment.id, {
                 Flagged: comment.data.flagged,
                 GUID: comment.data.GUID
+              }).then(() => {
+                this.closeToastProgress();
               });
             }).then(() => {
               setTimeout(() => {
@@ -150,6 +164,9 @@ Fliplet.Widget.instance('comments', function(widgetData) {
           },
           getComments() {
             var thisy = this;
+
+            thisy.showToastProgress('Loading comments...');
+
             var entryId = '123456'; // Replace with the entry ID from the url
 
             return Fliplet.DataSources.connectByName(DS_COMMENTS).then(
@@ -196,6 +213,8 @@ Fliplet.Widget.instance('comments', function(widgetData) {
 
                         return el;
                       });
+
+                      thisy.closeToastProgress();
                     });
                   });
               }
@@ -232,6 +251,7 @@ Fliplet.Widget.instance('comments', function(widgetData) {
             });
           },
           manageComment() {
+            // todo add showToastProgress for edit/add comment
             if (this.commentInput && this.commentForEditing) {
               this.comments.push({
                 id: this.commentsLength + 1,
@@ -261,6 +281,8 @@ Fliplet.Widget.instance('comments', function(widgetData) {
                   return console.log('Not confirmed!');
                 }
 
+                thisy.showToastProgress('Deleting comment...');
+
                 if (isThread) {
                   return Fliplet.DataSources.connectByName(DS_COMMENTS).then(function(
                     connection
@@ -273,6 +295,8 @@ Fliplet.Widget.instance('comments', function(widgetData) {
 
                         return el;
                       });
+
+                      thisy.closeToastProgress();
                     });
                   });
                 }
@@ -288,6 +312,7 @@ Fliplet.Widget.instance('comments', function(widgetData) {
                     }).then(function() {
                       return connection.removeById(comment.id).then(function() {
                         thisy.comments = this.comments.filter((el) => el.id !== comment.id);
+                        thisy.closeToastProgress();
                       });
                     });
                   });

@@ -202,17 +202,33 @@ Fliplet.Widget.instance('comments', function (widgetData) {
           }
         },
         methods: {
+          showToastProgress: function showToastProgress() {
+            var message = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'Processing';
+            Fliplet.UI.Toast({
+              message: message,
+              position: 'center',
+              backdrop: true,
+              tapToDismiss: false,
+              duration: false
+            });
+          },
+          closeToastProgress: function closeToastProgress() {
+            Fliplet.UI.Toast.dismiss();
+          },
           editComment: function editComment(comment) {
             this.commentForEditing = comment;
           },
           flagComment: function flagComment(comment) {
+            this.showToastProgress('Flagging comment...');
             // todo notify admin from the component settings
             comment.data.flagged = true;
-            comment.data.openDropdown = false;
             Fliplet.DataSources.connectByName(DS_COMMENTS).then(function (connection) {
+              var _this = this;
               return connection.update(comment.id, {
                 Flagged: comment.data.flagged,
                 GUID: comment.data.GUID
+              }).then(function () {
+                _this.closeToastProgress();
               });
             }).then(function () {
               setTimeout(function () {
@@ -239,6 +255,7 @@ Fliplet.Widget.instance('comments', function (widgetData) {
           },
           getComments: function getComments() {
             var thisy = this;
+            thisy.showToastProgress('Loading comments...');
             var entryId = '123456'; // Replace with the entry ID from the url
 
             return Fliplet.DataSources.connectByName(DS_COMMENTS).then(function (connection) {
@@ -277,6 +294,7 @@ Fliplet.Widget.instance('comments', function (widgetData) {
                     });
                     return el;
                   });
+                  thisy.closeToastProgress();
                 });
               });
             });
@@ -309,6 +327,7 @@ Fliplet.Widget.instance('comments', function (widgetData) {
             });
           },
           manageComment: function manageComment() {
+            // todo add showToastProgress for edit/add comment
             if (this.commentInput && this.commentForEditing) {
               this.comments.push({
                 id: this.commentsLength + 1,
@@ -334,6 +353,7 @@ Fliplet.Widget.instance('comments', function (widgetData) {
               if (!result) {
                 return console.log('Not confirmed!');
               }
+              thisy.showToastProgress('Deleting comment...');
               if (isThread) {
                 return Fliplet.DataSources.connectByName(DS_COMMENTS).then(function (connection) {
                   return connection.removeById(comment.id).then(function () {
@@ -345,6 +365,7 @@ Fliplet.Widget.instance('comments', function (widgetData) {
                       }
                       return el;
                     });
+                    thisy.closeToastProgress();
                   });
                 });
               }
@@ -365,6 +386,7 @@ Fliplet.Widget.instance('comments', function (widgetData) {
                       thisy.comments = this.comments.filter(function (el) {
                         return el.id !== comment.id;
                       });
+                      thisy.closeToastProgress();
                     });
                   });
                 });
