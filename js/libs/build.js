@@ -199,7 +199,7 @@ Fliplet.Widget.instance('comments', function(widgetData) {
             return likes.includes(loggedUser.Email); // logged user email
           },
           getTimeFromTimestamp: function(timestamp) {
-            return moment(timestamp).format('HH:mm:ss');
+            return moment(timestamp).format('HH:mm');
           },
           getDateFromTimestamp: function(timestamp) {
             return moment(timestamp).format('MM/DD/YYYY');

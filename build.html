@@ -14,13 +14,14 @@
   <p class="comment-length">\{{comments.length}} COMMENTS</p>
   <div v-if="comments.length">
     <div v-for="(comment, index) in comments" :key="comment.id">
-      <div class="comment" :class="{flagged: comment.data.flagged}">
+      <div class="comment" :class="{flagged: comment.data.flagged, 'thread-shown': comment.showThreads}">
         <div class="flagged-dialog" v-if="comment.data.flagged">
           <div class="close-flagged-dialog">
             <i class="fa fa-times" @click="comment.data.flagged = false"></i>
           </div>
           <p>
             Thank you for flagging this comment.
+            <br>
             <br>
             Admin will be notified about it.
           </p>
@@ -55,15 +56,18 @@
             <div @click="manageLike(comment)">
               <i class="fa" :class="{'fa-heart': likedLoginByUser(comment.data.Likes), 'fa-heart-o': !likedLoginByUser(comment.data.Likes)}"></i>
               Like
-              <span v-if="comment.data.Likes.length">\{{comment.data.Likes.length}}</span>
+              <span v-if="comment.data.Likes.length">(\{{comment.data.Likes.length}})</span>
             </div>
           </div>
           <div @click="flagComment(comment)">...</div>
         </div>
         <div class="show-more-less" v-if="comment.threads.length" @click="toggleThreads(comment)">
           <i class="fa" :class="{'fa-caret-down': !comment.showThreads, 'fa-caret-up': comment.showThreads, }"></i>
-          \{{comment.showThreads ? 'Hide' : 'Show'}} \{{comment.threads.length}}
+          <span>
+            \{{comment.showThreads ? 'Hide' : 'Show'}} \{{comment.threads.length}}
           replies
+          </span>
+          <div v-if="comment.showThreads" class="extra-border"></div>
         </div>
       </div>
       <div>
@@ -73,6 +77,17 @@
             v-for="(thread, index) in comment.threads"
             :key="'thread' + thread.id"
           >
+            <div class="flagged-dialog" v-if="thread.data.flagged">
+              <div class="close-flagged-dialog">
+                <i class="fa fa-times" @click="thread.data.flagged = false"></i>
+              </div>
+              <p>
+                Thank you for flagging this comment.
+                <br>
+                <br>
+                Admin will be notified about it.
+              </p>
+            </div>
             <div class="comment-avatar">
               <div
                 v-if="thread.data.userAvatar"
@@ -98,7 +113,7 @@
                 <div @click="manageLike(thread)">
                   <i class="fa" :class="{'fa-heart': likedLoginByUser(thread.data.Likes), 'fa-heart-o': !likedLoginByUser(thread.data.Likes)}"></i>
                   Like
-                  <span v-if="thread.data.Likes.length">\{{thread.data.Likes.length}}</span>
+                  <span v-if="thread.data.Likes.length">(\{{thread.data.Likes.length}})</span>
                 </div>
               </div>
               <div @click="flagComment(thread)">...</div>
