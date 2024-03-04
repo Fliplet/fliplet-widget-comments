@@ -328,18 +328,24 @@ Fliplet.Widget.instance('comments', function (widgetData) {
           },
           manageComment: function manageComment() {
             // todo add showToastProgress for edit/add comment
-            if (this.commentInput && this.commentForEditing) {
-              this.comments.push({
-                id: this.commentsLength + 1,
-                data: {
-                  text: this.commentInput,
-                  timestamp: new Date().toISOString(),
-                  userAvatar: 'https://variety.com/wp-content/uploads/2020/12/Brad_Pitt.png'
-                }
+            var thisy = this;
+            if (thisy.commentInput) {
+              thisy.showToastProgress('Adding comment...');
+              Fliplet.DataSources.connectByName(DS_COMMENTS).then(function (connection) {
+                var toInsert = {
+                  Message: thisy.commentInput,
+                  'Author Email': loggedUser.Email,
+                  Timestamp: new Date().toISOString(),
+                  'Entry Id': QUERY.dataSourceEntryId,
+                  Likes: []
+                };
+                return connection.insert(toInsert).then(function (record) {
+                  thisy.comments.push(record);
+                  thisy.closeToastProgress();
+                  this.commentInput = '';
+                });
               });
-              this.commentInput = '';
             }
-            this.commentForEditing = null;
           },
           deleteComment: function deleteComment(comment) {
             var isThread = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
