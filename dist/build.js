@@ -354,10 +354,10 @@ Fliplet.Widget.instance('comments', function (widgetData) {
                     toInsert['Comment GUID'] = thisy.commentState.comment.data['GUID'];
                   }
                   return connection.insert(toInsert).then(function (record) {
-                    record.userInitials = (loggedUser['User Full Name'] || '').split(' ').map(function (name) {
+                    record.data.userInitials = (loggedUser['User Full Name'] || '').split(' ').map(function (name) {
                       return name[0];
                     }).join('');
-                    record.userAvatar = loggedUser['User Avatar'] ? Fliplet.Media.authenticate(loggedUser['User Avatar']) : null;
+                    record.data.userAvatar = loggedUser['User Avatar'] ? Fliplet.Media.authenticate(loggedUser['User Avatar']) : null;
                     record.data.flagged = false;
                     record.data.openDropdown = false;
                     record.showThreads = false;

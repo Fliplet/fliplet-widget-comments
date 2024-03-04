@@ -287,11 +287,11 @@ Fliplet.Widget.instance('comments', function(widgetData) {
                   }
 
                   return connection.insert(toInsert).then(function(record) {
-                    record.userInitials = (loggedUser['User Full Name'] || '')
+                    record.data.userInitials = (loggedUser['User Full Name'] || '')
                       .split(' ')
                       .map((name) => name[0])
                       .join('');
-                    record.userAvatar = loggedUser['User Avatar']
+                    record.data.userAvatar = loggedUser['User Avatar']
                       ? Fliplet.Media.authenticate(loggedUser['User Avatar'])
                       : null;
                     record.data.flagged = false;
