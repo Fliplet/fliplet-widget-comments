@@ -324,7 +324,12 @@ Fliplet.Widget.instance('comments', function(widgetData) {
                     Message: thisy.commentInput,
                     GUID: thisy.commentState.comment.data['GUID']
                   }).then(function() {
-                    thisy.commentState.comment.data.Message = thisy.commentInput;
+                    thisy.comments = thisy.comments.map((el) => {
+                      if (el.id === thisy.commentState.comment.id) {
+                        el.data.Message = thisy.commentInput;
+                      }
+                    });
+
                     thisy.commentInput = '';
                     thisy.commentState = null;
                     thisy.closeToastProgress();
