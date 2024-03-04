@@ -340,6 +340,14 @@ Fliplet.Widget.instance('comments', function (widgetData) {
                   Likes: []
                 };
                 return connection.insert(toInsert).then(function (record) {
+                  record.userInitials = (loggedUser['User Full Name'] || '').split(' ').map(function (name) {
+                    return name[0];
+                  }).join('');
+                  record.userAvatar = loggedUser['User Avatar'] ? Fliplet.Media.authenticate(loggedUser['User Avatar']) : null;
+                  record.data.flagged = false;
+                  record.data.openDropdown = false;
+                  record.showThreads = false;
+                  record.threads = [];
                   thisy.comments.push(record);
                   thisy.closeToastProgress();
                   thisy.commentInput = '';
