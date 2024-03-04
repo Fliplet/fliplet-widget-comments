@@ -30,13 +30,13 @@ Fliplet.Widget.instance('comments', function(widgetData) {
 
   function initVue() {
     $('[name="comments"]').removeClass('hidden');
-
-    new Vue({
-      el: '#app-comments',
-      data: {
-        newComment: '',
-        message: 'Hello, Vue!',
-        commentsData: [
+    Fliplet().then(function() {
+      new Vue({
+        el: '#app-comments',
+        data: {
+          commentInput: '',
+          message: 'Hello, Vue!',
+          comments: [
           // {
           //   id: 1,
           //   liked: true,
@@ -98,84 +98,93 @@ Fliplet.Widget.instance('comments', function(widgetData) {
           //     }
           //   }]
           // }
-        ]
-      },
-      computed: {
-        commentsLength: function() {
-          return this.message + ' text';
+          ]
         },
-        comments() {
-          return this.commentsData;
-        }
-      },
-      methods: {
-        consoleComments() {
-          console.log(this.commentsData);
-          console.log(this.comments);
+        computed: {
+          commentsLength: function() {
+            return this.message + ' text';
+          }
+        // comments() {
+        //   return this.commentsData;
+        // }
         },
-        getComments() {
-          var entryId = '123456'; // Replace with the entry ID from the url
+        methods: {
+          consoleComments() {
+          // console.log(this.commentsData);
+            console.log(this.comments);
+          },
+          getComments() {
+            var thisy = this;
+            var entryId = '123456'; // Replace with the entry ID from the url
 
-          Fliplet.DataSources.connectByName(DS_COMMENTS).then(function(connection) {
-            return connection.find({ where: { 'Entry Id': entryId } }).then(function(records) {
-              var comments = [];
-              var threads = [];
+            Fliplet.DataSources.connectByName(DS_COMMENTS).then(function(connection) {
+              return connection.find({ where: { 'Entry Id': entryId } }).then(function(records) {
+                var comments = [];
+                var threads = [];
 
-              records.forEach(el => {
+                records.forEach(el => {
                 // get after from the user table
-                el.userInitials = (el.data['User Full Name'] || 'John Doe').split(' ').map(name => name[0]).join('');
-                el.userAvatar = el.data['User Avatar'] ? Fliplet.Media.authenticate(el.data['User Avatar']) : null;
+                  el.userInitials = (el.data['User Full Name'] || 'John Doe').split(' ').map(name => name[0]).join('');
+                  el.userAvatar = el.data['User Avatar'] ? Fliplet.Media.authenticate(el.data['User Avatar']) : null;
+                  el.flagged = false;
 
-                if (el.data['Comment GUID']) {
-                  threads.push(el);
-                } else {
-                  comments.push(el);
+                  if (el.data['Comment GUID']) {
+                    threads.push(el);
+                  } else {
+                    comments.push(el);
+                  }
+                });
+                debugger;
+                thisy.comments = comments.map(el => {
+                  el.showThreads = false;
+                  el.threads = threads.filter(thread => thread.data['Comment GUID'] === el.data['GUID']);
+
+                  return el;
+                });
+              });
+            });
+          },
+          likedLoginByUser(likes) {
+            return likes.include(loggedUser.Email); // logged user email
+          },
+          getTimeFromTimestamp: function(timestamp) {
+            return moment(timestamp).format('HH:mm:ss');
+          },
+          getDateFromTimestamp: function(timestamp) {
+            return moment(timestamp).format('MM/DD/YYYY');
+          },
+          manageComment() {
+            if (this.commentInput) {
+              this.comments.push({
+                id: this.commentsLength + 1,
+                data: {
+                  text: this.commentInput,
+                  userInitials: 'AB',
+                  userFullName: 'Alicia B',
+                  timestamp: new Date().toISOString(),
+                  userAvatar: 'https://variety.com/wp-content/uploads/2020/12/Brad_Pitt.png'
                 }
               });
-
-              this.commentsData = comments.map(el => {
-                el.showThreads = false;
-                el.threads = threads.filter(thread => thread.data['Comment GUID'] === el.data['GUID']);
-
-                return el;
-              });
-            });
-          });
-        },
-        likedLoginByUser(likes) {
-          return likes.include(loggedUser.Email); // logged user email
-        },
-        getTimeFromTimestamp: function(timestamp) {
-          return moment(timestamp).format('HH:mm:ss');
-        },
-        getDateFromTimestamp: function(timestamp) {
-          return moment(timestamp).format('MM/DD/YYYY');
-        },
-        addComment() {
-          if (this.newComment) {
-            this.comments.push({
-              id: this.commentsLength + 1,
-              text: this.newComment
-            });
-            this.newComment = '';
+              this.commentInput = '';
+            }
           }
-        }
-      },
-      mounted() {
-        var thisy = this;
+        },
+        mounted() {
+          var thisy = this;
 
-        Fliplet.Session.get().then((session) => {
-          loggedUser = _.get(session, 'entries.dataSource.data');
+          Fliplet.Session.get().then((session) => {
+            loggedUser = _.get(session, 'entries.dataSource.data');
 
-          if (loggedUser) {
+            if (loggedUser) {
             //  initVue();
-            debugger;
-            thisy.getComments();
-          } else {
-            showToastMessage('You need to be logged in to see the comments');
-          }
-        });
-      }
+              debugger;
+              thisy.getComments();
+            } else {
+              showToastMessage('You need to be logged in to see the comments');
+            }
+          });
+        }
+      });
     });
   }
 });

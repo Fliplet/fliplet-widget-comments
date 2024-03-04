@@ -121,153 +121,164 @@ Fliplet.Widget.instance('comments', function (widgetData) {
   }
   function initVue() {
     $('[name="comments"]').removeClass('hidden');
-    new Vue({
-      el: '#app-comments',
-      data: {
-        newComment: '',
-        message: 'Hello, Vue!',
-        commentsData: [
-          // {
-          //   id: 1,
-          //   liked: true,
-          //   likeCount: 5,
-          //   data: {
-          //     text: 'Comment 1',
-          //     userInitials: 'AB',
-          //     userFullName: 'Alicia B',
-          //     timestamp: '2020-01-01T00:00:00Z',
-          //     userAvatar: 'https://variety.com/wp-content/uploads/2020/12/Brad_Pitt.png'
-          //   },
-          //   threads: []
-          // },
-          // {
-          //   id: 2,
-          //   liked: true,
-          //   likeCount: 3,
-          //   data: {
-          //     text: 'Comment 2',
-          //     userInitials: 'CD',
-          //     userFullName: 'Cory D',
-          //     timestamp: '2020-01-02T00:00:00Z',
-          //     userAvatar: null
-          //   },
-          //   threads: [{
-          //     id: 2,
-          //     liked: true,
-          //     likeCount: 3,
-          //     data: {
-          //       text: 'Comment 2',
-          //       userInitials: 'CD',
-          //       userFullName: 'Cory D',
-          //       timestamp: '2020-01-02T00:00:00Z',
-          //       userAvatar: null
-          //     }
-          //   }]
-          // },
-          // {
-          //   id: 3,
-          //   liked: false,
-          //   likeCount: 7,
-          //   data: {
-          //     text: 'Comment 3',
-          //     userInitials: 'EF',
-          //     userFullName: 'Evan F',
-          //     timestamp: '2020-01-03T00:00:00Z',
-          //     userAvatar: null
-          //   },
-          //   threads: [{
-          //     id: 3,
-          //     liked: false,
-          //     likeCount: 0,
-          //     data: {
-          //       text: 'Comment 3',
-          //       userInitials: 'EF',
-          //       userFullName: 'Evan F',
-          //       timestamp: '2020-01-03T00:00:00Z',
-          //       userAvatar: 'https://variety.com/wp-content/uploads/2020/12/Brad_Pitt.png'
-          //     }
-          //   }]
+    Fliplet().then(function () {
+      new Vue({
+        el: '#app-comments',
+        data: {
+          commentInput: '',
+          message: 'Hello, Vue!',
+          comments: [
+            // {
+            //   id: 1,
+            //   liked: true,
+            //   likeCount: 5,
+            //   data: {
+            //     text: 'Comment 1',
+            //     userInitials: 'AB',
+            //     userFullName: 'Alicia B',
+            //     timestamp: '2020-01-01T00:00:00Z',
+            //     userAvatar: 'https://variety.com/wp-content/uploads/2020/12/Brad_Pitt.png'
+            //   },
+            //   threads: []
+            // },
+            // {
+            //   id: 2,
+            //   liked: true,
+            //   likeCount: 3,
+            //   data: {
+            //     text: 'Comment 2',
+            //     userInitials: 'CD',
+            //     userFullName: 'Cory D',
+            //     timestamp: '2020-01-02T00:00:00Z',
+            //     userAvatar: null
+            //   },
+            //   threads: [{
+            //     id: 2,
+            //     liked: true,
+            //     likeCount: 3,
+            //     data: {
+            //       text: 'Comment 2',
+            //       userInitials: 'CD',
+            //       userFullName: 'Cory D',
+            //       timestamp: '2020-01-02T00:00:00Z',
+            //       userAvatar: null
+            //     }
+            //   }]
+            // },
+            // {
+            //   id: 3,
+            //   liked: false,
+            //   likeCount: 7,
+            //   data: {
+            //     text: 'Comment 3',
+            //     userInitials: 'EF',
+            //     userFullName: 'Evan F',
+            //     timestamp: '2020-01-03T00:00:00Z',
+            //     userAvatar: null
+            //   },
+            //   threads: [{
+            //     id: 3,
+            //     liked: false,
+            //     likeCount: 0,
+            //     data: {
+            //       text: 'Comment 3',
+            //       userInitials: 'EF',
+            //       userFullName: 'Evan F',
+            //       timestamp: '2020-01-03T00:00:00Z',
+            //       userAvatar: 'https://variety.com/wp-content/uploads/2020/12/Brad_Pitt.png'
+            //     }
+            //   }]
+            // }
+          ]
+        },
+        computed: {
+          commentsLength: function commentsLength() {
+            return this.message + ' text';
+          }
+          // comments() {
+          //   return this.commentsData;
           // }
-        ]
-      },
-      computed: {
-        commentsLength: function commentsLength() {
-          return this.message + ' text';
         },
-        comments: function comments() {
-          return this.commentsData;
-        }
-      },
-      methods: {
-        consoleComments: function consoleComments() {
-          console.log(this.commentsData);
-          console.log(this.comments);
-        },
-        getComments: function getComments() {
-          var entryId = '123456'; // Replace with the entry ID from the url
+        methods: {
+          consoleComments: function consoleComments() {
+            // console.log(this.commentsData);
+            console.log(this.comments);
+          },
+          getComments: function getComments() {
+            var thisy = this;
+            var entryId = '123456'; // Replace with the entry ID from the url
 
-          Fliplet.DataSources.connectByName(DS_COMMENTS).then(function (connection) {
-            return connection.find({
-              where: {
-                'Entry Id': entryId
-              }
-            }).then(function (records) {
-              var comments = [];
-              var threads = [];
-              records.forEach(function (el) {
-                // get after from the user table
-                el.userInitials = (el.data['User Full Name'] || 'John Doe').split(' ').map(function (name) {
-                  return name[0];
-                }).join('');
-                el.userAvatar = el.data['User Avatar'] ? Fliplet.Media.authenticate(el.data['User Avatar']) : null;
-                if (el.data['Comment GUID']) {
-                  threads.push(el);
-                } else {
-                  comments.push(el);
+            Fliplet.DataSources.connectByName(DS_COMMENTS).then(function (connection) {
+              return connection.find({
+                where: {
+                  'Entry Id': entryId
+                }
+              }).then(function (records) {
+                var comments = [];
+                var threads = [];
+                records.forEach(function (el) {
+                  // get after from the user table
+                  el.userInitials = (el.data['User Full Name'] || 'John Doe').split(' ').map(function (name) {
+                    return name[0];
+                  }).join('');
+                  el.userAvatar = el.data['User Avatar'] ? Fliplet.Media.authenticate(el.data['User Avatar']) : null;
+                  el.flagged = false;
+                  if (el.data['Comment GUID']) {
+                    threads.push(el);
+                  } else {
+                    comments.push(el);
+                  }
+                });
+                debugger;
+                thisy.comments = comments.map(function (el) {
+                  el.showThreads = false;
+                  el.threads = threads.filter(function (thread) {
+                    return thread.data['Comment GUID'] === el.data['GUID'];
+                  });
+                  return el;
+                });
+              });
+            });
+          },
+          likedLoginByUser: function likedLoginByUser(likes) {
+            return likes.include(loggedUser.Email); // logged user email
+          },
+          getTimeFromTimestamp: function getTimeFromTimestamp(timestamp) {
+            return moment(timestamp).format('HH:mm:ss');
+          },
+          getDateFromTimestamp: function getDateFromTimestamp(timestamp) {
+            return moment(timestamp).format('MM/DD/YYYY');
+          },
+          manageComment: function manageComment() {
+            if (this.commentInput) {
+              this.comments.push({
+                id: this.commentsLength + 1,
+                data: {
+                  text: this.commentInput,
+                  userInitials: 'AB',
+                  userFullName: 'Alicia B',
+                  timestamp: new Date().toISOString(),
+                  userAvatar: 'https://variety.com/wp-content/uploads/2020/12/Brad_Pitt.png'
                 }
               });
-              this.commentsData = comments.map(function (el) {
-                el.showThreads = false;
-                el.threads = threads.filter(function (thread) {
-                  return thread.data['Comment GUID'] === el.data['GUID'];
-                });
-                return el;
-              });
-            });
+              this.commentInput = '';
+            }
+          }
+        },
+        mounted: function mounted() {
+          var thisy = this;
+          Fliplet.Session.get().then(function (session) {
+            loggedUser = _.get(session, 'entries.dataSource.data');
+            if (loggedUser) {
+              //  initVue();
+              debugger;
+              thisy.getComments();
+            } else {
+              showToastMessage('You need to be logged in to see the comments');
+            }
           });
-        },
-        likedLoginByUser: function likedLoginByUser(likes) {
-          return likes.include(loggedUser.Email); // logged user email
-        },
-        getTimeFromTimestamp: function getTimeFromTimestamp(timestamp) {
-          return moment(timestamp).format('HH:mm:ss');
-        },
-        getDateFromTimestamp: function getDateFromTimestamp(timestamp) {
-          return moment(timestamp).format('MM/DD/YYYY');
-        },
-        addComment: function addComment() {
-          if (this.newComment) {
-            this.comments.push({
-              id: this.commentsLength + 1,
-              text: this.newComment
-            });
-            this.newComment = '';
-          }
         }
-      },
-      mounted: function mounted() {
-        var thisy = this;
-        Fliplet.Session.get().then(function (session) {
-          loggedUser = _.get(session, 'entries.dataSource.data');
-          if (loggedUser) {
-            //  initVue();
-            debugger;
-            thisy.getComments();
-          } else {
-            showToastMessage('You need to be logged in to see the comments');
-          }
-        });
-      }
+      });
     });
   }
 });
