@@ -265,7 +265,15 @@ Fliplet.Widget.instance('comments', function(widgetData) {
                   return Fliplet.DataSources.connectByName(DS_COMMENTS).then(function(
                     connection
                   ) {
-                    return connection.removeById(comment.id);
+                    return connection.removeById(comment.id).then(function() {
+                      thisy.comments = this.comments.map(el => {
+                        if (el.data['GUID'] === comment.data['Comment GUID']) {
+                          el.threads = el.threads.filter((el) => el.id !== comment.id);
+                        }
+
+                        return el;
+                      });
+                    });
                   });
                 }
 
@@ -279,17 +287,7 @@ Fliplet.Widget.instance('comments', function(widgetData) {
                       extend: true
                     }).then(function() {
                       return connection.removeById(comment.id).then(function() {
-                        if (isThread) {
-                          thisy.comments = this.comments.map(el => {
-                            if (el.data['GUID'] === comment.data['Comment GUID']) {
-                              el.threads = el.threads.filter((el) => el.id !== comment.id);
-                            }
-
-                            return el;
-                          });
-                        } else {
-                          thisy.comments = this.comments.filter((el) => el.id !== comment.id);
-                        }
+                        thisy.comments = this.comments.filter((el) => el.id !== comment.id);
                       });
                     });
                   });

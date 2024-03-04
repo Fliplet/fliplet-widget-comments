@@ -336,7 +336,16 @@ Fliplet.Widget.instance('comments', function (widgetData) {
               }
               if (isThread) {
                 return Fliplet.DataSources.connectByName(DS_COMMENTS).then(function (connection) {
-                  return connection.removeById(comment.id);
+                  return connection.removeById(comment.id).then(function () {
+                    thisy.comments = this.comments.map(function (el) {
+                      if (el.data['GUID'] === comment.data['Comment GUID']) {
+                        el.threads = el.threads.filter(function (el) {
+                          return el.id !== comment.id;
+                        });
+                      }
+                      return el;
+                    });
+                  });
                 });
               }
               return Fliplet.DataSources.connectByName(DS_COMMENTS).then(function (connection) {
@@ -353,20 +362,9 @@ Fliplet.Widget.instance('comments', function (widgetData) {
                     extend: true
                   }).then(function () {
                     return connection.removeById(comment.id).then(function () {
-                      if (isThread) {
-                        thisy.comments = this.comments.map(function (el) {
-                          if (el.data['GUID'] === comment.data['Comment GUID']) {
-                            el.threads = el.threads.filter(function (el) {
-                              return el.id !== comment.id;
-                            });
-                          }
-                          return el;
-                        });
-                      } else {
-                        thisy.comments = this.comments.filter(function (el) {
-                          return el.id !== comment.id;
-                        });
-                      }
+                      thisy.comments = this.comments.filter(function (el) {
+                        return el.id !== comment.id;
+                      });
                     });
                   });
                 });
