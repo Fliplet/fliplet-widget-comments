@@ -200,6 +200,9 @@ Fliplet.Widget.instance('comments', function(widgetData) {
           likedLoginByUser(likes) {
             return likes.includes(loggedUser.Email); // logged user email
           },
+          isLoggedUserOwnerOfComment(comment) {
+            return comment.data['Author Email'] === loggedUser.Email;
+          },
           getTimeFromTimestamp: function(timestamp) {
             return moment(timestamp).format('HH:mm');
           },
@@ -241,6 +244,7 @@ Fliplet.Widget.instance('comments', function(widgetData) {
             }
           },
           deleteComment(comment, isThread = false) {
+            var thisy = this;
             var options = {
               title: 'Delete comment?',
               message: 'Are you sure you want to delete this comment?',
@@ -253,10 +257,38 @@ Fliplet.Widget.instance('comments', function(widgetData) {
                   return console.log('Not confirmed!');
                 }
 
+                if (isThread) {
+                  return Fliplet.DataSources.connectByName(DS_COMMENTS).then(function(
+                    connection
+                  ) {
+                    return connection.delete(comment.id);
+                  });
+                }
+
                 return Fliplet.DataSources.connectByName(DS_COMMENTS).then(function(
                   connection
                 ) {
-                  return connection.delete(comment.id);
+                  return connection.find({ where: { 'Comment GUID': comment.data.GUID } }).then(function(records) {
+                    return connection.commit({
+                      delete: records.map((el) => el.id),
+                      append: true,
+                      extend: true
+                    }).then(function() {
+                      return connection.delete(comment.id).then(function() {
+                        if (isThread) {
+                          thisy.comments = this.comments.map(el => {
+                            if (el.data['GUID'] === comment.data['Comment GUID']) {
+                              el.threads = el.threads.filter((el) => el.id !== comment.id);
+                            }
+
+                            return el;
+                          });
+                        } else {
+                          thisy.comments = this.comments.filter((el) => el.id !== comment.id);
+                        }
+                      });
+                    });
+                  });
                 });
               });
           }

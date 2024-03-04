@@ -280,6 +280,9 @@ Fliplet.Widget.instance('comments', function (widgetData) {
           likedLoginByUser: function likedLoginByUser(likes) {
             return likes.includes(loggedUser.Email); // logged user email
           },
+          isLoggedUserOwnerOfComment: function isLoggedUserOwnerOfComment(comment) {
+            return comment.data['Author Email'] === loggedUser.Email;
+          },
           getTimeFromTimestamp: function getTimeFromTimestamp(timestamp) {
             return moment(timestamp).format('HH:mm');
           },
@@ -318,6 +321,7 @@ Fliplet.Widget.instance('comments', function (widgetData) {
           },
           deleteComment: function deleteComment(comment) {
             var isThread = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+            var thisy = this;
             var options = {
               title: 'Delete comment?',
               message: 'Are you sure you want to delete this comment?',
@@ -327,8 +331,42 @@ Fliplet.Widget.instance('comments', function (widgetData) {
               if (!result) {
                 return console.log('Not confirmed!');
               }
+              if (isThread) {
+                return Fliplet.DataSources.connectByName(DS_COMMENTS).then(function (connection) {
+                  return connection["delete"](comment.id);
+                });
+              }
               return Fliplet.DataSources.connectByName(DS_COMMENTS).then(function (connection) {
-                return connection["delete"](comment.id);
+                return connection.find({
+                  where: {
+                    'Comment GUID': comment.data.GUID
+                  }
+                }).then(function (records) {
+                  return connection.commit({
+                    "delete": records.map(function (el) {
+                      return el.id;
+                    }),
+                    append: true,
+                    extend: true
+                  }).then(function () {
+                    return connection["delete"](comment.id).then(function () {
+                      if (isThread) {
+                        thisy.comments = this.comments.map(function (el) {
+                          if (el.data['GUID'] === comment.data['Comment GUID']) {
+                            el.threads = el.threads.filter(function (el) {
+                              return el.id !== comment.id;
+                            });
+                          }
+                          return el;
+                        });
+                      } else {
+                        thisy.comments = this.comments.filter(function (el) {
+                          return el.id !== comment.id;
+                        });
+                      }
+                    });
+                  });
+                });
               });
             });
           }
