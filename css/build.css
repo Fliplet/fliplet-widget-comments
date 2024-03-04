@@ -24,6 +24,10 @@
   padding: 7px;
 }
 
+[name="comments"] .comment.flagged {
+  background: #f4f4f4;
+}
+
 [name="comments"] .comment.answer {
   margin-left: 20px;
   margin-top: 5px;

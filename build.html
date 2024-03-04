@@ -14,7 +14,7 @@
   <p class="comment-length">\{{comments.length}} COMMENTS</p>
   <div v-if="comments.length">
     <div v-for="(comment, index) in comments" :key="comment.id">
-      <div class="comment" :class="flagged: comment.data.flagged">
+      <div class="comment" :class="{flagged: comment.data.flagged}">
         <div class="flagged-dialog" v-if="comment.data.flagged">
           <div class="close-flagged-dialog">
             <i class="fa fa-times" @click="comment.data.flagged = false"></i>
