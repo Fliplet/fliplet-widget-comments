@@ -270,6 +270,23 @@ Fliplet.Widget.instance('comments', function (widgetData) {
           getDateFromTimestamp: function getDateFromTimestamp(timestamp) {
             return moment(timestamp).format('MM/DD/YYYY');
           },
+          manageLike: function manageLike(comment) {
+            if (this.likedLoginByUser(comment.data.Likes)) {
+              comment.data.Likes = comment.data.Likes.filter(function (el) {
+                return el !== loggedUser.Email;
+              });
+            } else {
+              comment.data.Likes.push(loggedUser.Email);
+            }
+            Fliplet.DataSources.connectByName(DS_COMMENTS).then(function (connection) {
+              return connection.update(comment.id, {
+                data: {
+                  Likes: comment.data.Likes,
+                  GUID: comment.data.GUID
+                }
+              });
+            });
+          },
           manageComment: function manageComment() {
             if (this.commentInput) {
               this.comments.push({

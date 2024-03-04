@@ -42,7 +42,7 @@
               <i class="fa fa-comment"></i>
               Reply
             </div>
-            <div>
+            <div @click="manageLike(thread)">
               <i class="fa" :class="{'fa-heart': likedLoginByUser(comment.data.Likes), 'fa-heart-o': !likedLoginByUser(comment.data.Likes)}"></i>
               Like
               <span v-if="comment.data.Likes.length">\{{comment.data.Likes.length}}</span>
@@ -51,7 +51,9 @@
           <div>...</div>
         </div>
         <div class="show-more-less" v-if="comment.threads.length" @click="toggleThreads(comment)">
-          <i class="fa fa-sort-down"></i> \{{comment.showThreads ? 'Hide' : 'Show'}} \{{comment.threads.length}}
+          <i v-if="comment.showThreads" class="fa fa-sort-up"></i>
+          <i else="comment.showThreads" class="fa fa-sort-down"></i>
+          \{{comment.showThreads ? 'Hide' : 'Show'}} \{{comment.threads.length}}
           replies
         </div>
       </div>
@@ -84,7 +86,7 @@
             </div>
             <div class="last-row">
               <div class="actions">
-                <div>
+                <div @click="manageLike(thread)">
                   <i class="fa" :class="{'fa-heart': likedLoginByUser(thread.data.Likes), 'fa-heart-o': !likedLoginByUser(thread.data.Likes)}"></i>
                   Like
                   <span v-if="thread.data.Likes.length">\{{thread.data.Likes.length}}</span>
@@ -100,13 +102,15 @@
   <div v-else class="no-comments">
     <p>No comments yet</p>
   </div>
-  <div class="add-comment-container">
-    <input
-      class="input-comment"
-      type="text"
-      v-model="commentInput"
-      placeholder="Add a comment..."
-    />
-    <button class="btn-post-comment show" @click="manageComment()">Post</button>
+  <div class="fixed-container">
+    <div class="add-comment-container">
+      <input
+        class="input-comment"
+        type="text"
+        v-model="commentInput"
+        placeholder="Add a comment..."
+      />
+      <button class="btn-post-comment show" @click="manageComment()">Post</button>
+    </div>
   </div>
 </div>
