@@ -3,16 +3,16 @@
 }
 
 [name="comments"] .comments-holder{
-  max-height: 400px;
-  overflow-y: auto;
+  /* max-height: 400px;
+  overflow-y: auto; */
 }
 
-[name="comments"] .comments-holder *::-webkit-scrollbar {
+[name="comments"] .comments-holder::-webkit-scrollbar {
   width: 7px;
   background: rgb(245, 245, 245);
 }
 
-[name="comments"] .comments-holder *::-webkit-scrollbar-thumb {
+[name="comments"] .comments-holder::-webkit-scrollbar-thumb {
   background: #c7c7c7;
 }
 

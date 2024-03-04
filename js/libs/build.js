@@ -127,7 +127,9 @@ Fliplet.Widget.instance('comments', function(widgetData) {
             this.commentForEditing = comment;
           },
           flagComment(comment) {
-            this.showToastProgress('Flagging comment...');
+            var thisy = this;
+
+            thisy.showToastProgress('Flagging comment...');
             // todo notify admin from the component settings
             comment.data.flagged = true;
             Fliplet.DataSources.connectByName(DS_COMMENTS).then(function(
@@ -137,7 +139,7 @@ Fliplet.Widget.instance('comments', function(widgetData) {
                 Flagged: comment.data.flagged,
                 GUID: comment.data.GUID
               }).then(() => {
-                this.closeToastProgress();
+                thisy.closeToastProgress();
               });
             }).then(() => {
               setTimeout(() => {
@@ -311,7 +313,7 @@ Fliplet.Widget.instance('comments', function(widgetData) {
                       extend: true
                     }).then(function() {
                       return connection.removeById(comment.id).then(function() {
-                        thisy.comments = this.comments.filter((el) => el.id !== comment.id);
+                        thisy.comments = thisy.comments.filter((el) => el.id !== comment.id);
                         thisy.closeToastProgress();
                       });
                     });

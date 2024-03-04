@@ -219,16 +219,16 @@ Fliplet.Widget.instance('comments', function (widgetData) {
             this.commentForEditing = comment;
           },
           flagComment: function flagComment(comment) {
-            this.showToastProgress('Flagging comment...');
+            var thisy = this;
+            thisy.showToastProgress('Flagging comment...');
             // todo notify admin from the component settings
             comment.data.flagged = true;
             Fliplet.DataSources.connectByName(DS_COMMENTS).then(function (connection) {
-              var _this = this;
               return connection.update(comment.id, {
                 Flagged: comment.data.flagged,
                 GUID: comment.data.GUID
               }).then(function () {
-                _this.closeToastProgress();
+                thisy.closeToastProgress();
               });
             }).then(function () {
               setTimeout(function () {
@@ -383,7 +383,7 @@ Fliplet.Widget.instance('comments', function (widgetData) {
                     extend: true
                   }).then(function () {
                     return connection.removeById(comment.id).then(function () {
-                      thisy.comments = this.comments.filter(function (el) {
+                      thisy.comments = thisy.comments.filter(function (el) {
                         return el.id !== comment.id;
                       });
                       thisy.closeToastProgress();
