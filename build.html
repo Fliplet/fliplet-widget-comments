@@ -59,19 +59,19 @@
               <span v-if="comment.data.Likes.length">(\{{comment.data.Likes.length}})</span>
             </div>
           </div>
-          <div v-if="isLoggedUserOwnerOfComment(comment)" class="flag-container" @click="comment.data.openDropdown = !comment.data.openDropdown">
+          <div v-if="isLoggedUserOwnerOfComment(comment)" class="manage-comment-container">
+            <p @click="editComment(comment)">Edit</p>
+            <p @click="deleteComment(comment)">Delete</p>
+          </div>
+          <div v-else class="flag-container" @click="comment.data.openDropdown = !comment.data.openDropdown">
             <svg width="28" height="6" viewBox="0 0 28 6" fill="none" xmlns="http://www.w3.org/2000/svg">
               <circle cx="3" cy="3" r="3" fill="#D4D4D7"/>
               <circle cx="14" cy="3" r="3" fill="#D4D4D7"/>
               <circle cx="25" cy="3" r="3" fill="#D4D4D7"/>
             </svg>
-            <ul class="comment-dropdown">
+            <ul class="comment-dropdown" v-if="comment.data.openDropdown">
               <li @click="flagComment(comment)">Flag comment</li>
             </ul>
-          </div>
-          <div v-else class="manage-comment-container">
-            <p @click="editComment(comment)">Edit</p>
-            <p @click="deleteComment(comment)">Delete</p>
           </div>
         </div>
         <div class="show-more-less" v-if="comment.threads.length" @click="toggleThreads(comment)">
@@ -130,19 +130,19 @@
                   <span v-if="thread.data.Likes.length">(\{{thread.data.Likes.length}})</span>
                 </div>
               </div>
-              <div v-if="isLoggedUserOwnerOfComment(thread)" class="flag-container" @click="thread.data.openDropdown = !thread.data.openDropdown">
+              <div v-if="isLoggedUserOwnerOfComment(thread)"  class="manage-comment-container">
+                <p @click="editComment(thread)">Edit</p>
+                <p @click="deleteComment(thread, true)">Delete</p>
+              </div>
+              <div v-else class="flag-container" @click="thread.data.openDropdown = !thread.data.openDropdown">
                 <svg width="28" height="6" viewBox="0 0 28 6" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <circle cx="3" cy="3" r="3" fill="#D4D4D7"/>
                   <circle cx="14" cy="3" r="3" fill="#D4D4D7"/>
                   <circle cx="25" cy="3" r="3" fill="#D4D4D7"/>
                 </svg>
-                <ul class="comment-dropdown">
+                <ul class="comment-dropdown" v-if="thread.data.openDropdown">
                   <li @click="flagComment(thread)">Flag comment</li>
                 </ul>
-              </div>
-              <div v-else class="manage-comment-container">
-                <p @click="editComment(thread)">Edit</p>
-                <p @click="deleteComment(thread, true)">Delete</p>
               </div>
             </div>
           </div>

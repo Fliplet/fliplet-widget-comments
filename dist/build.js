@@ -127,6 +127,7 @@ Fliplet.Widget.instance('comments', function (widgetData) {
         el: '#app-comments',
         data: {
           commentInput: '',
+          commentForEditing: null,
           message: 'Hello, Vue!',
           comments: [
             // {
@@ -201,6 +202,9 @@ Fliplet.Widget.instance('comments', function (widgetData) {
           // }
         },
         methods: {
+          editComment: function editComment(comment) {
+            this.commentForEditing = comment;
+          },
           flagComment: function flagComment(comment) {
             // todo notify admin from the component settings
             comment.data.flagged = true;
@@ -305,19 +309,18 @@ Fliplet.Widget.instance('comments', function (widgetData) {
             });
           },
           manageComment: function manageComment() {
-            if (this.commentInput) {
+            if (this.commentInput && this.commentForEditing) {
               this.comments.push({
                 id: this.commentsLength + 1,
                 data: {
                   text: this.commentInput,
-                  userInitials: 'AB',
-                  userFullName: 'Alicia B',
                   timestamp: new Date().toISOString(),
                   userAvatar: 'https://variety.com/wp-content/uploads/2020/12/Brad_Pitt.png'
                 }
               });
               this.commentInput = '';
             }
+            this.commentForEditing = null;
           },
           deleteComment: function deleteComment(comment) {
             var isThread = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
