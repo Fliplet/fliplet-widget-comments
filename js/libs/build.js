@@ -1,5 +1,6 @@
 Fliplet.Widget.instance('comments', function(widgetData) {
   const DS_COMMENTS = 'Global Comments';
+  const DS_USERS = 'Users';
   const QUERY = Fliplet.Navigate.query;
   let loggedUser = null;
 
@@ -37,112 +38,147 @@ Fliplet.Widget.instance('comments', function(widgetData) {
           commentInput: '',
           message: 'Hello, Vue!',
           comments: [
-          // {
-          //   id: 1,
-          //   liked: true,
-          //   likeCount: 5,
-          //   data: {
-          //     text: 'Comment 1',
-          //     userInitials: 'AB',
-          //     userFullName: 'Alicia B',
-          //     timestamp: '2020-01-01T00:00:00Z',
-          //     userAvatar: 'https://variety.com/wp-content/uploads/2020/12/Brad_Pitt.png'
-          //   },
-          //   threads: []
-          // },
-          // {
-          //   id: 2,
-          //   liked: true,
-          //   likeCount: 3,
-          //   data: {
-          //     text: 'Comment 2',
-          //     userInitials: 'CD',
-          //     userFullName: 'Cory D',
-          //     timestamp: '2020-01-02T00:00:00Z',
-          //     userAvatar: null
-          //   },
-          //   threads: [{
-          //     id: 2,
-          //     liked: true,
-          //     likeCount: 3,
-          //     data: {
-          //       text: 'Comment 2',
-          //       userInitials: 'CD',
-          //       userFullName: 'Cory D',
-          //       timestamp: '2020-01-02T00:00:00Z',
-          //       userAvatar: null
-          //     }
-          //   }]
-          // },
-          // {
-          //   id: 3,
-          //   liked: false,
-          //   likeCount: 7,
-          //   data: {
-          //     text: 'Comment 3',
-          //     userInitials: 'EF',
-          //     userFullName: 'Evan F',
-          //     timestamp: '2020-01-03T00:00:00Z',
-          //     userAvatar: null
-          //   },
-          //   threads: [{
-          //     id: 3,
-          //     liked: false,
-          //     likeCount: 0,
-          //     data: {
-          //       text: 'Comment 3',
-          //       userInitials: 'EF',
-          //       userFullName: 'Evan F',
-          //       timestamp: '2020-01-03T00:00:00Z',
-          //       userAvatar: 'https://variety.com/wp-content/uploads/2020/12/Brad_Pitt.png'
-          //     }
-          //   }]
-          // }
+            // {
+            //   id: 1,
+            //   liked: true,
+            //   likeCount: 5,
+            //   data: {
+            //     text: 'Comment 1',
+            //     userInitials: 'AB',
+            //     userFullName: 'Alicia B',
+            //     timestamp: '2020-01-01T00:00:00Z',
+            //     userAvatar: 'https://variety.com/wp-content/uploads/2020/12/Brad_Pitt.png'
+            //   },
+            //   threads: []
+            // },
+            // {
+            //   id: 2,
+            //   liked: true,
+            //   likeCount: 3,
+            //   data: {
+            //     text: 'Comment 2',
+            //     userInitials: 'CD',
+            //     userFullName: 'Cory D',
+            //     timestamp: '2020-01-02T00:00:00Z',
+            //     userAvatar: null
+            //   },
+            //   threads: [{
+            //     id: 2,
+            //     liked: true,
+            //     likeCount: 3,
+            //     data: {
+            //       text: 'Comment 2',
+            //       userInitials: 'CD',
+            //       userFullName: 'Cory D',
+            //       timestamp: '2020-01-02T00:00:00Z',
+            //       userAvatar: null
+            //     }
+            //   }]
+            // },
+            // {
+            //   id: 3,
+            //   liked: false,
+            //   likeCount: 7,
+            //   data: {
+            //     text: 'Comment 3',
+            //     userInitials: 'EF',
+            //     userFullName: 'Evan F',
+            //     timestamp: '2020-01-03T00:00:00Z',
+            //     userAvatar: null
+            //   },
+            //   threads: [{
+            //     id: 3,
+            //     liked: false,
+            //     likeCount: 0,
+            //     data: {
+            //       text: 'Comment 3',
+            //       userInitials: 'EF',
+            //       userFullName: 'Evan F',
+            //       timestamp: '2020-01-03T00:00:00Z',
+            //       userAvatar: 'https://variety.com/wp-content/uploads/2020/12/Brad_Pitt.png'
+            //     }
+            //   }]
+            // }
           ]
         },
         computed: {
           commentsLength: function() {
             return this.message + ' text';
           }
-        // comments() {
-        //   return this.commentsData;
-        // }
+          // comments() {
+          //   return this.commentsData;
+          // }
         },
         methods: {
           consoleComments() {
-          // console.log(this.commentsData);
+            // console.log(this.commentsData);
             console.log(this.comments);
+          },
+          getUserData(userEmails) {
+            return Fliplet.DataSources.connectByName(DS_USERS).then(function(
+              connection
+            ) {
+              return connection
+                .find({
+                  where: { Email: { $in: userEmails } },
+                  attributes: ['Email', 'User Full Name', 'User Avatar']
+                })
+                .then(function(records) {
+                  return records;
+                });
+            });
           },
           getComments() {
             var thisy = this;
             var entryId = '123456'; // Replace with the entry ID from the url
 
-            Fliplet.DataSources.connectByName(DS_COMMENTS).then(function(connection) {
-              return connection.find({ where: { 'Entry Id': entryId } }).then(function(records) {
-                var comments = [];
-                var threads = [];
+            return Fliplet.DataSources.connectByName(DS_COMMENTS).then(
+              function(connection) {
+                return connection
+                  .find({ where: { 'Entry Id': entryId } })
+                  .then(function(records) {
+                    var userEmails = records.map(
+                      (el) => el.data['Author Email']
+                    );
 
-                records.forEach(el => {
-                // get after from the user table
-                  el.userInitials = (el.data['User Full Name'] || 'John Doe').split(' ').map(name => name[0]).join('');
-                  el.userAvatar = el.data['User Avatar'] ? Fliplet.Media.authenticate(el.data['User Avatar']) : null;
-                  el.flagged = false;
+                    thisy.getUserData(userEmails).then(function(users) {
+                      var comments = [];
+                      var threads = [];
 
-                  if (el.data['Comment GUID']) {
-                    threads.push(el);
-                  } else {
-                    comments.push(el);
-                  }
-                });
-                debugger;
-                thisy.comments = comments.map(el => {
-                  el.showThreads = false;
-                  el.threads = threads.filter(thread => thread.data['Comment GUID'] === el.data['GUID']);
+                      records.forEach((el) => {
+                        var currentUser = users.find(
+                          (user) => user.data['Email'] === el.data['Author Email']
+                        );
 
-                  return el;
-                });
-              });
-            });
+                        el.userInitials = (currentUser.data['User Full Name'] || '')
+                          .split(' ')
+                          .map((name) => name[0])
+                          .join('');
+                        el.userAvatar = currentUser.data['User Avatar']
+                          ? Fliplet.Media.authenticate(currentUser.data['User Avatar'])
+                          : null;
+                        el.flagged = false;
+
+                        if (el.data['Comment GUID']) {
+                          threads.push(el);
+                        } else {
+                          comments.push(el);
+                        }
+                      });
+                      debugger;
+                      thisy.comments = comments.map((el) => {
+                        el.showThreads = false;
+                        el.threads = threads.filter(
+                          (thread) =>
+                            thread.data['Comment GUID'] === el.data['GUID']
+                        );
+
+                        return el;
+                      });
+                    });
+                  });
+              }
+            );
           },
           likedLoginByUser(likes) {
             return likes.includes(loggedUser.Email); // logged user email
@@ -162,7 +198,8 @@ Fliplet.Widget.instance('comments', function(widgetData) {
                   userInitials: 'AB',
                   userFullName: 'Alicia B',
                   timestamp: new Date().toISOString(),
-                  userAvatar: 'https://variety.com/wp-content/uploads/2020/12/Brad_Pitt.png'
+                  userAvatar:
+                    'https://variety.com/wp-content/uploads/2020/12/Brad_Pitt.png'
                 }
               });
               this.commentInput = '';
@@ -176,7 +213,7 @@ Fliplet.Widget.instance('comments', function(widgetData) {
             loggedUser = _.get(session, 'entries.dataSource.data');
 
             if (loggedUser) {
-            //  initVue();
+              //  initVue();
               debugger;
               thisy.getComments();
             } else {

@@ -95,6 +95,7 @@
 
 Fliplet.Widget.instance('comments', function (widgetData) {
   var DS_COMMENTS = 'Global Comments';
+  var DS_USERS = 'Users';
   var QUERY = Fliplet.Navigate.query;
   var loggedUser = null;
   Fliplet.Widget.initializeChildren(this.$el, this);
@@ -204,38 +205,59 @@ Fliplet.Widget.instance('comments', function (widgetData) {
             // console.log(this.commentsData);
             console.log(this.comments);
           },
+          getUserData: function getUserData(userEmails) {
+            return Fliplet.DataSources.connectByName(DS_USERS).then(function (connection) {
+              return connection.find({
+                where: {
+                  Email: {
+                    $in: userEmails
+                  }
+                },
+                attributes: ['Email', 'User Full Name', 'User Avatar']
+              }).then(function (records) {
+                return records;
+              });
+            });
+          },
           getComments: function getComments() {
             var thisy = this;
             var entryId = '123456'; // Replace with the entry ID from the url
 
-            Fliplet.DataSources.connectByName(DS_COMMENTS).then(function (connection) {
+            return Fliplet.DataSources.connectByName(DS_COMMENTS).then(function (connection) {
               return connection.find({
                 where: {
                   'Entry Id': entryId
                 }
               }).then(function (records) {
-                var comments = [];
-                var threads = [];
-                records.forEach(function (el) {
-                  // get after from the user table
-                  el.userInitials = (el.data['User Full Name'] || 'John Doe').split(' ').map(function (name) {
-                    return name[0];
-                  }).join('');
-                  el.userAvatar = el.data['User Avatar'] ? Fliplet.Media.authenticate(el.data['User Avatar']) : null;
-                  el.flagged = false;
-                  if (el.data['Comment GUID']) {
-                    threads.push(el);
-                  } else {
-                    comments.push(el);
-                  }
+                var userEmails = records.map(function (el) {
+                  return el.data['Author Email'];
                 });
-                debugger;
-                thisy.comments = comments.map(function (el) {
-                  el.showThreads = false;
-                  el.threads = threads.filter(function (thread) {
-                    return thread.data['Comment GUID'] === el.data['GUID'];
+                thisy.getUserData(userEmails).then(function (users) {
+                  var comments = [];
+                  var threads = [];
+                  records.forEach(function (el) {
+                    var currentUser = users.find(function (user) {
+                      return user.data['Email'] === el.data['Author Email'];
+                    });
+                    el.userInitials = (currentUser.data['User Full Name'] || '').split(' ').map(function (name) {
+                      return name[0];
+                    }).join('');
+                    el.userAvatar = currentUser.data['User Avatar'] ? Fliplet.Media.authenticate(currentUser.data['User Avatar']) : null;
+                    el.flagged = false;
+                    if (el.data['Comment GUID']) {
+                      threads.push(el);
+                    } else {
+                      comments.push(el);
+                    }
                   });
-                  return el;
+                  debugger;
+                  thisy.comments = comments.map(function (el) {
+                    el.showThreads = false;
+                    el.threads = threads.filter(function (thread) {
+                      return thread.data['Comment GUID'] === el.data['GUID'];
+                    });
+                    return el;
+                  });
                 });
               });
             });
