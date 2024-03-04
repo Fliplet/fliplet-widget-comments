@@ -127,7 +127,7 @@ Fliplet.Widget.instance('comments', function (widgetData) {
         el: '#app-comments',
         data: {
           commentInput: '',
-          commentForEditing: null,
+          commentState: null,
           message: 'Hello, Vue!',
           comments: [
             // {
@@ -214,9 +214,6 @@ Fliplet.Widget.instance('comments', function (widgetData) {
           },
           closeToastProgress: function closeToastProgress() {
             Fliplet.UI.Toast.dismiss();
-          },
-          editComment: function editComment(comment) {
-            this.commentForEditing = comment;
           },
           flagComment: function flagComment(comment) {
             var thisy = this;
@@ -326,33 +323,56 @@ Fliplet.Widget.instance('comments', function (widgetData) {
               });
             });
           },
+          prepareComment: function prepareComment(comment, action) {
+            this.commentState = {
+              comment: comment,
+              action: action
+            };
+          },
           manageComment: function manageComment() {
             // todo add showToastProgress for edit/add comment
             var thisy = this;
             if (thisy.commentInput) {
               thisy.showToastProgress('Adding comment...');
-              Fliplet.DataSources.connectByName(DS_COMMENTS).then(function (connection) {
-                var toInsert = {
-                  Message: thisy.commentInput,
-                  'Author Email': loggedUser.Email,
-                  Timestamp: new Date().toISOString(),
-                  'Entry Id': QUERY.dataSourceEntryId,
-                  Likes: []
-                };
-                return connection.insert(toInsert).then(function (record) {
-                  record.userInitials = (loggedUser['User Full Name'] || '').split(' ').map(function (name) {
-                    return name[0];
-                  }).join('');
-                  record.userAvatar = loggedUser['User Avatar'] ? Fliplet.Media.authenticate(loggedUser['User Avatar']) : null;
-                  record.data.flagged = false;
-                  record.data.openDropdown = false;
-                  record.showThreads = false;
-                  record.threads = [];
-                  thisy.comments.push(record);
-                  thisy.closeToastProgress();
-                  thisy.commentInput = '';
+              if (!thisy.commentState || thisy.commentState.action === 'reply') {
+                Fliplet.DataSources.connectByName(DS_COMMENTS).then(function (connection) {
+                  var toInsert = {
+                    Message: thisy.commentInput,
+                    'Author Email': loggedUser.Email,
+                    Timestamp: new Date().toISOString(),
+                    'Entry Id': QUERY.dataSourceEntryId,
+                    Likes: []
+                  };
+                  if (thisy.commentState.action === 'reply') {
+                    toInsert['Comment GUID'] = thisy.commentState.comment.data['GUID'];
+                  }
+                  return connection.insert(toInsert).then(function (record) {
+                    record.userInitials = (loggedUser['User Full Name'] || '').split(' ').map(function (name) {
+                      return name[0];
+                    }).join('');
+                    record.userAvatar = loggedUser['User Avatar'] ? Fliplet.Media.authenticate(loggedUser['User Avatar']) : null;
+                    record.data.flagged = false;
+                    record.data.openDropdown = false;
+                    record.showThreads = false;
+                    record.threads = [];
+                    thisy.comments.push(record);
+                    thisy.closeToastProgress();
+                    thisy.commentInput = '';
+                    thisy.commentState = null;
+                  });
                 });
-              });
+              } else {
+                Fliplet.DataSources.connectByName(DS_COMMENTS).then(function (connection) {
+                  return connection.update(thisy.commentState.comment.id, {
+                    Message: thisy.commentInput,
+                    GUID: thisy.commentState.comment.data['GUID']
+                  }).then(function () {
+                    thisy.closeToastProgress();
+                    thisy.commentInput = '';
+                    thisy.commentState = null;
+                  });
+                });
+              }
             }
           },
           deleteComment: function deleteComment(comment) {

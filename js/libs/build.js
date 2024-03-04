@@ -36,7 +36,7 @@ Fliplet.Widget.instance('comments', function(widgetData) {
         el: '#app-comments',
         data: {
           commentInput: '',
-          commentForEditing: null,
+          commentState: null,
           message: 'Hello, Vue!',
           comments: [
             // {
@@ -122,9 +122,6 @@ Fliplet.Widget.instance('comments', function(widgetData) {
           },
           closeToastProgress() {
             Fliplet.UI.Toast.dismiss();
-          },
-          editComment(comment) {
-            this.commentForEditing = comment;
           },
           flagComment(comment) {
             var thisy = this;
@@ -252,6 +249,12 @@ Fliplet.Widget.instance('comments', function(widgetData) {
               });
             });
           },
+          prepareComment(comment, action) {
+            this.commentState = {
+              comment,
+              action
+            };
+          },
           manageComment() {
             // todo add showToastProgress for edit/add comment
             var thisy = this;
@@ -259,35 +262,55 @@ Fliplet.Widget.instance('comments', function(widgetData) {
             if (thisy.commentInput) {
               thisy.showToastProgress('Adding comment...');
 
-              Fliplet.DataSources.connectByName(DS_COMMENTS).then(function(
-                connection
-              ) {
-                var toInsert = {
-                  Message: thisy.commentInput,
-                  'Author Email': loggedUser.Email,
-                  Timestamp: new Date().toISOString(),
-                  'Entry Id': QUERY.dataSourceEntryId,
-                  Likes: []
-                };
+              if (!thisy.commentState || thisy.commentState.action === 'reply') {
+                Fliplet.DataSources.connectByName(DS_COMMENTS).then(function(
+                  connection
+                ) {
+                  var toInsert = {
+                    Message: thisy.commentInput,
+                    'Author Email': loggedUser.Email,
+                    Timestamp: new Date().toISOString(),
+                    'Entry Id': QUERY.dataSourceEntryId,
+                    Likes: []
+                  };
 
-                return connection.insert(toInsert).then(function(record) {
-                  record.userInitials = (loggedUser['User Full Name'] || '')
-                    .split(' ')
-                    .map((name) => name[0])
-                    .join('');
-                  record.userAvatar = loggedUser['User Avatar']
-                    ? Fliplet.Media.authenticate(loggedUser['User Avatar'])
-                    : null;
-                  record.data.flagged = false;
-                  record.data.openDropdown = false;
-                  record.showThreads = false;
-                  record.threads = [];
+                  if (thisy.commentState.action === 'reply') {
+                    toInsert['Comment GUID'] = thisy.commentState.comment.data['GUID'];
+                  }
 
-                  thisy.comments.push(record);
-                  thisy.closeToastProgress();
-                  thisy.commentInput = '';
+                  return connection.insert(toInsert).then(function(record) {
+                    record.userInitials = (loggedUser['User Full Name'] || '')
+                      .split(' ')
+                      .map((name) => name[0])
+                      .join('');
+                    record.userAvatar = loggedUser['User Avatar']
+                      ? Fliplet.Media.authenticate(loggedUser['User Avatar'])
+                      : null;
+                    record.data.flagged = false;
+                    record.data.openDropdown = false;
+                    record.showThreads = false;
+                    record.threads = [];
+
+                    thisy.comments.push(record);
+                    thisy.closeToastProgress();
+                    thisy.commentInput = '';
+                    thisy.commentState = null;
+                  });
                 });
-              });
+              } else {
+                Fliplet.DataSources.connectByName(DS_COMMENTS).then(function(
+                  connection
+                ) {
+                  return connection.update(thisy.commentState.comment.id, {
+                    Message: thisy.commentInput,
+                    GUID: thisy.commentState.comment.data['GUID']
+                  }).then(function() {
+                    thisy.closeToastProgress();
+                    thisy.commentInput = '';
+                    thisy.commentState = null;
+                  });
+                });
+              }
             }
           },
           deleteComment(comment, isThread = false) {

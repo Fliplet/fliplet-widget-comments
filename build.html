@@ -49,8 +49,8 @@
         </div>
         <div class="last-row">
           <div class="actions">
-            <div>
-              <i class="fa fa-comment"></i>
+            <div @click="prepareComment(comment)">
+              <i class="fa fa-comment-o"></i>
               Reply
             </div>
             <div @click="manageLike(comment)">
@@ -61,7 +61,7 @@
           </div>
           <div v-if="isLoggedUserOwnerOfComment(comment)" class="manage-comment-container">
             <p @click="deleteComment(comment)">Delete</p>
-            <p @click="editComment(comment)">Edit</p>
+            <p @click="prepareComment(comment, 'edit')">Edit</p>
           </div>
           <div v-else class="flag-container" @click="comment.data.openDropdown = !comment.data.openDropdown">
             <svg width="28" height="6" viewBox="0 0 28 6" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -132,7 +132,7 @@
               </div>
               <div v-if="isLoggedUserOwnerOfComment(thread)"  class="manage-comment-container">
                 <p @click="deleteComment(thread, true)">Delete</p>
-                <p @click="editComment(thread)">Edit</p>
+                <p @click="prepareComment(thread, 'edit')">Edit</p>
               </div>
               <div v-else class="flag-container" @click="thread.data.openDropdown = !thread.data.openDropdown">
                 <svg width="28" height="6" viewBox="0 0 28 6" fill="none" xmlns="http://www.w3.org/2000/svg">
