@@ -162,12 +162,15 @@ Fliplet.Widget.instance('comments', function(widgetData) {
         }
       },
       mounted() {
-        Fliplet.Session.get().then(function onCachedSessionRetrieved(session) {
+        var thisy = this;
+
+        Fliplet.Session.get().then((session) => {
           loggedUser = _.get(session, 'entries.dataSource.data');
 
           if (loggedUser) {
             //  initVue();
-            this.getComments();
+            debugger;
+            thisy.getComments();
           } else {
             showToastMessage('You need to be logged in to see the comments');
           }
