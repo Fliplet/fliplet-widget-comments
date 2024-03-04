@@ -105,10 +105,10 @@ Fliplet.Widget.instance('comments', function(widgetData) {
         computed: {
           commentsLength: function() {
             return this.message + ' text';
+          },
+          commentData() {
+            return this.comments;
           }
-          // comments() {
-          //   return this.commentsData;
-          // }
         },
         methods: {
           editComment(comment) {
@@ -266,7 +266,7 @@ Fliplet.Widget.instance('comments', function(widgetData) {
                     connection
                   ) {
                     return connection.removeById(comment.id).then(function() {
-                      thisy.comments = this.comments.map(el => {
+                      thisy.comments = thisy.comments.map(el => {
                         if (el.data['GUID'] === comment.data['Comment GUID']) {
                           el.threads = el.threads.filter((el) => el.id !== comment.id);
                         }

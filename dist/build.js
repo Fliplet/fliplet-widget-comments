@@ -196,10 +196,10 @@ Fliplet.Widget.instance('comments', function (widgetData) {
         computed: {
           commentsLength: function commentsLength() {
             return this.message + ' text';
+          },
+          commentData: function commentData() {
+            return this.comments;
           }
-          // comments() {
-          //   return this.commentsData;
-          // }
         },
         methods: {
           editComment: function editComment(comment) {
@@ -337,7 +337,7 @@ Fliplet.Widget.instance('comments', function (widgetData) {
               if (isThread) {
                 return Fliplet.DataSources.connectByName(DS_COMMENTS).then(function (connection) {
                   return connection.removeById(comment.id).then(function () {
-                    thisy.comments = this.comments.map(function (el) {
+                    thisy.comments = thisy.comments.map(function (el) {
                       if (el.data['GUID'] === comment.data['Comment GUID']) {
                         el.threads = el.threads.filter(function (el) {
                           return el.id !== comment.id;
