@@ -342,7 +342,7 @@ Fliplet.Widget.instance('comments', function (widgetData) {
                 return connection.insert(toInsert).then(function (record) {
                   thisy.comments.push(record);
                   thisy.closeToastProgress();
-                  this.commentInput = '';
+                  thisy.commentInput = '';
                 });
               });
             }
