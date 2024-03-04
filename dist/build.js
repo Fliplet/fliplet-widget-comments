@@ -101,17 +101,21 @@ Fliplet.Widget.instance('comments', function (widgetData) {
   if (!QUERY.dataSourceEntryId) {
     showToastMessage('No data source entry ID provided');
   }
-  loggedInUser();
-  function loggedInUser() {
-    Fliplet.Session.get().then(function onCachedSessionRetrieved(session) {
-      loggedUser = _.get(session, 'entries.dataSource.data');
-      if (loggedUser) {
-        initVue();
-      } else {
-        showToastMessage('You need to be logged in to see the comments');
-      }
-    });
-  }
+  initVue();
+  // loggedInUser();
+
+  // function loggedInUser() {
+  //   Fliplet.Session.get().then(function onCachedSessionRetrieved(session) {
+  //     loggedUser = _.get(session, 'entries.dataSource.data');
+
+  //     if (loggedUser) {
+  //       initVue();
+  //     } else {
+  //       showToastMessage('You need to be logged in to see the comments');
+  //     }
+  //   });
+  // }
+
   function showToastMessage(message) {
     return Fliplet.UI.Toast(message);
   }
@@ -195,6 +199,10 @@ Fliplet.Widget.instance('comments', function (widgetData) {
         }
       },
       methods: {
+        consoleComments: function consoleComments() {
+          console.log(this.commentsData);
+          console.log(this.comments);
+        },
         getComments: function getComments() {
           var entryId = '123456'; // Replace with the entry ID from the url
 
@@ -248,7 +256,15 @@ Fliplet.Widget.instance('comments', function (widgetData) {
         }
       },
       mounted: function mounted() {
-        this.getComments();
+        Fliplet.Session.get().then(function onCachedSessionRetrieved(session) {
+          loggedUser = _.get(session, 'entries.dataSource.data');
+          if (loggedUser) {
+            //  initVue();
+            this.getComments();
+          } else {
+            showToastMessage('You need to be logged in to see the comments');
+          }
+        });
       }
     });
   }

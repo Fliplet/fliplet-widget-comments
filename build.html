@@ -11,7 +11,8 @@
   data-comments-id="{{ id }}"
   id="app-comments"
 >
-  <p class="comment-length">\{{comments.length}} COMMENTS</p>
+  {{{comments}}}
+  <p class="comment-length" @click="consoleComments()">\{{comments.length}} COMMENTS</p>
   <div v-if="comments.length">
     <div v-for="(comment, index) in comments" :key="comment.id">
       <div class="comment">
