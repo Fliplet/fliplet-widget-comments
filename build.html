@@ -154,7 +154,7 @@
     <p>No comments yet</p>
   </div>
   <div class="fixed-container">
-    <p v-if="commentState" @click="commentState = null">Cancel</p>
+    <p v-if="commentState" @click="clearState()">Cancel</p>
     <div class="add-comment-container">
       <input
         class="input-comment"

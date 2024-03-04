@@ -323,11 +323,18 @@ Fliplet.Widget.instance('comments', function (widgetData) {
               });
             });
           },
+          clearState: function clearState() {
+            this.commentState = null;
+            this.commentInput = '';
+          },
           prepareComment: function prepareComment(comment, action) {
             this.commentState = {
               comment: comment,
               action: action
             };
+            if (action === 'edit') {
+              this.commentInput = comment.data.Message;
+            }
           },
           manageComment: function manageComment() {
             // todo add showToastProgress for edit/add comment
@@ -355,7 +362,16 @@ Fliplet.Widget.instance('comments', function (widgetData) {
                     record.data.openDropdown = false;
                     record.showThreads = false;
                     record.threads = [];
-                    thisy.comments.push(record);
+                    if (thisy.commentState && thisy.commentState.action === 'reply') {
+                      thisy.comments = thisy.comments.map(function (el) {
+                        if (el.data['GUID'] === thisy.commentState.comment.data['GUID']) {
+                          el.threads.push(record);
+                        }
+                        return el;
+                      });
+                    } else {
+                      thisy.comments.unshift(record);
+                    }
                     thisy.closeToastProgress();
                     thisy.commentInput = '';
                     thisy.commentState = null;
@@ -367,9 +383,10 @@ Fliplet.Widget.instance('comments', function (widgetData) {
                     Message: thisy.commentInput,
                     GUID: thisy.commentState.comment.data['GUID']
                   }).then(function () {
-                    thisy.closeToastProgress();
+                    thisy.commentState.comment.data.Message = thisy.commentInput;
                     thisy.commentInput = '';
                     thisy.commentState = null;
+                    thisy.closeToastProgress();
                   });
                 });
               }

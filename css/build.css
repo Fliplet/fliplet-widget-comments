@@ -258,10 +258,20 @@
 [name="comments"] .fixed-container {
   display: flex;
   position: fixed;
+  flex-wrap: wrap;
   bottom: 0;
   left: 0;
   right: 0;
   background: #FAFAFB;
+}
+
+[name="comments"] .fixed-container p {
+  flex: 0 0 100%;
+  cursor: pointer;
+  font-weight: bold;
+  margin-top: 10px;
+  margin-left: 25px;
+  margin-bottom: 0;
 }
 
 [name="comments"] .add-comment-container {
