@@ -265,7 +265,7 @@ Fliplet.Widget.instance('comments', function(widgetData) {
                   return Fliplet.DataSources.connectByName(DS_COMMENTS).then(function(
                     connection
                   ) {
-                    return connection.delete(comment.id);
+                    return connection.removeById(comment.id);
                   });
                 }
 
@@ -278,7 +278,7 @@ Fliplet.Widget.instance('comments', function(widgetData) {
                       append: true,
                       extend: true
                     }).then(function() {
-                      return connection.delete(comment.id).then(function() {
+                      return connection.removeById(comment.id).then(function() {
                         if (isThread) {
                           thisy.comments = this.comments.map(el => {
                             if (el.data['GUID'] === comment.data['Comment GUID']) {

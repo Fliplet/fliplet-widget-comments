@@ -57,6 +57,16 @@
   top: 30px;
   right: 0;
   padding: 0;
+  width: 133px;
+}
+
+[name="comments"] .flag-container .comment-dropdown li {
+  padding: 10px;
+  cursor: pointer;
+}
+
+[name="comments"] .flag-container .comment-dropdown li:hover {
+  background: #F0F0F4;
 }
 
 [name="comments"] .manage-comment-container {
@@ -75,14 +85,6 @@
   color: #474975;
   cursor: pointer;
   margin-left: 15px;
-}
-
-[name="comments"] .flag-container .comment-dropdown li {
-  padding: 10px;
-}
-
-[name="comments"] .flag-container .comment-dropdown li:hover {
-  background: #F0F0F4;
 }
 
 [name="comments"] .comment.answer {

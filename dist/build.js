@@ -336,7 +336,7 @@ Fliplet.Widget.instance('comments', function (widgetData) {
               }
               if (isThread) {
                 return Fliplet.DataSources.connectByName(DS_COMMENTS).then(function (connection) {
-                  return connection["delete"](comment.id);
+                  return connection.removeById(comment.id);
                 });
               }
               return Fliplet.DataSources.connectByName(DS_COMMENTS).then(function (connection) {
@@ -352,7 +352,7 @@ Fliplet.Widget.instance('comments', function (widgetData) {
                     append: true,
                     extend: true
                   }).then(function () {
-                    return connection["delete"](comment.id).then(function () {
+                    return connection.removeById(comment.id).then(function () {
                       if (isThread) {
                         thisy.comments = this.comments.map(function (el) {
                           if (el.data['GUID'] === comment.data['Comment GUID']) {
