@@ -1,14 +1,14 @@
 Fliplet.Widget.instance('comments', function(widgetData) {
   const DS_COMMENTS = 'Global Comments';
-  const DS_USERS = 'Users';
+  const DS_USERS = 'Users'; // Replace from the component settings
   const QUERY = Fliplet.Navigate.query;
   let loggedUser = null;
-
-  Fliplet.Widget.initializeChildren(this.$el, this);
 
   if (!QUERY.dataSourceEntryId) {
     showToastMessage('No data source entry ID provided');
   }
+
+  Fliplet.Widget.initializeChildren(this.$el, this);
 
   initVue();
   // loggedInUser();
@@ -110,9 +110,8 @@ Fliplet.Widget.instance('comments', function(widgetData) {
           // }
         },
         methods: {
-          consoleComments() {
-            // console.log(this.commentsData);
-            console.log(this.comments);
+          toggleThreads(comment) {
+            comment.showThreads = !comment.showThreads;
           },
           getUserData(userEmails) {
             return Fliplet.DataSources.connectByName(DS_USERS).then(function(
@@ -141,7 +140,7 @@ Fliplet.Widget.instance('comments', function(widgetData) {
                       (el) => el.data['Author Email']
                     );
 
-                    thisy.getUserData(userEmails).then(function(users) {
+                    return thisy.getUserData(userEmails).then(function(users) {
                       var comments = [];
                       var threads = [];
 
@@ -150,14 +149,14 @@ Fliplet.Widget.instance('comments', function(widgetData) {
                           (user) => user.data['Email'] === el.data['Author Email']
                         );
 
-                        el.userInitials = (currentUser.data['User Full Name'] || '')
+                        el.data.userInitials = (currentUser.data['User Full Name'] || '')
                           .split(' ')
                           .map((name) => name[0])
                           .join('');
-                        el.userAvatar = currentUser.data['User Avatar']
+                        el.data.userAvatar = currentUser.data['User Avatar']
                           ? Fliplet.Media.authenticate(currentUser.data['User Avatar'])
                           : null;
-                        el.flagged = false;
+                        el.data.flagged = false;
 
                         if (el.data['Comment GUID']) {
                           threads.push(el);

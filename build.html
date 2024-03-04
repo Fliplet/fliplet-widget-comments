@@ -11,8 +11,7 @@
   data-comments-id="{{ id }}"
   id="app-comments"
 >
-  {{{comments}}}
-  <p class="comment-length" @click="consoleComments()">\{{comments.length}} COMMENTS</p>
+  <p class="comment-length">\{{comments.length}} COMMENTS</p>
   <div v-if="comments.length">
     <div v-for="(comment, index) in comments" :key="comment.id">
       <div class="comment">
@@ -51,13 +50,13 @@
           </div>
           <div>...</div>
         </div>
-        <div class="show-more-less" v-if="comment.threads.length">
-          <i class="fa fa-sort-down"></i> Show \{{comment.threads.length}}
+        <div class="show-more-less" v-if="comment.threads.length" @click="toggleThreads(comment)">
+          <i class="fa fa-sort-down"></i> \{{comment.showThreads ? 'Hide' : 'Show'}} \{{comment.threads.length}}
           replies
         </div>
       </div>
       <div>
-        <div v-if="comment.threads.length">
+        <div v-if="comment.threads.length && comment.showThreads">
           <div
             class="comment answer"
             v-for="(thread, index) in comment.threads"
