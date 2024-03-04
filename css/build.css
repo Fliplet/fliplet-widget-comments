@@ -219,13 +219,16 @@
 [name="comments"] .flagged-dialog {
   position: absolute;
   top: 20px;
+  left: 20px;
+  right: 20px;
   box-shadow: 1px 1px 9px 0px #00000040;
   padding: 15px;
+  background: #e2e1e1;
 }
 
 [name="comments"] .close-flagged-dialog {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
 }
 
 [name="comments"] .close-flagged-dialog i {

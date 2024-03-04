@@ -58,7 +58,7 @@
               <span v-if="comment.data.Likes.length">\{{comment.data.Likes.length}}</span>
             </div>
           </div>
-          <div @click="comment.data.flagged = true">...</div>
+          <div @click="flagComment(comment)">...</div>
         </div>
         <div class="show-more-less" v-if="comment.threads.length" @click="toggleThreads(comment)">
           <i class="fa" :class="{'fa-caret-down': !comment.showThreads, 'fa-caret-up': comment.showThreads, }"></i>
@@ -101,7 +101,7 @@
                   <span v-if="thread.data.Likes.length">\{{thread.data.Likes.length}}</span>
                 </div>
               </div>
-              <div @click="thread.data.flagged = true">...</div>
+              <div @click="flagComment(thread)">...</div>
             </div>
           </div>
         </div>

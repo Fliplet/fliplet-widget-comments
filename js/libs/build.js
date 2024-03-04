@@ -110,6 +110,22 @@ Fliplet.Widget.instance('comments', function(widgetData) {
           // }
         },
         methods: {
+          flagComment(comment) {
+            // todo notify admin from the component settings
+            comment.data.flagged = true;
+            Fliplet.DataSources.connectByName(DS_COMMENTS).then(function(
+              connection
+            ) {
+              return connection.update(comment.id, {
+                Flagged: comment.data.flagged,
+                GUID: comment.data.GUID
+              });
+            }).then(() => {
+              setTimeout(() => {
+                comment.data.flagged = false;
+              }, 2000);
+            });
+          },
           toggleThreads(comment) {
             comment.showThreads = !comment.showThreads;
           },
