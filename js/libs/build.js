@@ -274,7 +274,7 @@ Fliplet.Widget.instance('comments', function(widgetData) {
                     Likes: []
                   };
 
-                  if (thisy.commentState.action === 'reply') {
+                  if (thisy.commentState && thisy.commentState.action === 'reply') {
                     toInsert['Comment GUID'] = thisy.commentState.comment.data['GUID'];
                   }
 
