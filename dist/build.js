@@ -241,7 +241,7 @@ Fliplet.Widget.instance('comments', function (widgetData) {
             });
           },
           likedLoginByUser: function likedLoginByUser(likes) {
-            return likes.include(loggedUser.Email); // logged user email
+            return likes.includes(loggedUser.Email); // logged user email
           },
           getTimeFromTimestamp: function getTimeFromTimestamp(timestamp) {
             return moment(timestamp).format('HH:mm:ss');
