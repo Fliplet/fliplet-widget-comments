@@ -204,6 +204,7 @@ Fliplet.Widget.instance('comments', function (widgetData) {
           flagComment: function flagComment(comment) {
             // todo notify admin from the component settings
             comment.data.flagged = true;
+            comment.data.openDropdown = false;
             Fliplet.DataSources.connectByName(DS_COMMENTS).then(function (connection) {
               return connection.update(comment.id, {
                 Flagged: comment.data.flagged,
@@ -257,6 +258,7 @@ Fliplet.Widget.instance('comments', function (widgetData) {
                     }).join('');
                     el.data.userAvatar = currentUser.data['User Avatar'] ? Fliplet.Media.authenticate(currentUser.data['User Avatar']) : null;
                     el.data.flagged = false;
+                    el.data.openDropdown = false;
                     if (el.data['Comment GUID']) {
                       threads.push(el);
                     } else {
@@ -313,6 +315,22 @@ Fliplet.Widget.instance('comments', function (widgetData) {
               });
               this.commentInput = '';
             }
+          },
+          deleteComment: function deleteComment(comment) {
+            var isThread = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+            var options = {
+              title: 'Delete comment?',
+              message: 'Are you sure you want to delete this comment?',
+              labels: ['Agree', 'No'] // Native only (defaults to [OK,Cancel])
+            };
+            Fliplet.Navigate.confirm(options).then(function (result) {
+              if (!result) {
+                return console.log('Not confirmed!');
+              }
+              return Fliplet.DataSources.connectByName(DS_COMMENTS).then(function (connection) {
+                return connection["delete"](comment.id);
+              });
+            });
           }
         },
         mounted: function mounted() {

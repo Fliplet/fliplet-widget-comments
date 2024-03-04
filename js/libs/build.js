@@ -113,6 +113,7 @@ Fliplet.Widget.instance('comments', function(widgetData) {
           flagComment(comment) {
             // todo notify admin from the component settings
             comment.data.flagged = true;
+            comment.data.openDropdown = false;
             Fliplet.DataSources.connectByName(DS_COMMENTS).then(function(
               connection
             ) {
@@ -173,6 +174,7 @@ Fliplet.Widget.instance('comments', function(widgetData) {
                           ? Fliplet.Media.authenticate(currentUser.data['User Avatar'])
                           : null;
                         el.data.flagged = false;
+                        el.data.openDropdown = false;
 
                         if (el.data['Comment GUID']) {
                           threads.push(el);
@@ -237,6 +239,26 @@ Fliplet.Widget.instance('comments', function(widgetData) {
               });
               this.commentInput = '';
             }
+          },
+          deleteComment(comment, isThread = false) {
+            var options = {
+              title: 'Delete comment?',
+              message: 'Are you sure you want to delete this comment?',
+              labels: ['Agree', 'No'] // Native only (defaults to [OK,Cancel])
+            };
+
+            Fliplet.Navigate.confirm(options)
+              .then(function(result) {
+                if (!result) {
+                  return console.log('Not confirmed!');
+                }
+
+                return Fliplet.DataSources.connectByName(DS_COMMENTS).then(function(
+                  connection
+                ) {
+                  return connection.delete(comment.id);
+                });
+              });
           }
         },
         mounted() {
