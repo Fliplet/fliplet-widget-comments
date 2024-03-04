@@ -4,6 +4,16 @@
 
 [name="comments"] .comments-holder{
   max-height: 400px;
+  overflow-y: auto;
+}
+
+[name="comments"] .comments-holder *::-webkit-scrollbar {
+  width: 7px;
+  background: rgb(245, 245, 245);
+}
+
+[name="comments"] .comments-holder *::-webkit-scrollbar-thumb {
+  background: #c7c7c7;
 }
 
 [name="comments"]#app-comments {
@@ -74,7 +84,6 @@
   align-items: center;
   justify-content: space-between;
   padding: 10px;
-  border-bottom: 1px solid #F0F0F4;
 }
 
 [name="comments"] .manage-comment-container p {

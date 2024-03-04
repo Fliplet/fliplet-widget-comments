@@ -60,8 +60,8 @@
             </div>
           </div>
           <div v-if="isLoggedUserOwnerOfComment(comment)" class="manage-comment-container">
-            <p @click="editComment(comment)">Edit</p>
             <p @click="deleteComment(comment)">Delete</p>
+            <p @click="editComment(comment)">Edit</p>
           </div>
           <div v-else class="flag-container" @click="comment.data.openDropdown = !comment.data.openDropdown">
             <svg width="28" height="6" viewBox="0 0 28 6" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -131,8 +131,8 @@
                 </div>
               </div>
               <div v-if="isLoggedUserOwnerOfComment(thread)"  class="manage-comment-container">
-                <p @click="editComment(thread)">Edit</p>
                 <p @click="deleteComment(thread, true)">Delete</p>
+                <p @click="editComment(thread)">Edit</p>
               </div>
               <div v-else class="flag-container" @click="thread.data.openDropdown = !thread.data.openDropdown">
                 <svg width="28" height="6" viewBox="0 0 28 6" fill="none" xmlns="http://www.w3.org/2000/svg">
