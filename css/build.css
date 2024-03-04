@@ -15,6 +15,7 @@
 }
 
 [name="comments"] .comment {
+  position: relative;
   border-bottom: 1px solid #dcdcdc;
   padding: 5px 0 10px 0;
   display: flex;
@@ -212,6 +213,8 @@
 }
 
 [name="comments"] .flagged-dialog {
+  position: absolute;
+  top: 20px;
   box-shadow: 1px 1px 9px 0px #00000040;
   padding: 15px;
 }
