@@ -298,7 +298,7 @@
   border-radius: 24px;
   width: 65px;
   color: #fff;
-  display: none;
+  display: block;
 }
 
 [name="comments"] .fa-heart {
