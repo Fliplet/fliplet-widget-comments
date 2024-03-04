@@ -42,7 +42,7 @@
               <i class="fa fa-comment"></i>
               Reply
             </div>
-            <div @click="manageLike(thread)">
+            <div @click="manageLike(comment)">
               <i class="fa" :class="{'fa-heart': likedLoginByUser(comment.data.Likes), 'fa-heart-o': !likedLoginByUser(comment.data.Likes)}"></i>
               Like
               <span v-if="comment.data.Likes.length">\{{comment.data.Likes.length}}</span>
@@ -51,8 +51,7 @@
           <div>...</div>
         </div>
         <div class="show-more-less" v-if="comment.threads.length" @click="toggleThreads(comment)">
-          <i v-if="comment.showThreads" class="fa fa-sort-up"></i>
-          <i else="comment.showThreads" class="fa fa-sort-down"></i>
+          <i class="fa" :class="{'fa-sort-down': !comment.showThreads, 'fa-sort-up': comment.showThreads, }"></i>
           \{{comment.showThreads ? 'Hide' : 'Show'}} \{{comment.threads.length}}
           replies
         </div>
@@ -110,7 +109,7 @@
         v-model="commentInput"
         placeholder="Add a comment..."
       />
-      <button class="btn-post-comment show" @click="manageComment()">Post</button>
+      <button class="btn-post-comment" @click="manageComment()">Post</button>
     </div>
   </div>
 </div>

@@ -2,6 +2,10 @@
   display: none!important;
 }
 
+[name="comments"]#app-comments {
+  padding-bottom: 100px;
+}
+
 [name="comments"] .no-comments {
   color: #7D7D7D;
   font-family: Helvetica;
@@ -154,7 +158,6 @@
 
 [name="comments"] .fixed-container {
   display: flex;
-  border-radius: 33px;
   position: fixed;
   bottom: 0;
   left: 0;
@@ -165,13 +168,14 @@
 [name="comments"] .add-comment-container {
   margin: 10px;
   padding: 5px;
+  height: 52px;
   border: 1px solid #9495AE;
   display: flex;
   border-radius: 33px;
+  width: 100%;
 }
 
 [name="comments"] .input-comment {
-  height: 52px;
   border-radius: 33px;
   flex: 1 0 auto;
   border: none;
@@ -182,7 +186,8 @@
   outline: none;
 }
 
-[name="comments"] .input-comment:focus .btn-post-comment {
+on 
+[name="comments"] .input-comment:focus + .btn-post-comment {
   display: block;
 }
 
@@ -193,7 +198,6 @@
 [name="comments"] .btn-post-comment {
   background: #474975;
   border-radius: 24px;
-  padding: 10px;
   width: 65px;
   color: #fff;
   display: none;
