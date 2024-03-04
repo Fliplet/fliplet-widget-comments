@@ -201,10 +201,8 @@ Fliplet.Widget.instance('comments', function(widgetData) {
               connection
             ) {
               return connection.update(comment.id, {
-                data: {
-                  Likes: comment.data.Likes,
-                  GUID: comment.data.GUID
-                }
+                Likes: comment.data.Likes,
+                GUID: comment.data.GUID
               });
             });
           },

@@ -14,7 +14,17 @@
   <p class="comment-length">\{{comments.length}} COMMENTS</p>
   <div v-if="comments.length">
     <div v-for="(comment, index) in comments" :key="comment.id">
-      <div class="comment">
+      <div class="comment" :class="flagged: comment.data.flagged">
+        <div class="flagged-dialog" v-if="comment.data.flagged">
+          <div class="close-flagged-dialog">
+            <i class="fa fa-times" @click="comment.data.flagged = false"></i>
+          </div>
+          <p>
+            Thank you for flagging this comment.
+            <br>
+            Admin will be notified about it.
+          </p>
+        </div>
         <div class="comment-avatar">
           <div
             v-if="comment.data.userAvatar"
@@ -48,10 +58,10 @@
               <span v-if="comment.data.Likes.length">\{{comment.data.Likes.length}}</span>
             </div>
           </div>
-          <div>...</div>
+          <div @click="comment.data.flagged = true">...</div>
         </div>
         <div class="show-more-less" v-if="comment.threads.length" @click="toggleThreads(comment)">
-          <i class="fa" :class="{'fa-sort-down': !comment.showThreads, 'fa-sort-up': comment.showThreads, }"></i>
+          <i class="fa" :class="{'fa-caret-down': !comment.showThreads, 'fa-caret-up': comment.showThreads, }"></i>
           \{{comment.showThreads ? 'Hide' : 'Show'}} \{{comment.threads.length}}
           replies
         </div>
@@ -91,7 +101,7 @@
                   <span v-if="thread.data.Likes.length">\{{thread.data.Likes.length}}</span>
                 </div>
               </div>
-              <div>...</div>
+              <div @click="thread.data.flagged = true">...</div>
             </div>
           </div>
         </div>

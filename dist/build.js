@@ -280,10 +280,8 @@ Fliplet.Widget.instance('comments', function (widgetData) {
             }
             Fliplet.DataSources.connectByName(DS_COMMENTS).then(function (connection) {
               return connection.update(comment.id, {
-                data: {
-                  Likes: comment.data.Likes,
-                  GUID: comment.data.GUID
-                }
+                Likes: comment.data.Likes,
+                GUID: comment.data.GUID
               });
             });
           },

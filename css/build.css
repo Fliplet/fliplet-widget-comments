@@ -149,7 +149,12 @@
 [name="comments"] .show-more-less {
   cursor: pointer;
   display: flex;
+  align-items: center;
   margin-left: 50px;
+}
+
+[name="comments"] .show-more-less i {
+  margin-right: 5px;
 }
 
 [name="comments"] .comment-length {
@@ -186,7 +191,6 @@
   outline: none;
 }
 
-on 
 [name="comments"] .input-comment:focus + .btn-post-comment {
   display: block;
 }
@@ -205,4 +209,26 @@ on
 
 [name="comments"] .fa-heart {
   color: red;
+}
+
+[name="comments"] .flagged-dialog {
+  box-shadow: 1px 1px 9px 0px #00000040;
+  padding: 15px;
+}
+
+[name="comments"] .close-flagged-dialog {
+  display: flex;
+  justify-content: space-between;
+}
+
+[name="comments"] .close-flagged-dialog i {
+  cursor: pointer;
+}
+
+[name="comments"] .flagged-dialog p {
+  color: #3D3D3D;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 15px;
+  padding: 0 15px;
 }
