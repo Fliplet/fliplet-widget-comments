@@ -1,7 +1,24 @@
 Fliplet.Widget.instance('comments', function(widgetData) {
+  widgetData.fields = _.assign(
+    {
+      dataSource: '',
+      columnEmail: ''
+    },
+    widgetData.fields
+  );
+
+  if (!widgetData.fields.dataSource) {
+    return showToastMessage('Please select Data source');
+  }
+
+  if (!widgetData.fields.columnEmail) {
+    return showToastMessage('Please select column for the email');
+  }
+
   const DS_COMMENTS = 'Global Comments';
-  const DS_USERS = 'Users'; // Replace from the component settings
+  const DS_USERS = widgetData.fields.dataSource.id;
   const QUERY = Fliplet.Navigate.query;
+  const EMAIL_COLUMN = widgetData.fields.columnEmail;
   let loggedUser = null;
 
   if (!QUERY.dataSourceEntryId) {
@@ -67,9 +84,9 @@ Fliplet.Widget.instance('comments', function(widgetData) {
             comment.showThreads = !comment.showThreads;
           },
           getUserData(userEmails) {
-            return Fliplet.DataSources.connectByName(DS_USERS)
+            return Fliplet.DataSources.connect(DS_USERS)
               .then(connection => connection.find({
-                where: { Email: { $in: userEmails } },
+                where: { [EMAIL_COLUMN]: { $in: userEmails } },
                 attributes: ['Email', 'User Full Name', 'User Avatar']
               }))
               .then(records => records);
@@ -96,7 +113,7 @@ Fliplet.Widget.instance('comments', function(widgetData) {
 
                       records.forEach((el) => {
                         var currentUser = users.find(
-                          (user) => user.data['Email'] === el.data['Author Email']
+                          (user) => user.data[EMAIL_COLUMN] === el.data['Author Email']
                         );
 
                         el.data.userInitials = (currentUser.data['User Full Name'] || '')
@@ -147,10 +164,10 @@ Fliplet.Widget.instance('comments', function(widgetData) {
           manageLike(comment) {
             if (this.likedLoginByUser(comment.data.Likes)) {
               comment.data.Likes = comment.data.Likes.filter(
-                (el) => el !== loggedUser.Email
+                (el) => el !== loggedUser[EMAIL_COLUMN]
               );
             } else {
-              comment.data.Likes.push(loggedUser.Email);
+              comment.data.Likes.push(loggedUser[EMAIL_COLUMN]);
             }
 
             return Fliplet.DataSources.connectByName(DS_COMMENTS).then(function(
@@ -189,7 +206,7 @@ Fliplet.Widget.instance('comments', function(widgetData) {
                 ) {
                   var toInsert = {
                     Message: thisy.commentInput,
-                    'Author Email': loggedUser.Email,
+                    'Author Email': loggedUser[EMAIL_COLUMN],
                     Timestamp: new Date().toISOString(),
                     'Entry Id': QUERY.dataSourceEntryId,
                     Likes: []

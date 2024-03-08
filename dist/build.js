@@ -90,13 +90,29 @@
 /*!**************************!*\
   !*** ./js/libs/build.js ***!
   \**************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__);
 
 Fliplet.Widget.instance('comments', function (widgetData) {
+  widgetData.fields = _.assign({
+    dataSource: '',
+    columnEmail: ''
+  }, widgetData.fields);
+  if (!widgetData.fields.dataSource) {
+    return showToastMessage('Please select Data source');
+  }
+  if (!widgetData.fields.columnEmail) {
+    return showToastMessage('Please select column for the email');
+  }
   var DS_COMMENTS = 'Global Comments';
-  var DS_USERS = 'Users'; // Replace from the component settings
+  var DS_USERS = widgetData.fields.dataSource.id;
   var QUERY = Fliplet.Navigate.query;
+  var EMAIL_COLUMN = widgetData.fields.columnEmail;
   var loggedUser = null;
   if (!QUERY.dataSourceEntryId) {
     showToastMessage('No data source entry ID provided');
@@ -156,13 +172,11 @@ Fliplet.Widget.instance('comments', function (widgetData) {
             comment.showThreads = !comment.showThreads;
           },
           getUserData: function getUserData(userEmails) {
-            return Fliplet.DataSources.connectByName(DS_USERS).then(function (connection) {
+            return Fliplet.DataSources.connect(DS_USERS).then(function (connection) {
               return connection.find({
-                where: {
-                  Email: {
-                    $in: userEmails
-                  }
-                },
+                where: _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0___default()({}, EMAIL_COLUMN, {
+                  $in: userEmails
+                }),
                 attributes: ['Email', 'User Full Name', 'User Avatar']
               });
             }).then(function (records) {
@@ -188,7 +202,7 @@ Fliplet.Widget.instance('comments', function (widgetData) {
                   var threads = [];
                   records.forEach(function (el) {
                     var currentUser = users.find(function (user) {
-                      return user.data['Email'] === el.data['Author Email'];
+                      return user.data[EMAIL_COLUMN] === el.data['Author Email'];
                     });
                     el.data.userInitials = (currentUser.data['User Full Name'] || '').split(' ').map(function (name) {
                       return name[0];
@@ -230,10 +244,10 @@ Fliplet.Widget.instance('comments', function (widgetData) {
           manageLike: function manageLike(comment) {
             if (this.likedLoginByUser(comment.data.Likes)) {
               comment.data.Likes = comment.data.Likes.filter(function (el) {
-                return el !== loggedUser.Email;
+                return el !== loggedUser[EMAIL_COLUMN];
               });
             } else {
-              comment.data.Likes.push(loggedUser.Email);
+              comment.data.Likes.push(loggedUser[EMAIL_COLUMN]);
             }
             return Fliplet.DataSources.connectByName(DS_COMMENTS).then(function (connection) {
               return connection.update(comment.id, {
@@ -264,7 +278,7 @@ Fliplet.Widget.instance('comments', function (widgetData) {
                 Fliplet.DataSources.connectByName(DS_COMMENTS).then(function (connection) {
                   var toInsert = {
                     Message: thisy.commentInput,
-                    'Author Email': loggedUser.Email,
+                    'Author Email': loggedUser[EMAIL_COLUMN],
                     Timestamp: new Date().toISOString(),
                     'Entry Id': QUERY.dataSourceEntryId,
                     Likes: []
@@ -431,6 +445,91 @@ Fliplet.Widget.instance('comments', function (widgetData) {
     });
   }
 });
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/defineProperty.js":
+/*!***************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/defineProperty.js ***!
+  \***************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var toPropertyKey = __webpack_require__(/*! ./toPropertyKey.js */ "./node_modules/@babel/runtime/helpers/toPropertyKey.js");
+function _defineProperty(obj, key, value) {
+  key = toPropertyKey(key);
+  if (key in obj) {
+    Object.defineProperty(obj, key, {
+      value: value,
+      enumerable: true,
+      configurable: true,
+      writable: true
+    });
+  } else {
+    obj[key] = value;
+  }
+  return obj;
+}
+module.exports = _defineProperty, module.exports.__esModule = true, module.exports["default"] = module.exports;
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/toPrimitive.js":
+/*!************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/toPrimitive.js ***!
+  \************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var _typeof = __webpack_require__(/*! ./typeof.js */ "./node_modules/@babel/runtime/helpers/typeof.js")["default"];
+function toPrimitive(t, r) {
+  if ("object" != _typeof(t) || !t) return t;
+  var e = t[Symbol.toPrimitive];
+  if (void 0 !== e) {
+    var i = e.call(t, r || "default");
+    if ("object" != _typeof(i)) return i;
+    throw new TypeError("@@toPrimitive must return a primitive value.");
+  }
+  return ("string" === r ? String : Number)(t);
+}
+module.exports = toPrimitive, module.exports.__esModule = true, module.exports["default"] = module.exports;
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/toPropertyKey.js":
+/*!**************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/toPropertyKey.js ***!
+  \**************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var _typeof = __webpack_require__(/*! ./typeof.js */ "./node_modules/@babel/runtime/helpers/typeof.js")["default"];
+var toPrimitive = __webpack_require__(/*! ./toPrimitive.js */ "./node_modules/@babel/runtime/helpers/toPrimitive.js");
+function toPropertyKey(t) {
+  var i = toPrimitive(t, "string");
+  return "symbol" == _typeof(i) ? i : String(i);
+}
+module.exports = toPropertyKey, module.exports.__esModule = true, module.exports["default"] = module.exports;
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/typeof.js":
+/*!*******************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/typeof.js ***!
+  \*******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function _typeof(o) {
+  "@babel/helpers - typeof";
+
+  return (module.exports = _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) {
+    return typeof o;
+  } : function (o) {
+    return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o;
+  }, module.exports.__esModule = true, module.exports["default"] = module.exports), _typeof(o);
+}
+module.exports = _typeof, module.exports.__esModule = true, module.exports["default"] = module.exports;
 
 /***/ }),
 

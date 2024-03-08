@@ -40,6 +40,7 @@ Fliplet.Widget.generateInterface({
             attributes: ['columns']
           }).then(function(columns) {
             $('#columnEmail').html('');
+            $('#columnEmail').append('<option value="">Select an option</option>');
             columns.columns.forEach((el) => {
               $('#columnEmail').append(`<option value="${el}">${el}</option>`);
             });
