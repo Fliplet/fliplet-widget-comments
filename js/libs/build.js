@@ -1,4 +1,4 @@
-Fliplet.Widget.instance('comments', function(widgetData, xxx) {
+Fliplet.Widget.instance('comments', function(widgetData) {
   debugger;
 
   if (!widgetData.dataSource) {

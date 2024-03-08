@@ -46,11 +46,11 @@ Fliplet.Widget.generateInterface({
               $('#columnUserPhoto').append(`<option value="${el}">${el}</option>`);
             });
 
-            // Fliplet.UI.Typeahead($('#target'), {
-            //   options: columns.columns,
-            //   freeInput: false,
-            //   maxItems: 2
-            // });
+            Fliplet.UI.Typeahead($('#target'), {
+              options: columns.columns,
+              freeInput: false,
+              maxItems: 2
+            });
           });
         }
       }
@@ -80,16 +80,16 @@ Fliplet.Widget.generateInterface({
         );
       }
     },
-    // {
-    //   type: 'html',
-    //   html: `
-    //   <div>
-    //     <label for="tokenfield">User data fields (Required)</label>
-    //   </div>
-    //   <div class="form-group fl-typeahead" id="target">
-    //     <select placeholder="Start typing..."></select>
-    //   </div>`
-    // },
+    {
+      type: 'html',
+      html: `
+      <div>
+        <label for="target">User data fields (Required)</label>
+      </div>
+      <div class="form-group fl-typeahead" id="target">
+        <select placeholder="Start typing..."></select>
+      </div>`
+    },
     {
       type: 'text',
       name: 'flaggedEmails',
@@ -101,9 +101,9 @@ Fliplet.Widget.generateInterface({
     {
       type: 'text',
       name: 'flaggedMailContent',
-      label: 'Email content',
+      label: 'Create an email template that will be sent to the admin with a flagged comment',
       description: '',
-      placeholder: 'email.com, email.com, email.com',
+      placeholder: 'Comment below was flagged. Please take an action on it.',
       required: true
     }
   ]
