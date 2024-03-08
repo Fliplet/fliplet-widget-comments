@@ -47,7 +47,9 @@ Fliplet.Widget.generateInterface({
             });
 
             Fliplet.UI.Typeahead($('#target'), {
-              options: columns.columns,
+              options: columns.columns.map(el => {
+                return { value: el, label: el };
+              }),
               freeInput: false,
               maxItems: 2
             });
