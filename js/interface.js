@@ -98,6 +98,14 @@ Fliplet.Widget.generateInterface({
       description: "Note that it's important to have if you're publishing your app to app store",
       placeholder: 'email.com, email.com, email.com',
       required: true
+    },
+    {
+      type: 'text',
+      name: 'flaggedMailContent',
+      label: 'Email content',
+      description: '',
+      placeholder: 'email.com, email.com, email.com',
+      required: true
     }
   ]
 });
