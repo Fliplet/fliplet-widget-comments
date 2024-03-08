@@ -45,6 +45,14 @@ Fliplet.Widget.generateInterface({
               $('#columnEmail').append(`<option value="${el}">${el}</option>`);
               $('#columnUserPhoto').append(`<option value="${el}">${el}</option>`);
             });
+
+            $('#tokenfield').tokenfield({
+              autocomplete: {
+                source: columns.columns,
+                delay: 100
+              },
+              showAutocompleteOnFocus: true
+            });
           });
         }
       }
@@ -72,6 +80,14 @@ Fliplet.Widget.generateInterface({
           Fliplet.Helper.field('dataSource').get()
         );
       }
+    },
+    {
+      type: 'html',
+      html: `
+      <div>
+        <label for="tokenfield">User data fields (Required)</label>
+      </div>
+      <input type="text" class="form-control" id="tokenfield" />`
     }
   ]
 });

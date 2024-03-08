@@ -157,6 +157,7 @@
     <p v-if="commentState" @click="clearState()">Cancel</p>
     <div class="add-comment-container">
       <input
+        @keyup.enter="manageComment()"
         class="input-comment"
         type="text"
         v-model="commentInput"
