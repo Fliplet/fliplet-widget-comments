@@ -47,7 +47,9 @@ Fliplet.Widget.generateInterface({
             });
 
             Fliplet.UI.Typeahead($('#target'), {
-              options: columns.columns
+              options: columns.columns,
+              freeInput: false,
+              maxItems: 2
             });
           });
         }
