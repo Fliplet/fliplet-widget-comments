@@ -46,16 +46,24 @@ Fliplet.Widget.generateInterface({
               $('#columnUserPhoto').append(`<option value="${el}">${el}</option>`);
             });
 
-            Fliplet.UI.Typeahead($('#target'), {
+            var instance = Fliplet.UI.Typeahead($('#target'), {
               options: columns.columns.map(el => {
                 return { value: el, label: el };
               }),
               freeInput: false,
               maxItems: 2
             });
+
+            instance.change(function(value) {
+              Fliplet.Helper.field('userNames').set(value);
+            });
           });
         }
       }
+    },
+    {
+      name: 'userNames',
+      type: 'hidden'
     },
     {
       name: 'columnEmail',

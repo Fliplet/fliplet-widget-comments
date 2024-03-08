@@ -16,7 +16,9 @@ Fliplet.Widget.instance('comments', function(widgetData) {
   const USER_PHOTO_COLUMN = widgetData.columnUserPhoto;
   const FLAGGED_EMAILS = widgetData.flaggedEmails;
   const FLAGGED_MAIL_CONTENT = widgetData.flaggedMailContent;
+  const USER_NAMES = widgetData.userNames;
   let loggedUser = null;
+  debugger;
   const EMAILS_TO_NOTIFY_FLAGGED = !FLAGGED_EMAILS
     ? []
     : FLAGGED_EMAILS.split(',')
@@ -25,6 +27,10 @@ Fliplet.Widget.instance('comments', function(widgetData) {
 
   if (!QUERY.dataSourceEntryId) {
     showToastMessage('No data source entry ID provided');
+  }
+
+  if (!USER_NAMES) {
+    return showToastMessage('Please select user names');
   }
 
   Fliplet.Widget.initializeChildren(this.$el, this);
@@ -160,6 +166,10 @@ Fliplet.Widget.instance('comments', function(widgetData) {
                             user.data[EMAIL_COLUMN] === el.data['Author Email']
                         );
 
+                        var userInitials = '';
+                        if () {
+
+                        }
                         el.data.userInitials = (
                           currentUser.data['User Full Name'] || ''
                         )
