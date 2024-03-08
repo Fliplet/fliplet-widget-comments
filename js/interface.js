@@ -14,7 +14,6 @@ Fliplet.Widget.generateInterface({
       name: 'dataSource',
       type: 'provider',
       label: 'Datasource',
-      required: true,
       package: 'com.fliplet.data-source-provider',
       // onEvent: function(event, data) {
       //   debugger;
@@ -81,16 +80,16 @@ Fliplet.Widget.generateInterface({
         );
       }
     },
-    {
-      type: 'html',
-      html: `
-      <div>
-        <label for="tokenfield">User data fields (Required)</label>
-      </div>
-      <div class="form-group fl-typeahead" id="target">
-        <select placeholder="Start typing..."></select>
-      </div>`
-    },
+    // {
+    //   type: 'html',
+    //   html: `
+    //   <div>
+    //     <label for="tokenfield">User data fields (Required)</label>
+    //   </div>
+    //   <div class="form-group fl-typeahead" id="target">
+    //     <select placeholder="Start typing..."></select>
+    //   </div>`
+    // },
     {
       type: 'text',
       name: 'flaggedEmails',
