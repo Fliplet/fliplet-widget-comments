@@ -94,6 +94,7 @@
   color: #474975;
   cursor: pointer;
   margin-left: 15px;
+  margin-bottom: 0;
 }
 
 [name="comments"] .comment.answer {
@@ -221,7 +222,7 @@
 
 [name="comments"] .last-row .actions {
   display: flex;
-  margin: 10px 0 10px 50px;
+  margin: 10px 0 0 50px;
 }
 
 [name="comments"] .last-row .actions > div {
@@ -243,6 +244,7 @@
   font-weight: 400;
   line-height: 20px;
   letter-spacing: 0em;
+  padding-top: 10px;
 }
 
 [name="comments"] .show-more-less i {

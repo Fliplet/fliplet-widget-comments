@@ -103,20 +103,6 @@ Fliplet.Widget.instance('comments', function (widgetData) {
   }
   Fliplet.Widget.initializeChildren(this.$el, this);
   initVue();
-  // loggedInUser();
-
-  // function loggedInUser() {
-  //   Fliplet.Session.get().then(function onCachedSessionRetrieved(session) {
-  //     loggedUser = _.get(session, 'entries.dataSource.data');
-
-  //     if (loggedUser) {
-  //       initVue();
-  //     } else {
-  //       showToastMessage('You need to be logged in to see the comments');
-  //     }
-  //   });
-  // }
-
   function showToastMessage(message) {
     return Fliplet.UI.Toast(message);
   }
@@ -129,75 +115,10 @@ Fliplet.Widget.instance('comments', function (widgetData) {
           commentInput: '',
           commentState: null,
           message: 'Hello, Vue!',
-          comments: [
-            // {
-            //   id: 1,
-            //   liked: true,
-            //   likeCount: 5,
-            //   data: {
-            //     text: 'Comment 1',
-            //     userInitials: 'AB',
-            //     userFullName: 'Alicia B',
-            //     timestamp: '2020-01-01T00:00:00Z',
-            //     userAvatar: 'https://variety.com/wp-content/uploads/2020/12/Brad_Pitt.png'
-            //   },
-            //   threads: []
-            // },
-            // {
-            //   id: 2,
-            //   liked: true,
-            //   likeCount: 3,
-            //   data: {
-            //     text: 'Comment 2',
-            //     userInitials: 'CD',
-            //     userFullName: 'Cory D',
-            //     timestamp: '2020-01-02T00:00:00Z',
-            //     userAvatar: null
-            //   },
-            //   threads: [{
-            //     id: 2,
-            //     liked: true,
-            //     likeCount: 3,
-            //     data: {
-            //       text: 'Comment 2',
-            //       userInitials: 'CD',
-            //       userFullName: 'Cory D',
-            //       timestamp: '2020-01-02T00:00:00Z',
-            //       userAvatar: null
-            //     }
-            //   }]
-            // },
-            // {
-            //   id: 3,
-            //   liked: false,
-            //   likeCount: 7,
-            //   data: {
-            //     text: 'Comment 3',
-            //     userInitials: 'EF',
-            //     userFullName: 'Evan F',
-            //     timestamp: '2020-01-03T00:00:00Z',
-            //     userAvatar: null
-            //   },
-            //   threads: [{
-            //     id: 3,
-            //     liked: false,
-            //     likeCount: 0,
-            //     data: {
-            //       text: 'Comment 3',
-            //       userInitials: 'EF',
-            //       userFullName: 'Evan F',
-            //       timestamp: '2020-01-03T00:00:00Z',
-            //       userAvatar: 'https://variety.com/wp-content/uploads/2020/12/Brad_Pitt.png'
-            //     }
-            //   }]
-            // }
-          ]
+          comments: []
         },
         computed: {
-          commentsLength: function commentsLength() {
-            return this.message + ' text';
-          },
-          commentData: function commentData() {
+          commentsData: function commentsData() {
             return this.comments;
           }
         },
@@ -218,16 +139,14 @@ Fliplet.Widget.instance('comments', function (widgetData) {
           flagComment: function flagComment(comment) {
             var thisy = this;
             thisy.showToastProgress('Flagging comment...');
-            // todo notify admin from the component settings
             comment.data.flagged = true;
             Fliplet.DataSources.connectByName(DS_COMMENTS).then(function (connection) {
               return connection.update(comment.id, {
                 Flagged: comment.data.flagged,
                 GUID: comment.data.GUID
-              }).then(function () {
-                thisy.closeToastProgress();
               });
             }).then(function () {
+              thisy.closeToastProgress();
               setTimeout(function () {
                 comment.data.flagged = false;
               }, 2000);
@@ -245,9 +164,9 @@ Fliplet.Widget.instance('comments', function (widgetData) {
                   }
                 },
                 attributes: ['Email', 'User Full Name', 'User Avatar']
-              }).then(function (records) {
-                return records;
               });
+            }).then(function (records) {
+              return records;
             });
           },
           getComments: function getComments() {
@@ -297,7 +216,7 @@ Fliplet.Widget.instance('comments', function (widgetData) {
             });
           },
           likedLoginByUser: function likedLoginByUser(likes) {
-            return likes.includes(loggedUser.Email); // logged user email
+            return likes.includes(loggedUser.Email);
           },
           isLoggedUserOwnerOfComment: function isLoggedUserOwnerOfComment(comment) {
             return comment.data['Author Email'] === loggedUser.Email;
@@ -316,7 +235,7 @@ Fliplet.Widget.instance('comments', function (widgetData) {
             } else {
               comment.data.Likes.push(loggedUser.Email);
             }
-            Fliplet.DataSources.connectByName(DS_COMMENTS).then(function (connection) {
+            return Fliplet.DataSources.connectByName(DS_COMMENTS).then(function (connection) {
               return connection.update(comment.id, {
                 Likes: comment.data.Likes,
                 GUID: comment.data.GUID
@@ -409,8 +328,9 @@ Fliplet.Widget.instance('comments', function (widgetData) {
                 return console.log('Not confirmed!');
               }
               thisy.showToastProgress('Deleting comment...');
+              var deleteCommentPromise;
               if (isThread) {
-                return Fliplet.DataSources.connectByName(DS_COMMENTS).then(function (connection) {
+                deleteCommentPromise = Fliplet.DataSources.connectByName(DS_COMMENTS).then(function (connection) {
                   return connection.removeById(comment.id).then(function () {
                     thisy.comments = thisy.comments.map(function (el) {
                       if (el.data['GUID'] === comment.data['Comment GUID']) {
@@ -423,39 +343,84 @@ Fliplet.Widget.instance('comments', function (widgetData) {
                     thisy.closeToastProgress();
                   });
                 });
-              }
-              return Fliplet.DataSources.connectByName(DS_COMMENTS).then(function (connection) {
-                return connection.find({
-                  where: {
-                    'Comment GUID': comment.data.GUID
-                  }
-                }).then(function (records) {
-                  return connection.commit({
-                    "delete": records.map(function (el) {
-                      return el.id;
-                    }),
-                    append: true,
-                    extend: true
-                  }).then(function () {
-                    return connection.removeById(comment.id).then(function () {
-                      thisy.comments = thisy.comments.filter(function (el) {
-                        return el.id !== comment.id;
+              } else {
+                deleteCommentPromise = Fliplet.DataSources.connectByName(DS_COMMENTS).then(function (connection) {
+                  return connection.find({
+                    where: {
+                      'Comment GUID': comment.data.GUID
+                    }
+                  }).then(function (records) {
+                    return connection.commit({
+                      "delete": records.map(function (el) {
+                        return el.id;
+                      }),
+                      append: true,
+                      extend: true
+                    }).then(function () {
+                      return connection.removeById(comment.id).then(function () {
+                        thisy.comments = thisy.comments.filter(function (el) {
+                          return el.id !== comment.id;
+                        });
+                        thisy.closeToastProgress();
                       });
-                      thisy.closeToastProgress();
                     });
                   });
                 });
-              });
+              }
+              return deleteCommentPromise;
             });
-          }
+          } // deleteComment(comment, isThread = false) {
+          //   var thisy = this;
+          //   var options = {
+          //     title: 'Delete comment?',
+          //     message: 'Are you sure you want to delete this comment?',
+          //     labels: ['Agree', 'No'] // Native only (defaults to [OK,Cancel])
+          //   };
+          //   Fliplet.Navigate.confirm(options)
+          //     .then(function(result) {
+          //       if (!result) {
+          //         return console.log('Not confirmed!');
+          //       }
+          //       thisy.showToastProgress('Deleting comment...');
+          //       if (isThread) {
+          //         return Fliplet.DataSources.connectByName(DS_COMMENTS).then(function(
+          //           connection
+          //         ) {
+          //           return connection.removeById(comment.id).then(function() {
+          //             thisy.comments = thisy.comments.map(el => {
+          //               if (el.data['GUID'] === comment.data['Comment GUID']) {
+          //                 el.threads = el.threads.filter((el) => el.id !== comment.id);
+          //               }
+          //               return el;
+          //             });
+          //             thisy.closeToastProgress();
+          //           });
+          //         });
+          //       }
+          //       return Fliplet.DataSources.connectByName(DS_COMMENTS).then(function(
+          //         connection
+          //       ) {
+          //         return connection.find({ where: { 'Comment GUID': comment.data.GUID } }).then(function(records) {
+          //           return connection.commit({
+          //             delete: records.map((el) => el.id),
+          //             append: true,
+          //             extend: true
+          //           }).then(function() {
+          //             return connection.removeById(comment.id).then(function() {
+          //               thisy.comments = thisy.comments.filter((el) => el.id !== comment.id);
+          //               thisy.closeToastProgress();
+          //             });
+          //           });
+          //         });
+          //       });
+          //     });
+          // }
         },
         mounted: function mounted() {
           var thisy = this;
           Fliplet.Session.get().then(function (session) {
             loggedUser = _.get(session, 'entries.dataSource.data');
             if (loggedUser) {
-              //  initVue();
-              debugger;
               thisy.getComments();
             } else {
               showToastMessage('You need to be logged in to see the comments');

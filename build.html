@@ -13,7 +13,7 @@
 >
   <p class="comment-length">\{{comments.length}} COMMENTS</p>
   <div v-if="comments.length" class="comments-holder">
-    <div v-for="(comment, index) in commentData" :key="comment.id">
+    <div v-for="(comment, index) in commentsData" :key="comment.id">
       <div class="comment" :class="{flagged: comment.data.flagged, 'thread-shown': comment.showThreads}">
         <div class="flagged-dialog" v-if="comment.data.flagged">
           <div class="close-flagged-dialog">
