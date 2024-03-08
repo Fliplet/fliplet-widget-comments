@@ -99,14 +99,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__);
 
 Fliplet.Widget.instance('comments', function (widgetData) {
-  widgetData.fields = _.assign({
-    dataSource: '',
-    columnEmail: ''
-  }, widgetData.fields);
-  if (!widgetData.fields.dataSource) {
+  if (!widgetData.dataSource) {
     return showToastMessage('Please select Data source');
   }
-  if (!widgetData.fields.columnEmail) {
+  if (!widgetData.columnEmail) {
     return showToastMessage('Please select column for the email');
   }
   var DS_COMMENTS = 'Global Comments';

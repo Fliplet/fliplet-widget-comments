@@ -1,17 +1,9 @@
 Fliplet.Widget.instance('comments', function(widgetData) {
-  widgetData.fields = _.assign(
-    {
-      dataSource: '',
-      columnEmail: ''
-    },
-    widgetData.fields
-  );
-
-  if (!widgetData.fields.dataSource) {
+  if (!widgetData.dataSource) {
     return showToastMessage('Please select Data source');
   }
 
-  if (!widgetData.fields.columnEmail) {
+  if (!widgetData.columnEmail) {
     return showToastMessage('Please select column for the email');
   }
 
