@@ -15,11 +15,13 @@ Fliplet.Widget.instance('comments', function(widgetData) {
   const FLAGGED_EMAILS = widgetData.flaggedEmails;
   const FLAGGED_MAIL_CONTENT = widgetData.flaggedMailContent;
   let loggedUser = null;
-  const EMAILS_TO_NOTIFY_FLAGGED = FLAGGED_EMAILS
+  const EMAILS_TO_NOTIFY_FLAGGED = !FLAGGED_EMAILS
     ? []
     : FLAGGED_EMAILS.split(',')
       .map((el) => el.trim())
       .filter((el) => RegExp(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/).test(el));
+
+  debugger;
 
   if (!QUERY.dataSourceEntryId) {
     showToastMessage('No data source entry ID provided');
@@ -65,7 +67,6 @@ Fliplet.Widget.instance('comments', function(widgetData) {
             Fliplet.UI.Toast.dismiss();
           },
           flagComment(comment) {
-            debugger;
             var thisy = this;
 
             thisy.showToastProgress('Flagging comment...');
@@ -134,7 +135,6 @@ Fliplet.Widget.instance('comments', function(widgetData) {
               .then((records) => records);
           },
           getComments() {
-            debugger;
             var thisy = this;
 
             thisy.showToastProgress('Loading comments...');
@@ -149,8 +149,6 @@ Fliplet.Widget.instance('comments', function(widgetData) {
                     var userEmails = records.map(
                       (el) => el.data['Author Email']
                     );
-
-                    debugger;
 
                     return thisy.getUserData(userEmails).then(users => {
                       var comments = [];
@@ -182,7 +180,7 @@ Fliplet.Widget.instance('comments', function(widgetData) {
                           comments.push(el);
                         }
                       });
-                      debugger;
+
                       thisy.comments = comments.map((el) => {
                         el.showThreads = false;
                         el.threads = threads.filter(

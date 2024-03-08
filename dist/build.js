@@ -113,7 +113,7 @@ Fliplet.Widget.instance('comments', function (widgetData) {
   var FLAGGED_EMAILS = widgetData.flaggedEmails;
   var FLAGGED_MAIL_CONTENT = widgetData.flaggedMailContent;
   var loggedUser = null;
-  var EMAILS_TO_NOTIFY_FLAGGED = FLAGGED_EMAILS ? [] : FLAGGED_EMAILS.split(',').map(function (el) {
+  var EMAILS_TO_NOTIFY_FLAGGED = !FLAGGED_EMAILS ? [] : FLAGGED_EMAILS.split(',').map(function (el) {
     return el.trim();
   }).filter(function (el) {
     return RegExp(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/).test(el);
