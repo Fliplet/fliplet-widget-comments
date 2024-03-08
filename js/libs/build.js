@@ -8,9 +8,10 @@ Fliplet.Widget.instance('comments', function(widgetData) {
   }
 
   const DS_COMMENTS = 'Global Comments';
-  const DS_USERS = widgetData.fields.dataSource.id;
+  const DS_USERS = widgetData.dataSource.id;
   const QUERY = Fliplet.Navigate.query;
-  const EMAIL_COLUMN = widgetData.fields.columnEmail;
+  const EMAIL_COLUMN = widgetData.columnEmail;
+  const USER_PHOTO_COLUMN = widgetData.columnUserPhoto;
   let loggedUser = null;
 
   if (!QUERY.dataSourceEntryId) {
@@ -79,7 +80,7 @@ Fliplet.Widget.instance('comments', function(widgetData) {
             return Fliplet.DataSources.connect(DS_USERS)
               .then(connection => connection.find({
                 where: { [EMAIL_COLUMN]: { $in: userEmails } },
-                attributes: ['Email', 'User Full Name', 'User Avatar']
+                attributes: [EMAIL_COLUMN, 'User Full Name', USER_PHOTO_COLUMN]
               }))
               .then(records => records);
           },
@@ -112,8 +113,8 @@ Fliplet.Widget.instance('comments', function(widgetData) {
                           .split(' ')
                           .map((name) => name[0])
                           .join('');
-                        el.data.userAvatar = currentUser.data['User Avatar']
-                          ? Fliplet.Media.authenticate(currentUser.data['User Avatar'])
+                        el.data.userAvatar = currentUser.data[USER_PHOTO_COLUMN]
+                          ? Fliplet.Media.authenticate(currentUser.data[USER_PHOTO_COLUMN])
                           : null;
                         el.data.flagged = false;
                         el.data.openDropdown = false;
@@ -213,8 +214,8 @@ Fliplet.Widget.instance('comments', function(widgetData) {
                       .split(' ')
                       .map((name) => name[0])
                       .join('');
-                    record.data.userAvatar = loggedUser['User Avatar']
-                      ? Fliplet.Media.authenticate(loggedUser['User Avatar'])
+                    record.data.userAvatar = loggedUser[USER_PHOTO_COLUMN]
+                      ? Fliplet.Media.authenticate(loggedUser[USER_PHOTO_COLUMN])
                       : null;
                     record.data.flagged = false;
                     record.data.openDropdown = false;

@@ -59,6 +59,18 @@ Fliplet.Widget.generateInterface({
           Fliplet.Helper.field('dataSource').get()
         );
       }
+    },
+    {
+      name: 'columnUserPhoto',
+      type: 'dropdown',
+      label: 'User photo data field',
+      options: [],
+      default: '',
+      ready: function() {
+        Fliplet.Helper.field('columnUserPhoto').toggle(
+          Fliplet.Helper.field('dataSource').get()
+        );
+      }
     }
   ]
 });

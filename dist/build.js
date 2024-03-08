@@ -106,9 +106,10 @@ Fliplet.Widget.instance('comments', function (widgetData) {
     return showToastMessage('Please select column for the email');
   }
   var DS_COMMENTS = 'Global Comments';
-  var DS_USERS = widgetData.fields.dataSource.id;
+  var DS_USERS = widgetData.dataSource.id;
   var QUERY = Fliplet.Navigate.query;
-  var EMAIL_COLUMN = widgetData.fields.columnEmail;
+  var EMAIL_COLUMN = widgetData.columnEmail;
+  var USER_PHOTO_COLUMN = widgetData.columnUserPhoto;
   var loggedUser = null;
   if (!QUERY.dataSourceEntryId) {
     showToastMessage('No data source entry ID provided');
@@ -173,7 +174,7 @@ Fliplet.Widget.instance('comments', function (widgetData) {
                 where: _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0___default()({}, EMAIL_COLUMN, {
                   $in: userEmails
                 }),
-                attributes: ['Email', 'User Full Name', 'User Avatar']
+                attributes: [EMAIL_COLUMN, 'User Full Name', USER_PHOTO_COLUMN]
               });
             }).then(function (records) {
               return records;
@@ -203,7 +204,7 @@ Fliplet.Widget.instance('comments', function (widgetData) {
                     el.data.userInitials = (currentUser.data['User Full Name'] || '').split(' ').map(function (name) {
                       return name[0];
                     }).join('');
-                    el.data.userAvatar = currentUser.data['User Avatar'] ? Fliplet.Media.authenticate(currentUser.data['User Avatar']) : null;
+                    el.data.userAvatar = currentUser.data[USER_PHOTO_COLUMN] ? Fliplet.Media.authenticate(currentUser.data[USER_PHOTO_COLUMN]) : null;
                     el.data.flagged = false;
                     el.data.openDropdown = false;
                     if (el.data['Comment GUID']) {
@@ -286,7 +287,7 @@ Fliplet.Widget.instance('comments', function (widgetData) {
                     record.data.userInitials = (loggedUser['User Full Name'] || '').split(' ').map(function (name) {
                       return name[0];
                     }).join('');
-                    record.data.userAvatar = loggedUser['User Avatar'] ? Fliplet.Media.authenticate(loggedUser['User Avatar']) : null;
+                    record.data.userAvatar = loggedUser[USER_PHOTO_COLUMN] ? Fliplet.Media.authenticate(loggedUser[USER_PHOTO_COLUMN]) : null;
                     record.data.flagged = false;
                     record.data.openDropdown = false;
                     record.showThreads = false;
