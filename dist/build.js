@@ -110,9 +110,14 @@ Fliplet.Widget.instance('comments', function (widgetData) {
   var QUERY = Fliplet.Navigate.query;
   var EMAIL_COLUMN = widgetData.columnEmail;
   var USER_PHOTO_COLUMN = widgetData.columnUserPhoto;
-  var FLAGGED_EMAILS = widgetData.columnFlaggedEmails;
-  debugger;
+  var FLAGGED_EMAILS = widgetData.flaggedEmails;
+  var FLAGGED_MAIL_CONTENT = widgetData.flaggedMailContent;
   var loggedUser = null;
+  var EMAILS_TO_NOTIFY_FLAGGED = FLAGGED_EMAILS ? [] : FLAGGED_EMAILS.split(',').map(function (el) {
+    return el.trim();
+  }).filter(function (el) {
+    return RegExp(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/).test(el);
+  });
   if (!QUERY.dataSourceEntryId) {
     showToastMessage('No data source entry ID provided');
   }
@@ -152,6 +157,7 @@ Fliplet.Widget.instance('comments', function (widgetData) {
             Fliplet.UI.Toast.dismiss();
           },
           flagComment: function flagComment(comment) {
+            debugger;
             var thisy = this;
             thisy.showToastProgress('Flagging comment...');
             comment.data.flagged = true;
@@ -161,14 +167,43 @@ Fliplet.Widget.instance('comments', function (widgetData) {
                 GUID: comment.data.GUID
               });
             }).then(function () {
-              thisy.closeToastProgress();
-              setTimeout(function () {
-                comment.data.flagged = false;
-              }, 2000);
+              if (EMAILS_TO_NOTIFY_FLAGGED.length) {
+                return thisy.getExistingEmailsToNotifyAboutFlag().then(function (existingEmails) {
+                  var emails = existingEmails.map(function (user) {
+                    return {
+                      options: {
+                        email: user.data[EMAIL_COLUMN],
+                        name: user.data['User Full Name'],
+                        type: 'to',
+                        html: FLAGGED_MAIL_CONTENT,
+                        subject: 'Comment flagged'
+                        // from_name: 'Example Name'
+                      }
+                    };
+                  });
+                  Fliplet.Communicate.batchSendEmail(emails);
+                  thisy.closeToastProgress();
+                  setTimeout(function () {
+                    comment.data.flagged = false;
+                  }, 2000);
+                });
+              }
             });
           },
           toggleThreads: function toggleThreads(comment) {
             comment.showThreads = !comment.showThreads;
+          },
+          getExistingEmailsToNotifyAboutFlag: function getExistingEmailsToNotifyAboutFlag() {
+            return Fliplet.DataSources.connect(DS_USERS).then(function (connection) {
+              return connection.find({
+                where: _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0___default()({}, EMAIL_COLUMN, {
+                  $in: EMAILS_TO_NOTIFY_FLAGGED
+                }),
+                attributes: [EMAIL_COLUMN, 'User Full Name']
+              });
+            }).then(function (records) {
+              return records;
+            });
           },
           getUserData: function getUserData(userEmails) {
             return Fliplet.DataSources.connect(DS_USERS).then(function (connection) {
@@ -183,6 +218,7 @@ Fliplet.Widget.instance('comments', function (widgetData) {
             });
           },
           getComments: function getComments() {
+            debugger;
             var thisy = this;
             thisy.showToastProgress('Loading comments...');
             var entryId = '123456'; // Replace with the entry ID from the url
@@ -196,6 +232,7 @@ Fliplet.Widget.instance('comments', function (widgetData) {
                 var userEmails = records.map(function (el) {
                   return el.data['Author Email'];
                 });
+                debugger;
                 return thisy.getUserData(userEmails).then(function (users) {
                   var comments = [];
                   var threads = [];

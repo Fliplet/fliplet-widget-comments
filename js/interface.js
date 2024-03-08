@@ -14,6 +14,7 @@ Fliplet.Widget.generateInterface({
       name: 'dataSource',
       type: 'provider',
       label: 'Datasource',
+      required: true,
       package: 'com.fliplet.data-source-provider',
       // onEvent: function(event, data) {
       //   debugger;
@@ -61,6 +62,7 @@ Fliplet.Widget.generateInterface({
       label: 'User email data field (Required)',
       options: [],
       default: '',
+      required: true,
       ready: function() {
         Fliplet.Helper.field('columnEmail').toggle(
           Fliplet.Helper.field('dataSource').get()
