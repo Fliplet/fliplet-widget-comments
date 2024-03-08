@@ -33,16 +33,17 @@ Fliplet.Widget.generateInterface({
       // }
       // },
       ready: function(el, value, provider) {
-        debugger;
-
         if (value) {
           Fliplet.DataSources.getById(value.id, {
             attributes: ['columns']
           }).then(function(columns) {
             $('#columnEmail').html('');
+            $('#columnUserPhoto').html('');
             $('#columnEmail').append('<option value="">Select an option</option>');
+            $('#columnUserPhoto').append('<option value="">Select an option</option>');
             columns.columns.forEach((el) => {
               $('#columnEmail').append(`<option value="${el}">${el}</option>`);
+              $('#columnUserPhoto').append(`<option value="${el}">${el}</option>`);
             });
           });
         }
