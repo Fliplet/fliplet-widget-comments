@@ -109,12 +109,12 @@ Fliplet.Widget.generateInterface({
       required: true
     },
     {
-      type: 'text',
+      type: 'textarea',
       name: 'flaggedMailContent',
       label: 'Create an email template that will be sent to the admin with a flagged comment',
       description: '',
       placeholder: 'Comment below was flagged. Please take an action on it.',
-      required: true
+      rows: 5
     }
   ]
 });

@@ -95,33 +95,49 @@
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/toConsumableArray */ "./node_modules/@babel/runtime/helpers/toConsumableArray.js");
+/* harmony import */ var _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__);
+
 
 Fliplet.Widget.instance('comments', function (widgetData) {
   debugger;
-  if (!widgetData.dataSource) {
+  widgetData.fields = _.assign({
+    dataSource: '',
+    userNames: '',
+    columnEmail: '',
+    columnUserPhoto: '',
+    flaggedEmails: '',
+    flaggedMailContent: ''
+  }, widgetData.fields);
+  if (!widgetData.fields.dataSource) {
     return showToastMessage('Please select Data source');
   }
-  if (!widgetData.columnEmail) {
+  if (!widgetData.fields.columnEmail) {
     return showToastMessage('Please select column for the email');
   }
+  if (!QUERY.dataSourceEntryId) {
+    return showToastMessage('No data source entry ID provided');
+  }
   var DS_COMMENTS = 'Global Comments';
-  var DS_USERS = widgetData.dataSource.id;
+  var DS_USERS = widgetData.fields.dataSource.id;
   var QUERY = Fliplet.Navigate.query;
-  var EMAIL_COLUMN = widgetData.columnEmail;
-  var USER_PHOTO_COLUMN = widgetData.columnUserPhoto;
-  var FLAGGED_EMAILS = widgetData.flaggedEmails;
-  var FLAGGED_MAIL_CONTENT = widgetData.flaggedMailContent;
+  var EMAIL_COLUMN = widgetData.fields.columnEmail;
+  var USER_PHOTO_COLUMN = widgetData.fields.columnUserPhoto;
+  var FLAGGED_EMAILS = widgetData.fields.flaggedEmails;
+  var FLAGGED_MAIL_CONTENT = widgetData.fields.flaggedMailContent;
+  var USER_NAMES = widgetData.fields.userNames;
   var loggedUser = null;
+  if (!USER_NAMES) {
+    return showToastMessage('Please select user names');
+  }
+  debugger;
   var EMAILS_TO_NOTIFY_FLAGGED = !FLAGGED_EMAILS ? [] : FLAGGED_EMAILS.split(',').map(function (el) {
     return el.trim();
   }).filter(function (el) {
     return RegExp(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/).test(el);
   });
-  if (!QUERY.dataSourceEntryId) {
-    showToastMessage('No data source entry ID provided');
-  }
   Fliplet.Widget.initializeChildren(this.$el, this);
   if (!Fliplet.Env.get('interact')) {
     initVue();
@@ -198,10 +214,10 @@ Fliplet.Widget.instance('comments', function (widgetData) {
           getExistingEmailsToNotifyAboutFlag: function getExistingEmailsToNotifyAboutFlag() {
             return Fliplet.DataSources.connect(DS_USERS).then(function (connection) {
               return connection.find({
-                where: _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0___default()({}, EMAIL_COLUMN, {
+                where: _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1___default()({}, EMAIL_COLUMN, {
                   $in: EMAILS_TO_NOTIFY_FLAGGED
                 }),
-                attributes: [EMAIL_COLUMN, 'User Full Name']
+                attributes: [EMAIL_COLUMN].concat(_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0___default()(USER_NAMES))
               });
             }).then(function (records) {
               return records;
@@ -210,10 +226,10 @@ Fliplet.Widget.instance('comments', function (widgetData) {
           getUserData: function getUserData(userEmails) {
             return Fliplet.DataSources.connect(DS_USERS).then(function (connection) {
               return connection.find({
-                where: _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0___default()({}, EMAIL_COLUMN, {
+                where: _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1___default()({}, EMAIL_COLUMN, {
                   $in: userEmails
                 }),
-                attributes: [EMAIL_COLUMN, 'User Full Name', USER_PHOTO_COLUMN]
+                attributes: [EMAIL_COLUMN].concat(_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0___default()(USER_NAMES), [USER_PHOTO_COLUMN])
               });
             }).then(function (records) {
               return records;
@@ -240,9 +256,17 @@ Fliplet.Widget.instance('comments', function (widgetData) {
                     var currentUser = users.find(function (user) {
                       return user.data[EMAIL_COLUMN] === el.data['Author Email'];
                     });
-                    el.data.userInitials = (currentUser.data['User Full Name'] || '').split(' ').map(function (name) {
-                      return name[0];
-                    }).join('');
+                    var userInitials = '';
+                    if (USER_NAMES.length === 1) {
+                      userInitials = (currentUser.data[USER_NAMES[0]] || '').split(' ').map(function (name) {
+                        return name[0];
+                      }).join('');
+                    } else if (USER_NAMES.length === 2) {
+                      userInitials = USER_NAMES.map(function (el) {
+                        return currentUser.data[el] ? currentUser.data[el][0] : '';
+                      }).join('');
+                    }
+                    el.data.userInitials = userInitials;
                     el.data.userAvatar = currentUser.data[USER_PHOTO_COLUMN] ? Fliplet.Media.authenticate(currentUser.data[USER_PHOTO_COLUMN]) : null;
                     el.data.flagged = false;
                     el.data.openDropdown = false;
@@ -483,6 +507,37 @@ Fliplet.Widget.instance('comments', function (widgetData) {
 
 /***/ }),
 
+/***/ "./node_modules/@babel/runtime/helpers/arrayLikeToArray.js":
+/*!*****************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/arrayLikeToArray.js ***!
+  \*****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function _arrayLikeToArray(arr, len) {
+  if (len == null || len > arr.length) len = arr.length;
+  for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];
+  return arr2;
+}
+module.exports = _arrayLikeToArray, module.exports.__esModule = true, module.exports["default"] = module.exports;
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/arrayWithoutHoles.js":
+/*!******************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/arrayWithoutHoles.js ***!
+  \******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var arrayLikeToArray = __webpack_require__(/*! ./arrayLikeToArray.js */ "./node_modules/@babel/runtime/helpers/arrayLikeToArray.js");
+function _arrayWithoutHoles(arr) {
+  if (Array.isArray(arr)) return arrayLikeToArray(arr);
+}
+module.exports = _arrayWithoutHoles, module.exports.__esModule = true, module.exports["default"] = module.exports;
+
+/***/ }),
+
 /***/ "./node_modules/@babel/runtime/helpers/defineProperty.js":
 /*!***************************************************************!*\
   !*** ./node_modules/@babel/runtime/helpers/defineProperty.js ***!
@@ -506,6 +561,52 @@ function _defineProperty(obj, key, value) {
   return obj;
 }
 module.exports = _defineProperty, module.exports.__esModule = true, module.exports["default"] = module.exports;
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/iterableToArray.js":
+/*!****************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/iterableToArray.js ***!
+  \****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function _iterableToArray(iter) {
+  if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter);
+}
+module.exports = _iterableToArray, module.exports.__esModule = true, module.exports["default"] = module.exports;
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/nonIterableSpread.js":
+/*!******************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/nonIterableSpread.js ***!
+  \******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function _nonIterableSpread() {
+  throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+}
+module.exports = _nonIterableSpread, module.exports.__esModule = true, module.exports["default"] = module.exports;
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/toConsumableArray.js":
+/*!******************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/toConsumableArray.js ***!
+  \******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var arrayWithoutHoles = __webpack_require__(/*! ./arrayWithoutHoles.js */ "./node_modules/@babel/runtime/helpers/arrayWithoutHoles.js");
+var iterableToArray = __webpack_require__(/*! ./iterableToArray.js */ "./node_modules/@babel/runtime/helpers/iterableToArray.js");
+var unsupportedIterableToArray = __webpack_require__(/*! ./unsupportedIterableToArray.js */ "./node_modules/@babel/runtime/helpers/unsupportedIterableToArray.js");
+var nonIterableSpread = __webpack_require__(/*! ./nonIterableSpread.js */ "./node_modules/@babel/runtime/helpers/nonIterableSpread.js");
+function _toConsumableArray(arr) {
+  return arrayWithoutHoles(arr) || iterableToArray(arr) || unsupportedIterableToArray(arr) || nonIterableSpread();
+}
+module.exports = _toConsumableArray, module.exports.__esModule = true, module.exports["default"] = module.exports;
 
 /***/ }),
 
@@ -565,6 +666,26 @@ function _typeof(o) {
   }, module.exports.__esModule = true, module.exports["default"] = module.exports), _typeof(o);
 }
 module.exports = _typeof, module.exports.__esModule = true, module.exports["default"] = module.exports;
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/unsupportedIterableToArray.js":
+/*!***************************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/unsupportedIterableToArray.js ***!
+  \***************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var arrayLikeToArray = __webpack_require__(/*! ./arrayLikeToArray.js */ "./node_modules/@babel/runtime/helpers/arrayLikeToArray.js");
+function _unsupportedIterableToArray(o, minLen) {
+  if (!o) return;
+  if (typeof o === "string") return arrayLikeToArray(o, minLen);
+  var n = Object.prototype.toString.call(o).slice(8, -1);
+  if (n === "Object" && o.constructor) n = o.constructor.name;
+  if (n === "Map" || n === "Set") return Array.from(o);
+  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return arrayLikeToArray(o, minLen);
+}
+module.exports = _unsupportedIterableToArray, module.exports.__esModule = true, module.exports["default"] = module.exports;
 
 /***/ }),
 

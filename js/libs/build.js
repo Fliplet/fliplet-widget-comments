@@ -1,37 +1,50 @@
 Fliplet.Widget.instance('comments', function(widgetData) {
   debugger;
 
-  if (!widgetData.dataSource) {
+  widgetData.fields = _.assign(
+    {
+      dataSource: '',
+      userNames: '',
+      columnEmail: '',
+      columnUserPhoto: '',
+      flaggedEmails: '',
+      flaggedMailContent: ''
+    },
+    widgetData.fields
+  );
+
+  if (!widgetData.fields.dataSource) {
     return showToastMessage('Please select Data source');
   }
 
-  if (!widgetData.columnEmail) {
+  if (!widgetData.fields.columnEmail) {
     return showToastMessage('Please select column for the email');
   }
 
+  if (!QUERY.dataSourceEntryId) {
+    return showToastMessage('No data source entry ID provided');
+  }
+
   const DS_COMMENTS = 'Global Comments';
-  const DS_USERS = widgetData.dataSource.id;
+  const DS_USERS = widgetData.fields.dataSource.id;
   const QUERY = Fliplet.Navigate.query;
-  const EMAIL_COLUMN = widgetData.columnEmail;
-  const USER_PHOTO_COLUMN = widgetData.columnUserPhoto;
-  const FLAGGED_EMAILS = widgetData.flaggedEmails;
-  const FLAGGED_MAIL_CONTENT = widgetData.flaggedMailContent;
-  const USER_NAMES = widgetData.userNames;
+  const EMAIL_COLUMN = widgetData.fields.columnEmail;
+  const USER_PHOTO_COLUMN = widgetData.fields.columnUserPhoto;
+  const FLAGGED_EMAILS = widgetData.fields.flaggedEmails;
+  const FLAGGED_MAIL_CONTENT = widgetData.fields.flaggedMailContent;
+  const USER_NAMES = widgetData.fields.userNames;
   let loggedUser = null;
+
+  if (!USER_NAMES) {
+    return showToastMessage('Please select user names');
+  }
+
   debugger;
   const EMAILS_TO_NOTIFY_FLAGGED = !FLAGGED_EMAILS
     ? []
     : FLAGGED_EMAILS.split(',')
       .map((el) => el.trim())
       .filter((el) => RegExp(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/).test(el));
-
-  if (!QUERY.dataSourceEntryId) {
-    showToastMessage('No data source entry ID provided');
-  }
-
-  if (!USER_NAMES) {
-    return showToastMessage('Please select user names');
-  }
 
   Fliplet.Widget.initializeChildren(this.$el, this);
 
@@ -121,7 +134,7 @@ Fliplet.Widget.instance('comments', function(widgetData) {
               .then((connection) =>
                 connection.find({
                   where: { [EMAIL_COLUMN]: { $in: EMAILS_TO_NOTIFY_FLAGGED } },
-                  attributes: [EMAIL_COLUMN, 'User Full Name']
+                  attributes: [EMAIL_COLUMN, ...USER_NAMES]
                 })
               )
               .then((records) => records);
@@ -133,7 +146,7 @@ Fliplet.Widget.instance('comments', function(widgetData) {
                   where: { [EMAIL_COLUMN]: { $in: userEmails } },
                   attributes: [
                     EMAIL_COLUMN,
-                    'User Full Name',
+                    ...USER_NAMES,
                     USER_PHOTO_COLUMN
                   ]
                 })
@@ -167,15 +180,19 @@ Fliplet.Widget.instance('comments', function(widgetData) {
                         );
 
                         var userInitials = '';
-                        if () {
 
+                        if (USER_NAMES.length === 1) {
+                          userInitials = (
+                            currentUser.data[USER_NAMES[0]] || ''
+                          )
+                            .split(' ')
+                            .map((name) => name[0])
+                            .join('');
+                        } else if (USER_NAMES.length === 2) {
+                          userInitials = USER_NAMES.map((el) => currentUser.data[el] ? currentUser.data[el][0] : '').join('');
                         }
-                        el.data.userInitials = (
-                          currentUser.data['User Full Name'] || ''
-                        )
-                          .split(' ')
-                          .map((name) => name[0])
-                          .join('');
+
+                        el.data.userInitials = userInitials;
                         el.data.userAvatar = currentUser.data[USER_PHOTO_COLUMN]
                           ? Fliplet.Media.authenticate(
                             currentUser.data[USER_PHOTO_COLUMN]
