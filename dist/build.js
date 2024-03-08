@@ -103,31 +103,23 @@ __webpack_require__.r(__webpack_exports__);
 
 Fliplet.Widget.instance('comments', function (widgetData) {
   debugger;
-  widgetData.fields = _.assign({
-    dataSource: '',
-    userNames: '',
-    columnEmail: '',
-    columnUserPhoto: '',
-    flaggedEmails: '',
-    flaggedMailContent: ''
-  }, widgetData.fields);
-  if (!widgetData.fields.dataSource) {
+  if (!widgetData.dataSource) {
     return showToastMessage('Please select Data source');
   }
-  if (!widgetData.fields.columnEmail) {
+  if (!widgetData.columnEmail) {
     return showToastMessage('Please select column for the email');
   }
   if (!QUERY.dataSourceEntryId) {
     return showToastMessage('No data source entry ID provided');
   }
   var DS_COMMENTS = 'Global Comments';
-  var DS_USERS = widgetData.fields.dataSource.id;
+  var DS_USERS = widgetData.dataSource.id;
   var QUERY = Fliplet.Navigate.query;
-  var EMAIL_COLUMN = widgetData.fields.columnEmail;
-  var USER_PHOTO_COLUMN = widgetData.fields.columnUserPhoto;
-  var FLAGGED_EMAILS = widgetData.fields.flaggedEmails;
-  var FLAGGED_MAIL_CONTENT = widgetData.fields.flaggedMailContent;
-  var USER_NAMES = widgetData.fields.userNames;
+  var EMAIL_COLUMN = widgetData.columnEmail;
+  var USER_PHOTO_COLUMN = widgetData.columnUserPhoto;
+  var FLAGGED_EMAILS = widgetData.flaggedEmails;
+  var FLAGGED_MAIL_CONTENT = widgetData.flaggedMailContent;
+  var USER_NAMES = widgetData.userNames;
   var loggedUser = null;
   if (!USER_NAMES) {
     return showToastMessage('Please select user names');
