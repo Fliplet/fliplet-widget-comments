@@ -118,6 +118,7 @@ Fliplet.Widget.instance('comments', function (widgetData) {
   }).filter(function (el) {
     return RegExp(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/).test(el);
   });
+  debugger;
   if (!QUERY.dataSourceEntryId) {
     showToastMessage('No data source entry ID provided');
   }
@@ -159,7 +160,6 @@ Fliplet.Widget.instance('comments', function (widgetData) {
             Fliplet.UI.Toast.dismiss();
           },
           flagComment: function flagComment(comment) {
-            debugger;
             var thisy = this;
             thisy.showToastProgress('Flagging comment...');
             comment.data.flagged = true;
@@ -220,7 +220,6 @@ Fliplet.Widget.instance('comments', function (widgetData) {
             });
           },
           getComments: function getComments() {
-            debugger;
             var thisy = this;
             thisy.showToastProgress('Loading comments...');
             var entryId = '123456'; // Replace with the entry ID from the url
@@ -234,7 +233,6 @@ Fliplet.Widget.instance('comments', function (widgetData) {
                 var userEmails = records.map(function (el) {
                   return el.data['Author Email'];
                 });
-                debugger;
                 return thisy.getUserData(userEmails).then(function (users) {
                   var comments = [];
                   var threads = [];
@@ -254,7 +252,6 @@ Fliplet.Widget.instance('comments', function (widgetData) {
                       comments.push(el);
                     }
                   });
-                  debugger;
                   thisy.comments = comments.map(function (el) {
                     el.showThreads = false;
                     el.threads = threads.filter(function (thread) {
