@@ -46,12 +46,8 @@ Fliplet.Widget.generateInterface({
               $('#columnUserPhoto').append(`<option value="${el}">${el}</option>`);
             });
 
-            $('#tokenfield').tokenfield({
-              autocomplete: {
-                source: columns.columns,
-                delay: 100
-              },
-              showAutocompleteOnFocus: true
+            Fliplet.UI.Typeahead($('#target'), {
+              options: columns.columns
             });
           });
         }
@@ -87,7 +83,9 @@ Fliplet.Widget.generateInterface({
       <div>
         <label for="tokenfield">User data fields (Required)</label>
       </div>
-      <input type="text" class="form-control" id="tokenfield" />`
+      <div class="form-group fl-typeahead" id="target">
+        <select placeholder="Start typing..."></select>
+      </div>`
     }
   ]
 });
