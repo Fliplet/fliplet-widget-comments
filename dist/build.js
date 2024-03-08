@@ -110,6 +110,8 @@ Fliplet.Widget.instance('comments', function (widgetData) {
   var QUERY = Fliplet.Navigate.query;
   var EMAIL_COLUMN = widgetData.columnEmail;
   var USER_PHOTO_COLUMN = widgetData.columnUserPhoto;
+  var FLAGGED_EMAILS = widgetData.columnFlaggedEmails;
+  debugger;
   var loggedUser = null;
   if (!QUERY.dataSourceEntryId) {
     showToastMessage('No data source entry ID provided');

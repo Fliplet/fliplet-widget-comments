@@ -46,11 +46,11 @@ Fliplet.Widget.generateInterface({
               $('#columnUserPhoto').append(`<option value="${el}">${el}</option>`);
             });
 
-            Fliplet.UI.Typeahead($('#target'), {
-              options: columns.columns,
-              freeInput: false,
-              maxItems: 2
-            });
+            // Fliplet.UI.Typeahead($('#target'), {
+            //   options: columns.columns,
+            //   freeInput: false,
+            //   maxItems: 2
+            // });
           });
         }
       }
@@ -88,6 +88,14 @@ Fliplet.Widget.generateInterface({
       <div class="form-group fl-typeahead" id="target">
         <select placeholder="Start typing..."></select>
       </div>`
+    },
+    {
+      type: 'text',
+      name: 'flaggedEmails',
+      label: 'Enter admin email for flagged comments',
+      description: "Note that it's important to have if you're publishing your app to app store",
+      placeholder: 'email.com, email.com, email.com',
+      required: true
     }
   ]
 });

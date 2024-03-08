@@ -12,6 +12,8 @@ Fliplet.Widget.instance('comments', function(widgetData) {
   const QUERY = Fliplet.Navigate.query;
   const EMAIL_COLUMN = widgetData.columnEmail;
   const USER_PHOTO_COLUMN = widgetData.columnUserPhoto;
+  const FLAGGED_EMAILS = widgetData.columnFlaggedEmails;
+  debugger
   let loggedUser = null;
 
   if (!QUERY.dataSourceEntryId) {
