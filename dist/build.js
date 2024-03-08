@@ -122,7 +122,9 @@ Fliplet.Widget.instance('comments', function (widgetData) {
     showToastMessage('No data source entry ID provided');
   }
   Fliplet.Widget.initializeChildren(this.$el, this);
-  initVue();
+  if (!Fliplet.Env.get('interact')) {
+    initVue();
+  }
   function showToastMessage(message) {
     return Fliplet.UI.Toast(message);
   }

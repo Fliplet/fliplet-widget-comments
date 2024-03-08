@@ -27,7 +27,9 @@ Fliplet.Widget.instance('comments', function(widgetData) {
 
   Fliplet.Widget.initializeChildren(this.$el, this);
 
-  initVue();
+  if (!Fliplet.Env.get('interact')) {
+    initVue();
+  }
 
   function showToastMessage(message) {
     return Fliplet.UI.Toast(message);
