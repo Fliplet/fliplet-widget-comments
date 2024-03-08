@@ -109,9 +109,6 @@ Fliplet.Widget.instance('comments', function (widgetData) {
   if (!widgetData.columnEmail) {
     return showToastMessage('Please select column for the email');
   }
-  if (!QUERY.dataSourceEntryId) {
-    return showToastMessage('No data source entry ID provided');
-  }
   var DS_COMMENTS = 'Global Comments';
   var DS_USERS = widgetData.dataSource.id;
   var QUERY = Fliplet.Navigate.query;
@@ -123,6 +120,9 @@ Fliplet.Widget.instance('comments', function (widgetData) {
   var loggedUser = null;
   if (!USER_NAMES) {
     return showToastMessage('Please select user names');
+  }
+  if (!QUERY.dataSourceEntryId) {
+    return showToastMessage('No data source entry ID provided');
   }
   debugger;
   var EMAILS_TO_NOTIFY_FLAGGED = !FLAGGED_EMAILS ? [] : FLAGGED_EMAILS.split(',').map(function (el) {
