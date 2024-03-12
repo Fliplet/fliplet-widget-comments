@@ -167,8 +167,8 @@ Fliplet.Widget.instance('comments', function (widgetData) {
             Fliplet.UI.Toast.dismiss();
           },
           flagComment: function flagComment(comment) {
-            var thisy = this;
-            thisy.showToastProgress('Flagging comment...');
+            var _this = this;
+            this.showToastProgress('Flagging comment...');
             comment.data.flagged = true;
             Fliplet.DataSources.connectByName(DS_COMMENTS).then(function (connection) {
               return connection.update(comment.id, {
@@ -177,7 +177,7 @@ Fliplet.Widget.instance('comments', function (widgetData) {
               });
             }).then(function () {
               if (EMAILS_TO_NOTIFY_FLAGGED_COMMENT.length) {
-                return thisy.getExistingEmailsToNotifyAboutFlag().then(function (existingEmails) {
+                return _this.getExistingEmailsToNotifyAboutFlag().then(function (existingEmails) {
                   var emails = existingEmails.map(function (user) {
                     return {
                       options: {
@@ -191,7 +191,7 @@ Fliplet.Widget.instance('comments', function (widgetData) {
                     };
                   });
                   Fliplet.Communicate.batchSendEmail(emails);
-                  thisy.closeToastProgress();
+                  _this.closeToastProgress();
                   setTimeout(function () {
                     comment.data.flagged = false;
                   }, 2000);
@@ -319,26 +319,22 @@ Fliplet.Widget.instance('comments', function (widgetData) {
             }
           },
           manageComment: function manageComment() {
-            var _this = this;
-            var thisy = this;
-            if (thisy.commentInput) {
-              console.log(this);
-              if (!thisy.commentState || thisy.commentState.action === 'reply') {
-                thisy.showToastProgress('Adding comment...');
+            var _this2 = this;
+            if (this.commentInput) {
+              if (!this.commentState || this.commentState.action === 'reply') {
+                this.showToastProgress('Adding comment...');
                 Fliplet.DataSources.connectByName(DS_COMMENTS).then(function (connection) {
-                  console.log(_this);
                   var toInsert = {
-                    Message: thisy.commentInput,
+                    Message: _this2.commentInput,
                     'Author Email': loggedUser[EMAIL_COLUMN],
                     Timestamp: new Date().toISOString(),
                     'Entry Id': QUERY.dataSourceEntryId,
                     Likes: []
                   };
-                  if (thisy.commentState && thisy.commentState.action === 'reply') {
-                    toInsert['Comment GUID'] = thisy.commentState.comment.data['GUID'];
+                  if (_this2.commentState && _this2.commentState.action === 'reply') {
+                    toInsert['Comment GUID'] = _this2.commentState.comment.data['GUID'];
                   }
                   return connection.insert(toInsert).then(function (record) {
-                    console.log(_this);
                     record.data.userInitials = (loggedUser['User Full Name'] || '').split(' ').map(function (name) {
                       return name[0];
                     }).join('');
@@ -347,37 +343,36 @@ Fliplet.Widget.instance('comments', function (widgetData) {
                     record.data.openDropdown = false;
                     record.showThreads = false;
                     record.threads = [];
-                    if (thisy.commentState && thisy.commentState.action === 'reply') {
-                      thisy.comments = thisy.comments.map(function (el) {
-                        if (el.data['GUID'] === thisy.commentState.comment.data['GUID']) {
+                    if (_this2.commentState && _this2.commentState.action === 'reply') {
+                      _this2.comments = _this2.comments.map(function (el) {
+                        if (el.data['GUID'] === _this2.commentState.comment.data['GUID']) {
                           el.threads.push(record);
                         }
                         return el;
                       });
                     } else {
-                      thisy.comments.unshift(record);
+                      _this2.comments.unshift(record);
                     }
-                    thisy.closeToastProgress();
-                    thisy.commentInput = '';
-                    thisy.commentState = null;
+                    _this2.closeToastProgress();
+                    _this2.commentInput = '';
+                    _this2.commentState = null;
                   });
                 });
               } else {
-                thisy.showToastProgress('Updating comment...');
+                this.showToastProgress('Updating comment...');
                 Fliplet.DataSources.connectByName(DS_COMMENTS).then(function (connection) {
-                  console.log(_this);
-                  return connection.update(thisy.commentState.comment.id, {
-                    Message: thisy.commentInput,
-                    GUID: thisy.commentState.comment.data['GUID']
+                  return connection.update(_this2.commentState.comment.id, {
+                    Message: _this2.commentInput,
+                    GUID: _this2.commentState.comment.data['GUID']
                   }).then(function () {
-                    thisy.comments = thisy.comments.map(function (el) {
-                      if (el.id === thisy.commentState.comment.id) {
-                        el.data.Message = thisy.commentInput;
+                    _this2.comments = _this2.comments.map(function (el) {
+                      if (el.id === _this2.commentState.comment.id) {
+                        el.data.Message = _this2.commentInput;
                       }
                     });
-                    thisy.commentInput = '';
-                    thisy.commentState = null;
-                    thisy.closeToastProgress();
+                    _this2.commentInput = '';
+                    _this2.commentState = null;
+                    _this2.closeToastProgress();
                   });
                 });
               }
@@ -397,7 +392,7 @@ Fliplet.Widget.instance('comments', function (widgetData) {
             };
             Fliplet.Navigate.confirm(options).then(function (result) {
               if (!result) {
-                return console.log('Not confirmed!');
+                return Promise.reject(''); // Not confirmed!
               }
               thisy.showToastProgress('Deleting comment...');
               var deleteCommentPromise;

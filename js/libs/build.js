@@ -72,9 +72,7 @@ Fliplet.Widget.instance('comments', function(widgetData) {
             Fliplet.UI.Toast.dismiss();
           },
           flagComment(comment) {
-            let thisy = this;
-
-            thisy.showToastProgress('Flagging comment...');
+            this.showToastProgress('Flagging comment...');
             comment.data.flagged = true;
 
             Fliplet.DataSources.connectByName(DS_COMMENTS)
@@ -86,7 +84,7 @@ Fliplet.Widget.instance('comments', function(widgetData) {
               })
               .then(() => {
                 if (EMAILS_TO_NOTIFY_FLAGGED_COMMENT.length) {
-                  return thisy
+                  return this
                     .getExistingEmailsToNotifyAboutFlag()
                     .then(existingEmails => {
                       let emails = existingEmails.map((user) => {
@@ -104,7 +102,7 @@ Fliplet.Widget.instance('comments', function(widgetData) {
 
                       Fliplet.Communicate.batchSendEmail(emails);
 
-                      thisy.closeToastProgress();
+                      this.closeToastProgress();
                       setTimeout(() => {
                         comment.data.flagged = false;
                       }, 2000);
@@ -255,21 +253,15 @@ Fliplet.Widget.instance('comments', function(widgetData) {
             }
           },
           manageComment() {
-            let thisy = this;
-
-            if (thisy.commentInput) {
-              console.log(this);
-
+            if (this.commentInput) {
               if (
-                !thisy.commentState
-                || thisy.commentState.action === 'reply'
+                !this.commentState
+                || this.commentState.action === 'reply'
               ) {
-                thisy.showToastProgress('Adding comment...');
+                this.showToastProgress('Adding comment...');
                 Fliplet.DataSources.connectByName(DS_COMMENTS).then(connection => {
-                  console.log(this);
-
                   let toInsert = {
-                    Message: thisy.commentInput,
+                    Message: this.commentInput,
                     'Author Email': loggedUser[EMAIL_COLUMN],
                     Timestamp: new Date().toISOString(),
                     'Entry Id': QUERY.dataSourceEntryId,
@@ -277,15 +269,14 @@ Fliplet.Widget.instance('comments', function(widgetData) {
                   };
 
                   if (
-                    thisy.commentState
-                    && thisy.commentState.action === 'reply'
+                    this.commentState
+                    && this.commentState.action === 'reply'
                   ) {
                     toInsert['Comment GUID']
-                      = thisy.commentState.comment.data['GUID'];
+                      = this.commentState.comment.data['GUID'];
                   }
 
                   return connection.insert(toInsert).then(record => {
-                    console.log(this);
                     record.data.userInitials = (
                       loggedUser['User Full Name'] || ''
                     )
@@ -303,13 +294,13 @@ Fliplet.Widget.instance('comments', function(widgetData) {
                     record.threads = [];
 
                     if (
-                      thisy.commentState
-                      && thisy.commentState.action === 'reply'
+                      this.commentState
+                      && this.commentState.action === 'reply'
                     ) {
-                      thisy.comments = thisy.comments.map((el) => {
+                      this.comments = this.comments.map((el) => {
                         if (
                           el.data['GUID']
-                          === thisy.commentState.comment.data['GUID']
+                          === this.commentState.comment.data['GUID']
                         ) {
                           el.threads.push(record);
                         }
@@ -317,34 +308,32 @@ Fliplet.Widget.instance('comments', function(widgetData) {
                         return el;
                       });
                     } else {
-                      thisy.comments.unshift(record);
+                      this.comments.unshift(record);
                     }
 
-                    thisy.closeToastProgress();
-                    thisy.commentInput = '';
-                    thisy.commentState = null;
+                    this.closeToastProgress();
+                    this.commentInput = '';
+                    this.commentState = null;
                   });
                 });
               } else {
-                thisy.showToastProgress('Updating comment...');
+                this.showToastProgress('Updating comment...');
                 Fliplet.DataSources.connectByName(DS_COMMENTS).then(connection => {
-                  console.log(this);
-
                   return connection
-                    .update(thisy.commentState.comment.id, {
-                      Message: thisy.commentInput,
-                      GUID: thisy.commentState.comment.data['GUID']
+                    .update(this.commentState.comment.id, {
+                      Message: this.commentInput,
+                      GUID: this.commentState.comment.data['GUID']
                     })
                     .then(() => {
-                      thisy.comments = thisy.comments.map((el) => {
-                        if (el.id === thisy.commentState.comment.id) {
-                          el.data.Message = thisy.commentInput;
+                      this.comments = this.comments.map((el) => {
+                        if (el.id === this.commentState.comment.id) {
+                          el.data.Message = this.commentInput;
                         }
                       });
 
-                      thisy.commentInput = '';
-                      thisy.commentState = null;
-                      thisy.closeToastProgress();
+                      this.commentInput = '';
+                      this.commentState = null;
+                      this.closeToastProgress();
                     });
                 });
               }
@@ -366,7 +355,7 @@ Fliplet.Widget.instance('comments', function(widgetData) {
 
             Fliplet.Navigate.confirm(options).then(result => {
               if (!result) {
-                return console.log('Not confirmed!');
+                return Promise.reject(''); // Not confirmed!
               }
 
               thisy.showToastProgress('Deleting comment...');
