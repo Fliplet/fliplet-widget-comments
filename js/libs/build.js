@@ -163,20 +163,7 @@ Fliplet.Widget.instance('comments', function(widgetData) {
                             user.data[EMAIL_COLUMN] === el.data['Author Email']
                         );
 
-                        let userInitials = '';
-
-                        if (USER_NAMES.length === 1) {
-                          userInitials = (
-                            currentUser.data[USER_NAMES[0]] || ''
-                          )
-                            .split(' ')
-                            .map((name) => name[0])
-                            .join('');
-                        } else if (USER_NAMES.length === 2) {
-                          userInitials = USER_NAMES.map((el) => currentUser.data[el] ? currentUser.data[el][0] : '').join('');
-                        }
-
-                        el.data.userInitials = userInitials;
+                        el.data.userInitials = this.getUserInitials(currentUser.data);
                         el.data.userAvatar = currentUser.data[USER_PHOTO_COLUMN]
                           ? Fliplet.Media.authenticate(
                             currentUser.data[USER_PHOTO_COLUMN]
@@ -207,6 +194,22 @@ Fliplet.Widget.instance('comments', function(widgetData) {
                   });
               }
             );
+          },
+          getUserInitials(userData) {
+            let userInitials = '';
+
+            if (USER_NAMES.length === 1) {
+              userInitials = (
+                userData[USER_NAMES[0]] || ''
+              )
+                .split(' ')
+                .map((name) => name[0])
+                .join('');
+            } else if (USER_NAMES.length === 2) {
+              userInitials = USER_NAMES.map((el) => userData[el] ? userData[el][0] : '').join('');
+            }
+
+            return userInitials;
           },
           likedLoginByUser(likes) {
             return likes.includes(loggedUser.Email);
@@ -277,17 +280,7 @@ Fliplet.Widget.instance('comments', function(widgetData) {
                   }
 
                   return connection.insert(toInsert).then(record => {
-                    record.data.userInitials = (
-                      loggedUser['User Full Name'] || ''
-                    )
-                      .split(' ')
-                      .map((name) => name[0])
-                      .join('');
-                    record.data.userAvatar = loggedUser[USER_PHOTO_COLUMN]
-                      ? Fliplet.Media.authenticate(
-                        loggedUser[USER_PHOTO_COLUMN]
-                      )
-                      : null;
+                    record.data.userInitials = this.getUserInitials(loggedUser);
                     record.data.flagged = false;
                     record.data.openDropdown = false;
                     record.showThreads = false;

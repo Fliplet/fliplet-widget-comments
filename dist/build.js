@@ -227,6 +227,7 @@ Fliplet.Widget.instance('comments', function (widgetData) {
             });
           },
           getComments: function getComments() {
+            var _this2 = this;
             var thisy = this;
             thisy.showToastProgress('Loading comments...');
             var entryId = QUERY.dataSourceEntryId;
@@ -246,17 +247,7 @@ Fliplet.Widget.instance('comments', function (widgetData) {
                     var currentUser = users.find(function (user) {
                       return user.data[EMAIL_COLUMN] === el.data['Author Email'];
                     });
-                    var userInitials = '';
-                    if (USER_NAMES.length === 1) {
-                      userInitials = (currentUser.data[USER_NAMES[0]] || '').split(' ').map(function (name) {
-                        return name[0];
-                      }).join('');
-                    } else if (USER_NAMES.length === 2) {
-                      userInitials = USER_NAMES.map(function (el) {
-                        return currentUser.data[el] ? currentUser.data[el][0] : '';
-                      }).join('');
-                    }
-                    el.data.userInitials = userInitials;
+                    el.data.userInitials = _this2.getUserInitials(currentUser.data);
                     el.data.userAvatar = currentUser.data[USER_PHOTO_COLUMN] ? Fliplet.Media.authenticate(currentUser.data[USER_PHOTO_COLUMN]) : null;
                     el.data.flagged = false;
                     el.data.openDropdown = false;
@@ -277,6 +268,19 @@ Fliplet.Widget.instance('comments', function (widgetData) {
                 });
               });
             });
+          },
+          getUserInitials: function getUserInitials(userData) {
+            var userInitials = '';
+            if (USER_NAMES.length === 1) {
+              userInitials = (userData[USER_NAMES[0]] || '').split(' ').map(function (name) {
+                return name[0];
+              }).join('');
+            } else if (USER_NAMES.length === 2) {
+              userInitials = USER_NAMES.map(function (el) {
+                return userData[el] ? userData[el][0] : '';
+              }).join('');
+            }
+            return userInitials;
           },
           likedLoginByUser: function likedLoginByUser(likes) {
             return likes.includes(loggedUser.Email);
@@ -319,60 +323,57 @@ Fliplet.Widget.instance('comments', function (widgetData) {
             }
           },
           manageComment: function manageComment() {
-            var _this2 = this;
+            var _this3 = this;
             if (this.commentInput) {
               if (!this.commentState || this.commentState.action === 'reply') {
                 this.showToastProgress('Adding comment...');
                 Fliplet.DataSources.connectByName(DS_COMMENTS).then(function (connection) {
                   var toInsert = {
-                    Message: _this2.commentInput,
+                    Message: _this3.commentInput,
                     'Author Email': loggedUser[EMAIL_COLUMN],
                     Timestamp: new Date().toISOString(),
                     'Entry Id': QUERY.dataSourceEntryId,
                     Likes: []
                   };
-                  if (_this2.commentState && _this2.commentState.action === 'reply') {
-                    toInsert['Comment GUID'] = _this2.commentState.comment.data['GUID'];
+                  if (_this3.commentState && _this3.commentState.action === 'reply') {
+                    toInsert['Comment GUID'] = _this3.commentState.comment.data['GUID'];
                   }
                   return connection.insert(toInsert).then(function (record) {
-                    record.data.userInitials = (loggedUser['User Full Name'] || '').split(' ').map(function (name) {
-                      return name[0];
-                    }).join('');
-                    record.data.userAvatar = loggedUser[USER_PHOTO_COLUMN] ? Fliplet.Media.authenticate(loggedUser[USER_PHOTO_COLUMN]) : null;
+                    record.data.userInitials = _this3.getUserInitials(loggedUser);
                     record.data.flagged = false;
                     record.data.openDropdown = false;
                     record.showThreads = false;
                     record.threads = [];
-                    if (_this2.commentState && _this2.commentState.action === 'reply') {
-                      _this2.comments = _this2.comments.map(function (el) {
-                        if (el.data['GUID'] === _this2.commentState.comment.data['GUID']) {
+                    if (_this3.commentState && _this3.commentState.action === 'reply') {
+                      _this3.comments = _this3.comments.map(function (el) {
+                        if (el.data['GUID'] === _this3.commentState.comment.data['GUID']) {
                           el.threads.push(record);
                         }
                         return el;
                       });
                     } else {
-                      _this2.comments.unshift(record);
+                      _this3.comments.unshift(record);
                     }
-                    _this2.closeToastProgress();
-                    _this2.commentInput = '';
-                    _this2.commentState = null;
+                    _this3.closeToastProgress();
+                    _this3.commentInput = '';
+                    _this3.commentState = null;
                   });
                 });
               } else {
                 this.showToastProgress('Updating comment...');
                 Fliplet.DataSources.connectByName(DS_COMMENTS).then(function (connection) {
-                  return connection.update(_this2.commentState.comment.id, {
-                    Message: _this2.commentInput,
-                    GUID: _this2.commentState.comment.data['GUID']
+                  return connection.update(_this3.commentState.comment.id, {
+                    Message: _this3.commentInput,
+                    GUID: _this3.commentState.comment.data['GUID']
                   }).then(function () {
-                    _this2.comments = _this2.comments.map(function (el) {
-                      if (el.id === _this2.commentState.comment.id) {
-                        el.data.Message = _this2.commentInput;
+                    _this3.comments = _this3.comments.map(function (el) {
+                      if (el.id === _this3.commentState.comment.id) {
+                        el.data.Message = _this3.commentInput;
                       }
                     });
-                    _this2.commentInput = '';
-                    _this2.commentState = null;
-                    _this2.closeToastProgress();
+                    _this3.commentInput = '';
+                    _this3.commentState = null;
+                    _this3.closeToastProgress();
                   });
                 });
               }
