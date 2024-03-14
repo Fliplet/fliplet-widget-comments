@@ -81,8 +81,8 @@ Fliplet.Widget.generateInterface({
       },
       change: function() {
         debugger;
-        const key = Object.keys(this.__widgetData)[0];
-        const objValue = this.__widgetData[key];
+        const key = Object.keys(__widgetData)[0];
+        const objValue = __widgetData[key];
         const value = objValue.columnEmail;
 
         if (value) {
@@ -103,8 +103,8 @@ Fliplet.Widget.generateInterface({
       },
       change: function() {
         debugger;
-        const key = Object.keys(this.__widgetData)[0];
-        const objValue = this.__widgetData[key];
+        const key = Object.keys(__widgetData)[0];
+        const objValue = __widgetData[key];
         const value = objValue.columnUserPhoto;
 
         if (value) {
