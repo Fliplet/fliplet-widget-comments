@@ -7,10 +7,6 @@ Fliplet.Widget.instance('comments', function(widgetData) {
     return showToastMessage('Please select column for the email');
   }
 
-  if (!QUERY.dataSourceEntryId) {
-    return showToastMessage('No data source entry ID provided');
-  }
-
   const DS_COMMENTS = 'Global Comments';
   const DS_USERS = widgetData.userDataSource.id;
   const QUERY = Fliplet.Navigate.query;
@@ -23,6 +19,10 @@ Fliplet.Widget.instance('comments', function(widgetData) {
 
   if (!USER_NAMES) {
     return showToastMessage('Please select user names');
+  }
+
+  if (!QUERY.dataSourceEntryId) {
+    return showToastMessage('No data source entry ID provided');
   }
 
   debugger;
