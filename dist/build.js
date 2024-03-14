@@ -190,11 +190,12 @@ Fliplet.Widget.instance('comments', function (widgetData) {
                       }
                     };
                   });
-                  Fliplet.Communicate.batchSendEmail(emails);
-                  _this.closeToastProgress();
-                  setTimeout(function () {
-                    comment.data.flagged = false;
-                  }, 2000);
+                  return Fliplet.Communicate.batchSendEmail(emails).then(function () {
+                    _this.closeToastProgress();
+                    setTimeout(function () {
+                      comment.data.flagged = false;
+                    }, 2000);
+                  });
                 });
               }
             });

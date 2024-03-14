@@ -100,12 +100,12 @@ Fliplet.Widget.instance('comments', function(widgetData) {
                         };
                       });
 
-                      Fliplet.Communicate.batchSendEmail(emails);
-
-                      this.closeToastProgress();
-                      setTimeout(() => {
-                        comment.data.flagged = false;
-                      }, 2000);
+                      return Fliplet.Communicate.batchSendEmail(emails).then(() => {
+                        this.closeToastProgress();
+                        setTimeout(() => {
+                          comment.data.flagged = false;
+                        }, 2000);
+                      });
                     });
                 }
               });
