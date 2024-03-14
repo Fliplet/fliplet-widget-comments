@@ -108,9 +108,6 @@ Fliplet.Widget.instance('comments', function (widgetData) {
   if (!widgetData.columnEmail) {
     return showToastMessage('Please select column for the email');
   }
-  if (!USER_NAMES) {
-    return showToastMessage('Please select user names');
-  }
   if (!QUERY.dataSourceEntryId) {
     return showToastMessage('No data source entry ID provided');
   }
@@ -123,6 +120,9 @@ Fliplet.Widget.instance('comments', function (widgetData) {
   var FLAGGED_MAIL_CONTENT = widgetData.flaggedMailContent;
   var USER_NAMES = widgetData.userNames;
   var loggedUser = null;
+  if (!USER_NAMES) {
+    return showToastMessage('Please select user names');
+  }
   debugger;
   var EMAILS_TO_NOTIFY_FLAGGED_COMMENT = !FLAGGED_EMAILS ? [] : FLAGGED_EMAILS.split(',').map(function (el) {
     return el.trim();
