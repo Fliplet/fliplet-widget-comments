@@ -48,6 +48,12 @@ Fliplet.Widget.generateInterface({
               $('#columnUserPhoto').append(`<option value="${el}">${el}</option>`);
             });
 
+            const key = Object.keys(__widgetData)[0];
+            const objValue = __widgetData[key].data;
+
+            Fliplet.Helper.field('columnEmail').set(objValue.columnEmail);
+            Fliplet.Helper.field('columnUserPhoto').set(objValue.columnUserPhoto);
+
             var instance = Fliplet.UI.Typeahead($('#target'), {
               options: columns.columns.map(el => {
                 return { value: el, label: el };
@@ -78,17 +84,17 @@ Fliplet.Widget.generateInterface({
         Fliplet.Helper.field('columnEmail').toggle(
           Fliplet.Helper.field('dataSource').get()
         );
-      },
-      change: function() {
-        debugger;
-        const key = Object.keys(__widgetData)[0];
-        const objValue = __widgetData[key];
-        const value = objValue.columnEmail;
-
-        if (value) {
-          Fliplet.Helper.field('columnEmail').set(value);
-        }
       }
+      // change: function() {
+      //   debugger;
+      //   const key = Object.keys(__widgetData)[0];
+      //   const objValue = __widgetData[key].data;
+      //   const value = objValue.columnEmail;
+
+      //   if (value) {
+      //     Fliplet.Helper.field('columnEmail').set(value);
+      //   }
+      // }
     },
     {
       name: 'columnUserPhoto',
@@ -100,17 +106,17 @@ Fliplet.Widget.generateInterface({
         Fliplet.Helper.field('columnUserPhoto').toggle(
           Fliplet.Helper.field('dataSource').get()
         );
-      },
-      change: function() {
-        debugger;
-        const key = Object.keys(__widgetData)[0];
-        const objValue = __widgetData[key];
-        const value = objValue.columnUserPhoto;
-
-        if (value) {
-          Fliplet.Helper.field('columnUserPhoto').set(value);
-        }
       }
+      // change: function() {
+      //   debugger;
+      //   const key = Object.keys(__widgetData)[0];
+      //   const objValue = __widgetData[key].data;
+      //   const value = objValue.columnUserPhoto;
+
+      //   if (value) {
+      //     Fliplet.Helper.field('columnUserPhoto').set(value);
+      //   }
+      // }
     },
     {
       type: 'html',

@@ -191,10 +191,6 @@ Fliplet.Widget.instance('comments', function (widgetData) {
                           email: user.data[EMAIL_COLUMN],
                           name: userName,
                           type: 'to'
-                        }, {
-                          email: 'jane@example.org',
-                          name: 'Jane',
-                          type: 'cc'
                         }],
                         html: FLAGGED_MAIL_CONTENT,
                         subject: 'Comment flagged'
