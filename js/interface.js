@@ -1,13 +1,3 @@
-// var appDataSources = [];
-
-// Fliplet.DataSources.get({
-//   appId: Fliplet.Env.get('masterAppId'),
-//   attributes: ['id', 'name']
-// }).then(function(dataSources) {
-//   appDataSources = dataSources.map((el) => {
-//     return { value: el.id, label: el.name };
-//   });
-debugger;
 Fliplet.Widget.generateInterface({
   title: 'Comments',
   fields: [
@@ -83,7 +73,7 @@ Fliplet.Widget.generateInterface({
       required: true,
       ready: function() {
         Fliplet.Helper.field('columnEmail').toggle(
-          Fliplet.Helper.field('dataSource').get()
+          Fliplet.Helper.field('userDataSource').get()
         );
       }
       // change: function() {
@@ -105,7 +95,7 @@ Fliplet.Widget.generateInterface({
       default: '',
       ready: function() {
         Fliplet.Helper.field('columnUserPhoto').toggle(
-          Fliplet.Helper.field('dataSource').get()
+          Fliplet.Helper.field('userDataSource').get()
         );
       }
       // change: function() {

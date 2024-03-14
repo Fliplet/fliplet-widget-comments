@@ -71,7 +71,7 @@ Fliplet.Widget.instance('comments', function(widgetData) {
             Fliplet.UI.Toast.dismiss();
           },
           flagComment(comment) {
-            this.showToastProgress('Flagging comment...');
+            this.showToastProgress('Flagging the comment...');
             comment.data.flagged = true;
 
             Fliplet.DataSources.connectByName(DS_COMMENTS)
@@ -87,18 +87,18 @@ Fliplet.Widget.instance('comments', function(widgetData) {
                     .getExistingEmailsToNotifyAboutFlag()
                     .then(existingEmails => {
                       let emails = existingEmails.map((user) => {
-                        let userName = '';
+                        let adminName = '';
 
                         if (USER_NAMES.length === 1) {
-                          userName = user.data[USER_NAMES[0]];
+                          adminName = user.data[USER_NAMES[0]];
                         } else if (USER_NAMES.length === 2) {
-                          userName = `${user.data[USER_NAMES[0]]} ${user.data[USER_NAMES[1]]}`;
+                          adminName = `${user.data[USER_NAMES[0]]} ${user.data[USER_NAMES[1]]}`;
                         }
 
                         return {
                           options: {
                             to: [
-                              { email: user.data[EMAIL_COLUMN], name: userName, type: 'to' }
+                              { email: user.data[EMAIL_COLUMN], name: adminName, type: 'to' }
                             ],
                             html: FLAGGED_MAIL_CONTENT,
                             subject: 'Comment flagged'

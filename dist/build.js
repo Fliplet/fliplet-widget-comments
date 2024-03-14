@@ -168,7 +168,7 @@ Fliplet.Widget.instance('comments', function (widgetData) {
           },
           flagComment: function flagComment(comment) {
             var _this = this;
-            this.showToastProgress('Flagging comment...');
+            this.showToastProgress('Flagging the comment...');
             comment.data.flagged = true;
             Fliplet.DataSources.connectByName(DS_COMMENTS).then(function (connection) {
               return connection.update(comment.id, {
@@ -179,17 +179,17 @@ Fliplet.Widget.instance('comments', function (widgetData) {
               if (EMAILS_TO_NOTIFY_FLAGGED_COMMENT.length) {
                 return _this.getExistingEmailsToNotifyAboutFlag().then(function (existingEmails) {
                   var emails = existingEmails.map(function (user) {
-                    var userName = '';
+                    var adminName = '';
                     if (USER_NAMES.length === 1) {
-                      userName = user.data[USER_NAMES[0]];
+                      adminName = user.data[USER_NAMES[0]];
                     } else if (USER_NAMES.length === 2) {
-                      userName = "".concat(user.data[USER_NAMES[0]], " ").concat(user.data[USER_NAMES[1]]);
+                      adminName = "".concat(user.data[USER_NAMES[0]], " ").concat(user.data[USER_NAMES[1]]);
                     }
                     return {
                       options: {
                         to: [{
                           email: user.data[EMAIL_COLUMN],
-                          name: userName,
+                          name: adminName,
                           type: 'to'
                         }],
                         html: FLAGGED_MAIL_CONTENT,
