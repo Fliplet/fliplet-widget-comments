@@ -33,6 +33,8 @@ Fliplet.Widget.generateInterface({
       // }
       // },
       ready: function(el, value, provider) {
+        debugger;
+
         if (value) {
           Fliplet.DataSources.getById(value.id, {
             attributes: ['columns']
@@ -76,6 +78,16 @@ Fliplet.Widget.generateInterface({
         Fliplet.Helper.field('columnEmail').toggle(
           Fliplet.Helper.field('dataSource').get()
         );
+      },
+      change: function() {
+        debugger;
+        const key = Object.keys(this.__widgetData)[0];
+        const objValue = this.__widgetData[key];
+        const value = objValue.columnEmail;
+
+        if (value) {
+          Fliplet.Helper.field('columnEmail').set(value);
+        }
       }
     },
     {
@@ -88,6 +100,16 @@ Fliplet.Widget.generateInterface({
         Fliplet.Helper.field('columnUserPhoto').toggle(
           Fliplet.Helper.field('dataSource').get()
         );
+      },
+      change: function() {
+        debugger;
+        const key = Object.keys(this.__widgetData)[0];
+        const objValue = this.__widgetData[key];
+        const value = objValue.columnUserPhoto;
+
+        if (value) {
+          Fliplet.Helper.field('columnUserPhoto').set(value);
+        }
       }
     },
     {
