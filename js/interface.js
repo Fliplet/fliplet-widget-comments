@@ -7,6 +7,7 @@
 //   appDataSources = dataSources.map((el) => {
 //     return { value: el.id, label: el.name };
 //   });
+debugger;
 Fliplet.Widget.generateInterface({
   title: 'Comments',
   fields: [
@@ -15,11 +16,11 @@ Fliplet.Widget.generateInterface({
       type: 'provider',
       label: 'Datasource',
       package: 'com.fliplet.data-source-provider',
-      // onEvent: function(event, data) {
-      //   debugger;
-      // var value = 'x';
+      onEvent: function(event, data) {
+        debugger;
+        // var value = 'x';
 
-      // Fliplet.Helper.field('columnName').toggle(value);
+        // Fliplet.Helper.field('columnName').toggle(value);
 
       // if (value) {
       //   Fliplet.DataSources.getById(value, {
@@ -31,7 +32,7 @@ Fliplet.Widget.generateInterface({
       //     });
       //   });
       // }
-      // },
+      },
       ready: function(el, value, provider) {
         debugger;
 
