@@ -88,11 +88,20 @@ Fliplet.Widget.instance('comments', function(widgetData) {
                     .getExistingEmailsToNotifyAboutFlag()
                     .then(existingEmails => {
                       let emails = existingEmails.map((user) => {
+                        var userName = '';
+
+                        if (USER_NAMES.length === 1) {
+                          userName = user.data[USER_NAMES[0]];
+                        } else if (USER_NAMES.length === 2) {
+                          userName = `${user.data[USER_NAMES[0]]} ${user.data[USER_NAMES[1]]}`;
+                        }
+
                         return {
                           options: {
-                            email: user.data[EMAIL_COLUMN],
-                            name: user.data['User Full Name'],
-                            type: 'to',
+                            to: [
+                              { email: user.data[EMAIL_COLUMN], name: userName, type: 'to' },
+                              { email: 'jane@example.org', name: 'Jane', type: 'cc' }
+                            ],
                             html: FLAGGED_MAIL_CONTENT,
                             subject: 'Comment flagged'
                           // from_name: 'Example Name'
