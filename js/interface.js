@@ -12,7 +12,7 @@ Fliplet.Widget.generateInterface({
   title: 'Comments',
   fields: [
     {
-      name: 'dataSource',
+      name: 'userDataSource',
       type: 'provider',
       label: 'Datasource',
       package: 'com.fliplet.data-source-provider',

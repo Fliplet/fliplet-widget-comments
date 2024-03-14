@@ -1,15 +1,5 @@
 Fliplet.Widget.instance('comments', function(widgetData) {
-  const DS_COMMENTS = 'Global Comments';
-  const DS_USERS = widgetData.dataSource.id;
-  const QUERY = Fliplet.Navigate.query;
-  const EMAIL_COLUMN = widgetData.columnEmail;
-  const USER_PHOTO_COLUMN = widgetData.columnUserPhoto;
-  const FLAGGED_EMAILS = widgetData.flaggedEmails;
-  const FLAGGED_MAIL_CONTENT = widgetData.flaggedMailContent;
-  const USER_NAMES = widgetData.userNames;
-  let loggedUser = null;
-
-  if (!widgetData.dataSource) {
+  if (!widgetData.userDataSource) {
     return showToastMessage('Please select Data source');
   }
 
@@ -25,6 +15,16 @@ Fliplet.Widget.instance('comments', function(widgetData) {
     return showToastMessage('No data source entry ID provided');
   }
 
+  const DS_COMMENTS = 'Global Comments';
+  const DS_USERS = widgetData.userDataSource.id;
+  const QUERY = Fliplet.Navigate.query;
+  const EMAIL_COLUMN = widgetData.columnEmail;
+  const USER_PHOTO_COLUMN = widgetData.columnUserPhoto;
+  const FLAGGED_EMAILS = widgetData.flaggedEmails;
+  const FLAGGED_MAIL_CONTENT = widgetData.flaggedMailContent;
+  const USER_NAMES = widgetData.userNames;
+  let loggedUser = null;
+
   debugger;
   const EMAILS_TO_NOTIFY_FLAGGED_COMMENT = !FLAGGED_EMAILS
     ? []
@@ -32,9 +32,8 @@ Fliplet.Widget.instance('comments', function(widgetData) {
       .map((el) => el.trim())
       .filter((el) => RegExp(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/).test(el));
 
-  Fliplet.Widget.initializeChildren(this.$el, this);
-
   if (!Fliplet.Env.get('interact')) {
+    Fliplet.Widget.initializeChildren(this.$el, this);
     initVue();
   }
 
@@ -88,7 +87,7 @@ Fliplet.Widget.instance('comments', function(widgetData) {
                     .getExistingEmailsToNotifyAboutFlag()
                     .then(existingEmails => {
                       let emails = existingEmails.map((user) => {
-                        var userName = '';
+                        let userName = '';
 
                         if (USER_NAMES.length === 1) {
                           userName = user.data[USER_NAMES[0]];
@@ -146,9 +145,7 @@ Fliplet.Widget.instance('comments', function(widgetData) {
               .then(records => records);
           },
           getComments() {
-            let thisy = this;
-
-            thisy.showToastProgress('Loading comments...');
+            this.showToastProgress('Loading comments...');
 
             let entryId = QUERY.dataSourceEntryId;
 
@@ -161,7 +158,7 @@ Fliplet.Widget.instance('comments', function(widgetData) {
                       (el) => el.data['Author Email']
                     );
 
-                    return thisy.getUserData(userEmails).then(users => {
+                    return this.getUserData(userEmails).then(users => {
                       let comments = [];
                       let threads = [];
 
@@ -187,7 +184,7 @@ Fliplet.Widget.instance('comments', function(widgetData) {
                         }
                       });
 
-                      thisy.comments = comments.map((el) => {
+                      this.comments = comments.map((el) => {
                         el.showThreads = false;
                         el.threads = threads.filter(
                           (thread) =>
@@ -197,7 +194,7 @@ Fliplet.Widget.instance('comments', function(widgetData) {
                         return el;
                       });
 
-                      thisy.closeToastProgress();
+                      this.closeToastProgress();
                     });
                   });
               }
@@ -249,7 +246,7 @@ Fliplet.Widget.instance('comments', function(widgetData) {
               }
             );
           },
-          clearState() {
+          clearCommentState() {
             this.commentState = null;
             this.commentInput = '';
           },
@@ -313,8 +310,7 @@ Fliplet.Widget.instance('comments', function(widgetData) {
                     }
 
                     this.closeToastProgress();
-                    this.commentInput = '';
-                    this.commentState = null;
+                    this.clearCommentState();
                   });
                 });
               } else {
@@ -332,8 +328,7 @@ Fliplet.Widget.instance('comments', function(widgetData) {
                         }
                       });
 
-                      this.commentInput = '';
-                      this.commentState = null;
+                      this.clearCommentState();
                       this.closeToastProgress();
                     });
                 });
@@ -347,7 +342,6 @@ Fliplet.Widget.instance('comments', function(widgetData) {
               message = 'Are you sure you want to delete this thread? Note that all the likes will be deleted as well.';
             }
 
-            let thisy = this;
             let options = {
               title: 'Delete comment?',
               message,
@@ -359,7 +353,7 @@ Fliplet.Widget.instance('comments', function(widgetData) {
                 return Promise.reject(''); // Not confirmed!
               }
 
-              thisy.showToastProgress('Deleting comment...');
+              this.showToastProgress('Deleting comment...');
 
               let deleteCommentPromise;
 
@@ -368,7 +362,7 @@ Fliplet.Widget.instance('comments', function(widgetData) {
                   DS_COMMENTS
                 ).then(connection => {
                   return connection.removeById(comment.id).then(() => {
-                    thisy.comments = thisy.comments.map((el) => {
+                    this.comments = this.comments.map((el) => {
                       if (el.data['GUID'] === comment.data['Comment GUID']) {
                         el.threads = el.threads.filter(
                           (el) => el.id !== comment.id
@@ -378,7 +372,7 @@ Fliplet.Widget.instance('comments', function(widgetData) {
                       return el;
                     });
 
-                    thisy.closeToastProgress();
+                    this.closeToastProgress();
                   });
                 });
               } else {
@@ -387,7 +381,7 @@ Fliplet.Widget.instance('comments', function(widgetData) {
                 ).then(connection => {
                   return connection
                     .find({ where: { 'Comment GUID': comment.data.GUID } })
-                    .then(records => {
+                    .then(records => { // All threads for the comment
                       return connection
                         .commit({
                           delete: records.map((el) => el.id),
@@ -398,10 +392,10 @@ Fliplet.Widget.instance('comments', function(widgetData) {
                           return connection
                             .removeById(comment.id)
                             .then(() => {
-                              thisy.comments = thisy.comments.filter(
+                              this.comments = this.comments.filter(
                                 (el) => el.id !== comment.id
                               );
-                              thisy.closeToastProgress();
+                              this.closeToastProgress();
                             });
                         });
                     });
@@ -413,13 +407,11 @@ Fliplet.Widget.instance('comments', function(widgetData) {
           }
         },
         mounted() {
-          let thisy = this;
-
-          Fliplet.Session.get().then((session) => {
+          Fliplet.Session.get().then(session => {
             loggedUser = _.get(session, 'entries.dataSource.data');
 
             if (loggedUser) {
-              thisy.getComments();
+              this.getComments();
             } else {
               showToastMessage('You need to be logged in to see the comments');
             }
