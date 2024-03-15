@@ -42,6 +42,10 @@ Fliplet.Widget.generateInterface({
             instance.change(function(value) {
               Fliplet.Helper.field('userNames').set(value);
             });
+
+            $(document).find('.form-group.fl-typeahead .selectize-input').css('margin', 'auto');
+            $(document).find('.form-group.fl-typeahead .selectize-input').css('display', 'block');
+            $(document).find('.form-group.fl-typeahead .selectize-input').css('width', 'calc(100% - 30px)');
           });
         }
       }
@@ -99,7 +103,7 @@ Fliplet.Widget.generateInterface({
       <div>
         <label for="typeaheadUserName">User data fields (Required)</label>
       </div>
-      <div class="form-group fl-typeahead" style="margin: 0 0 20px 0!important;" id="typeaheadUserName">
+      <div class="form-group fl-typeahead" id="typeaheadUserName">
         <select placeholder="Start typing..."></select>
       </div>`
     },
