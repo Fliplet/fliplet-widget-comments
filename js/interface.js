@@ -8,20 +8,8 @@ Fliplet.Widget.generateInterface({
       package: 'com.fliplet.data-source-provider',
       // onEvent: function(event, data) {
       //   debugger;
-      // var value = 'x';
-
-      // Fliplet.Helper.field('columnName').toggle(value);
-
-      // if (value) {
-      //   Fliplet.DataSources.getById(value, {
-      //     attributes: ['columns']
-      //   }).then(function(columns) {
-      //     $('#columnName').html('');
-      //     columns.columns.forEach((el) => {
-      //       $('#columnName').append(`<option value="${el}">${el}</option>`);
-      //     });
-      //   });
-      // }
+      // $('#columnEmail').val('');
+      // $('#columnUserPhoto').val('');
       // },
       ready: function(el, value, provider) {
         debugger;
@@ -39,7 +27,7 @@ Fliplet.Widget.generateInterface({
               $('#columnUserPhoto').append(`<option value="${el}">${el}</option>`);
             });
 
-            var instance = Fliplet.UI.Typeahead($('#target'), {
+            var instance = Fliplet.UI.Typeahead($('#typeaheadUserName'), {
               options: columns.columns.map(el => {
                 return { value: el, label: el };
               }),
@@ -47,6 +35,10 @@ Fliplet.Widget.generateInterface({
               maxItems: 2
             });
 
+            const key = Object.keys(__widgetData)[0];
+            const objValue = __widgetData[key].data;
+
+            instance.set(objValue.userNames, true);
             instance.change(function(value) {
               Fliplet.Helper.field('userNames').set(value);
             });
@@ -76,20 +68,9 @@ Fliplet.Widget.generateInterface({
             const objValue = __widgetData[key].data;
 
             $('#columnEmail').val(objValue.columnEmail);
-            //     Fliplet.Helper.field('columnEmail').set(objValue.columnEmail);
           }, 1000);
         }
       }
-      // change: function() {
-      //   debugger;
-      //   const key = Object.keys(__widgetData)[0];
-      //   const objValue = __widgetData[key].data;
-      //   const value = objValue.columnEmail;
-
-      //   if (value) {
-      //     Fliplet.Helper.field('columnEmail').set(value);
-      //   }
-      // }
     },
     {
       name: 'columnUserPhoto',
@@ -108,29 +89,17 @@ Fliplet.Widget.generateInterface({
             const objValue = __widgetData[key].data;
 
             $('#columnUserPhoto').val(objValue.columnUserPhoto);
-
-          //   Fliplet.Helper.field('columnUserPhoto').set(objValue.columnUserPhoto);
           }, 1000);
         }
       }
-      // change: function() {
-      //   debugger;
-      //   const key = Object.keys(__widgetData)[0];
-      //   const objValue = __widgetData[key].data;
-      //   const value = objValue.columnUserPhoto;
-
-      //   if (value) {
-      //     Fliplet.Helper.field('columnUserPhoto').set(value);
-      //   }
-      // }
     },
     {
       type: 'html',
       html: `
       <div>
-        <label for="target">User data fields (Required)</label>
+        <label for="typeaheadUserName">User data fields (Required)</label>
       </div>
-      <div class="form-group fl-typeahead" id="target">
+      <div class="form-group fl-typeahead" id="typeaheadUserName">
         <select placeholder="Start typing..."></select>
       </div>`
     },
