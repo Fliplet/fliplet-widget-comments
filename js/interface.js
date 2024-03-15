@@ -71,12 +71,13 @@ Fliplet.Widget.generateInterface({
         );
 
         if (Fliplet.Helper.field('userDataSource').get()) {
-          setTimeout(() => {
-            const key = Object.keys(__widgetData)[0];
-            const objValue = __widgetData[key].data;
+          //   setTimeout(() => {
+          const key = Object.keys(__widgetData)[0];
+          const objValue = __widgetData[key].data;
 
-            Fliplet.Helper.field('columnEmail').set(objValue.columnEmail);
-          }, 1000);
+          $('#columnEmail').val(objValue.columnEmail);
+        //     Fliplet.Helper.field('columnEmail').set(objValue.columnEmail);
+        //   }, 1000);
         }
       }
       // change: function() {
@@ -102,12 +103,14 @@ Fliplet.Widget.generateInterface({
         );
 
         if (Fliplet.Helper.field('userDataSource').get()) {
-          setTimeout(() => {
-            const key = Object.keys(__widgetData)[0];
-            const objValue = __widgetData[key].data;
+          // setTimeout(() => {
+          const key = Object.keys(__widgetData)[0];
+          const objValue = __widgetData[key].data;
 
-            Fliplet.Helper.field('columnUserPhoto').set(objValue.columnUserPhoto);
-          }, 1000);
+          $('#columnUserPhoto').val(objValue.columnUserPhoto);
+
+          //   Fliplet.Helper.field('columnUserPhoto').set(objValue.columnUserPhoto);
+          // }, 1000);
         }
       }
       // change: function() {
