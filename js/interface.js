@@ -39,12 +39,6 @@ Fliplet.Widget.generateInterface({
               $('#columnUserPhoto').append(`<option value="${el}">${el}</option>`);
             });
 
-            const key = Object.keys(__widgetData)[0];
-            const objValue = __widgetData[key].data;
-
-            Fliplet.Helper.field('columnEmail').set(objValue.columnEmail);
-            Fliplet.Helper.field('columnUserPhoto').set(objValue.columnUserPhoto);
-
             var instance = Fliplet.UI.Typeahead($('#target'), {
               options: columns.columns.map(el => {
                 return { value: el, label: el };
@@ -75,6 +69,13 @@ Fliplet.Widget.generateInterface({
         Fliplet.Helper.field('columnEmail').toggle(
           Fliplet.Helper.field('userDataSource').get()
         );
+
+        if (Fliplet.Helper.field('userDataSource').get()) {
+          const key = Object.keys(__widgetData)[0];
+          const objValue = __widgetData[key].data;
+
+          Fliplet.Helper.field('columnEmail').set(objValue.columnEmail);
+        }
       }
       // change: function() {
       //   debugger;
@@ -97,6 +98,13 @@ Fliplet.Widget.generateInterface({
         Fliplet.Helper.field('columnUserPhoto').toggle(
           Fliplet.Helper.field('userDataSource').get()
         );
+
+        if (Fliplet.Helper.field('userDataSource').get()) {
+          const key = Object.keys(__widgetData)[0];
+          const objValue = __widgetData[key].data;
+
+          Fliplet.Helper.field('columnUserPhoto').set(objValue.columnUserPhoto);
+        }
       }
       // change: function() {
       //   debugger;
