@@ -99,7 +99,7 @@ Fliplet.Widget.generateInterface({
       <div>
         <label for="typeaheadUserName">User data fields (Required)</label>
       </div>
-      <div class="form-group fl-typeahead" id="typeaheadUserName">
+      <div class="form-group fl-typeahead" style="margin: 0 0 20px 0!important;" id="typeaheadUserName">
         <select placeholder="Start typing..."></select>
       </div>`
     },
