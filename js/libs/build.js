@@ -168,6 +168,7 @@ Fliplet.Widget.instance('comments', function(widgetData) {
                             user.data[EMAIL_COLUMN] === el.data['Author Email']
                         );
 
+                        el.data.userFullName = this.getUserFullName(currentUser.data);
                         el.data.userInitials = this.getUserInitials(currentUser.data);
                         el.data.userAvatar = currentUser.data[USER_PHOTO_COLUMN]
                           ? Fliplet.Media.authenticate(
@@ -199,6 +200,17 @@ Fliplet.Widget.instance('comments', function(widgetData) {
                   });
               }
             );
+          },
+          getUserFullName(userData) {
+            let userFullName = '';
+
+            if (USER_NAMES.length === 1) {
+              userFullName = userData[USER_NAMES[0]];
+            } else if (USER_NAMES.length === 2) {
+              userFullName = `${userData[USER_NAMES[0]]} ${userData[USER_NAMES[1]]}`;
+            }
+
+            return userFullName;
           },
           getUserInitials(userData) {
             let userInitials = '';

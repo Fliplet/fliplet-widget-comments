@@ -255,6 +255,7 @@ Fliplet.Widget.instance('comments', function (widgetData) {
                     var currentUser = users.find(function (user) {
                       return user.data[EMAIL_COLUMN] === el.data['Author Email'];
                     });
+                    el.data.userFullName = _this2.getUserFullName(currentUser.data);
                     el.data.userInitials = _this2.getUserInitials(currentUser.data);
                     el.data.userAvatar = currentUser.data[USER_PHOTO_COLUMN] ? Fliplet.Media.authenticate(currentUser.data[USER_PHOTO_COLUMN]) : null;
                     el.data.flagged = false;
@@ -276,6 +277,15 @@ Fliplet.Widget.instance('comments', function (widgetData) {
                 });
               });
             });
+          },
+          getUserFullName: function getUserFullName(userData) {
+            var userFullName = '';
+            if (USER_NAMES.length === 1) {
+              userFullName = userData[USER_NAMES[0]];
+            } else if (USER_NAMES.length === 2) {
+              userFullName = "".concat(userData[USER_NAMES[0]], " ").concat(userData[USER_NAMES[1]]);
+            }
+            return userFullName;
           },
           getUserInitials: function getUserInitials(userData) {
             var userInitials = '';
