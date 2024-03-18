@@ -153,6 +153,10 @@ Fliplet.Widget.instance('comments', function (widgetData) {
           }
         },
         methods: {
+          clearState: function clearState() {
+            this.commentState = null;
+            this.commentInput = '';
+          },
           showToastProgress: function showToastProgress() {
             var message = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'Processing';
             Fliplet.UI.Toast({
@@ -300,7 +304,7 @@ Fliplet.Widget.instance('comments', function (widgetData) {
             }
             return userInitials;
           },
-          likedLoginByUser: function likedLoginByUser(likes) {
+          isLikedByLoginUser: function isLikedByLoginUser(likes) {
             return likes.includes(loggedUser.Email);
           },
           isLoggedUserOwnerOfComment: function isLoggedUserOwnerOfComment(comment) {
@@ -313,7 +317,7 @@ Fliplet.Widget.instance('comments', function (widgetData) {
             return moment(timestamp).format('MM/DD/YYYY');
           },
           manageLike: function manageLike(comment) {
-            if (this.likedLoginByUser(comment.data.Likes)) {
+            if (this.isLikedByLoginUser(comment.data.Likes)) {
               comment.data.Likes = comment.data.Likes.filter(function (el) {
                 return el !== loggedUser[EMAIL_COLUMN];
               });
@@ -398,9 +402,9 @@ Fliplet.Widget.instance('comments', function (widgetData) {
           deleteComment: function deleteComment(comment) {
             var _this4 = this;
             var isThread = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
-            var message = 'Are you sure you want to delete this comment? Note that all the threads and likes will be deleted as well.';
+            var message = 'Are you sure you want to delete this comment? Note that all the threads will be deleted as well.';
             if (isThread) {
-              message = 'Are you sure you want to delete this thread? Note that all the likes will be deleted as well.';
+              message = 'Are you sure you want to delete this thread?';
             }
             var options = {
               title: 'Delete comment?',

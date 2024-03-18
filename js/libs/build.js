@@ -58,6 +58,10 @@ Fliplet.Widget.instance('comments', function(widgetData) {
           }
         },
         methods: {
+          clearState() {
+            this.commentState = null;
+            this.commentInput = '';
+          },
           showToastProgress(message = 'Processing') {
             Fliplet.UI.Toast({
               message,
@@ -228,7 +232,7 @@ Fliplet.Widget.instance('comments', function(widgetData) {
 
             return userInitials;
           },
-          likedLoginByUser(likes) {
+          isLikedByLoginUser(likes) {
             return likes.includes(loggedUser.Email);
           },
           isLoggedUserOwnerOfComment(comment) {
@@ -241,7 +245,7 @@ Fliplet.Widget.instance('comments', function(widgetData) {
             return moment(timestamp).format('MM/DD/YYYY');
           },
           manageLike(comment) {
-            if (this.likedLoginByUser(comment.data.Likes)) {
+            if (this.isLikedByLoginUser(comment.data.Likes)) {
               comment.data.Likes = comment.data.Likes.filter(
                 (el) => el !== loggedUser[EMAIL_COLUMN]
               );
@@ -348,10 +352,10 @@ Fliplet.Widget.instance('comments', function(widgetData) {
             }
           },
           deleteComment(comment, isThread = false) {
-            let message = 'Are you sure you want to delete this comment? Note that all the threads and likes will be deleted as well.';
+            let message = 'Are you sure you want to delete this comment? Note that all the threads will be deleted as well.';
 
             if (isThread) {
-              message = 'Are you sure you want to delete this thread? Note that all the likes will be deleted as well.';
+              message = 'Are you sure you want to delete this thread?';
             }
 
             let options = {
