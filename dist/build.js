@@ -102,14 +102,8 @@ __webpack_require__.r(__webpack_exports__);
 
 
 Fliplet.Widget.instance('comments', function (widgetData) {
-  if (!widgetData.userDataSource) {
-    return showToastMessage('Please select Data source');
-  }
-  if (!widgetData.columnEmail) {
-    return showToastMessage('Please select column for the email');
-  }
   var DS_COMMENTS = 'Global Comments';
-  var DS_USERS = widgetData.userDataSource.id;
+  var DS_USERS = widgetData.userDataSource ? widgetData.userDataSource.id : null;
   var QUERY = Fliplet.Navigate.query;
   var EMAIL_COLUMN = widgetData.columnEmail;
   var USER_PHOTO_COLUMN = widgetData.columnUserPhoto;
@@ -117,6 +111,12 @@ Fliplet.Widget.instance('comments', function (widgetData) {
   var FLAGGED_MAIL_CONTENT = widgetData.flaggedMailContent;
   var USER_NAMES = widgetData.userNames;
   var loggedUser = null;
+  if (!DS_USERS) {
+    return showToastMessage('Please select Data source');
+  }
+  if (!EMAIL_COLUMN) {
+    return showToastMessage('Please select column for the email');
+  }
   if (!USER_NAMES) {
     return showToastMessage('Please select user names');
   }
@@ -129,9 +129,65 @@ Fliplet.Widget.instance('comments', function (widgetData) {
   }).filter(function (el) {
     return RegExp(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/).test(el);
   });
+  var APP_ID = Fliplet.Env.get('appId');
+  var GLOBAL_COMMENTS_DATA_SOURCE = 'Global Comments';
+  var DS_DEFINITION = {
+    'guid': 'GUID'
+  };
+  var GLOBAL_COMMENTS_DATA_SOURCE_COLUMNS = ['GUID', 'Author Email', 'Comment GUID', 'Message', 'Likes', 'Timestamp', 'Flagged', 'Entry Id'];
+  var ACCESS_RULES = [{
+    'type': ['select', 'insert'],
+    'allow': 'loggedIn',
+    'enabled': true
+  }, {
+    'type': ['update', 'delete'],
+    'allow': {
+      'user': {
+        'Admin': {
+          'equals': 'Yes'
+        }
+      }
+    },
+    'enabled': true
+  }, {
+    'type': ['update', 'delete'],
+    'allow': {
+      'user': {
+        'Author Email': {
+          'equals': '{{user.[Email]}}'
+        }
+      }
+    },
+    'enabled': true
+  }];
   if (!Fliplet.Env.get('interact')) {
     Fliplet.Widget.initializeChildren(this.$el, this);
-    initVue();
+    manageGlobalCommentsDataSource();
+  }
+  function manageGlobalCommentsDataSource() {
+    return Fliplet.DataSources.get({
+      attributes: ['id', 'name'],
+      where: {
+        APP_ID: APP_ID
+      }
+    }).then(function (dataSources) {
+      var dsExist = dataSources.find(function (el) {
+        return el.name === GLOBAL_COMMENTS_DATA_SOURCE;
+      });
+      if (!dsExist) {
+        return Fliplet.DataSources.create({
+          name: GLOBAL_COMMENTS_DATA_SOURCE,
+          appId: APP_ID,
+          columns: GLOBAL_COMMENTS_DATA_SOURCE_COLUMNS,
+          accessRules: ACCESS_RULES,
+          'definition': DS_DEFINITION
+        }).then(function (newDataSource) {
+          // newDataSource.id
+          initVue();
+        });
+      }
+      initVue();
+    });
   }
   function showToastMessage(message) {
     return Fliplet.UI.Toast(message);
