@@ -403,6 +403,8 @@ Fliplet.Widget.instance('comments', function(widgetData) {
                         if (el.id === this.commentState.comment.id) {
                           el.data.Message = this.commentInput;
                         }
+
+                        return el;
                       });
 
                       this.clearCommentState();

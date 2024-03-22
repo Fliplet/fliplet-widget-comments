@@ -459,6 +459,7 @@ Fliplet.Widget.instance('comments', function (widgetData) {
                       if (el.id === _this3.commentState.comment.id) {
                         el.data.Message = _this3.commentInput;
                       }
+                      return el;
                     });
                     _this3.clearCommentState();
                     _this3.closeToastProgress();
