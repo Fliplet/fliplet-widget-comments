@@ -429,6 +429,7 @@ Fliplet.Widget.instance('comments', function (widgetData) {
                   }
                   return connection.insert(toInsert).then(function (record) {
                     record.data.userInitials = _this3.getUserInitials(loggedUser);
+                    record.data.userFullName = _this3.getUserFullName(loggedUser);
                     record.data.flagged = false;
                     record.data.openDropdown = false;
                     record.showThreads = false;
