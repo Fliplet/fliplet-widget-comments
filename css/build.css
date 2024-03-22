@@ -268,15 +268,6 @@
   background: #FAFAFB;
 }
 
-[name="comments"] .fixed-container p {
-  flex: 0 0 100%;
-  cursor: pointer;
-  font-weight: bold;
-  margin-top: 10px;
-  margin-left: 25px;
-  margin-bottom: 0;
-}
-
 [name="comments"] .add-comment-container {
   margin: 10px;
   padding: 5px;
@@ -356,6 +347,14 @@
 [name="comments"] .cancel-reply-container {
   display: flex;
   justify-content: space-between;
+  padding: 0 25px;
+}
+
+[name="comments"] .cancel-reply-container p {
+  flex: 0 0 100%;
+  cursor: pointer;
+  margin-top: 10px;
+  margin-bottom: 0;
 }
 
 [name="comments"] .comment.active-comment {

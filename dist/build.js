@@ -227,8 +227,11 @@ Fliplet.Widget.instance('comments', function (widgetData) {
           closeToastProgress: function closeToastProgress() {
             Fliplet.UI.Toast.dismiss();
           },
-          isCommentInActiveMode: function isCommentInActiveMode(comment) {
-            return this.commentState && this.commentState.comment.id === comment.id;
+          isCommentInEditMode: function isCommentInEditMode(comment) {
+            return this.commentState && this.commentState === 'edit' && this.commentState.comment.id === comment.id;
+          },
+          isCommentInReplyMode: function isCommentInReplyMode(comment) {
+            return this.commentState && this.commentState === 'reply' && this.commentState.comment.id === comment.id;
           },
           flagComment: function flagComment(comment) {
             var _this = this;

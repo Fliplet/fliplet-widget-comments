@@ -60,8 +60,9 @@
             </div>
           </div>
           <div v-if="isLoggedUserOwnerOfComment(comment)" class="manage-comment-container">
-            <p @click="deleteComment(comment)">Delete</p>
-            <p @click="prepareComment(comment, 'edit')">Edit</p>
+            <p v-if="!isCommentInEditMode(comment)" @click="deleteComment(comment)">Delete</p>
+            <p v-if="!isCommentInEditMode(comment)" @click="prepareComment(comment, 'edit')">Edit</p>
+            <p v-if="isCommentInEditMode(comment)" @click="clearState()" class="cancel-btn">Cancel editing</p>
           </div>
           <div v-else class="flag-container" @click="comment.data.openDropdown = !comment.data.openDropdown">
             <svg width="28" height="6" viewBox="0 0 28 6" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -86,7 +87,7 @@
       <div>
         <div v-if="comment.threads.length && comment.showThreads">
           <div
-            :class="{flagged: comment.data.flagged, 'active-comment': isCommentInActiveMode(comment)}"
+            :class="{flagged: comment.data.flagged, 'active-comment': isCommentInReplyMode(comment)}"
             class="comment answer"
             v-for="(thread, index) in comment.threads"
             :key="'thread' + thread.id"
@@ -154,10 +155,10 @@
     <p>No comments yet</p>
   </div>
   <div class="fixed-container">
-    <p class="cancel-reply-container" v-if="commentState && commentState.action === 'reply'">
-      <span>Replying to  <strong>\{{commentState.comment.data.userFullName}}</strong></span>
-      <span @click="clearState()" class="cancel-btn">Cancel</span>
-    </p>
+    <div class="cancel-reply-container" v-if="commentState && commentState.action === 'reply'">
+      <p>Replying to  <strong>\{{commentState.comment.data.userFullName}}</strong></p>
+      <p @click="clearState()" class="cancel-btn">Cancel</p>
+    </div>
     <div class="add-comment-container">
       <input
         @keyup.enter="manageComment()"
