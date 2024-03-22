@@ -132,8 +132,9 @@
                 </div>
               </div>
               <div v-if="isLoggedUserOwnerOfComment(thread)"  class="manage-comment-container">
-                <p @click="deleteComment(thread, true)">Delete</p>
-                <p @click="prepareComment(thread, 'edit')">Edit</p>
+                <p v-if="!checkCommentState(thread, 'edit')" @click="deleteComment(thread)">Delete</p>
+                <p v-if="!checkCommentState(thread, 'edit')" @click="prepareComment(thread, 'edit')">Edit</p>
+                <p v-if="checkCommentState(thread, 'edit')" @click="clearState()" class="cancel-btn">Cancel editing</p>
               </div>
               <div v-else class="flag-container" @click="thread.data.openDropdown = !thread.data.openDropdown">
                 <svg width="28" height="6" viewBox="0 0 28 6" fill="none" xmlns="http://www.w3.org/2000/svg">
