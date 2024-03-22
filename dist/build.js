@@ -101,6 +101,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__);
 
 
+// TODO: Change Entry Id for a entity to be a GUID
 Fliplet.Widget.instance('comments', function (widgetData) {
   var DS_COMMENTS = 'Global Comments';
   var DS_USERS = widgetData.userDataSource ? widgetData.userDataSource.id : null;
@@ -140,7 +141,7 @@ Fliplet.Widget.instance('comments', function (widgetData) {
     'allow': 'loggedIn',
     'enabled': true
   }, {
-    'type': ['update', 'delete'],
+    'type': ['delete'],
     'allow': {
       'user': {
         'Admin': {
@@ -154,7 +155,7 @@ Fliplet.Widget.instance('comments', function (widgetData) {
     'allow': {
       'user': {
         'Author Email': {
-          'equals': '{{user.[Email]}}'
+          'equals': "{{user.[".concat(EMAIL_COLUMN, "]}}")
         }
       }
     },

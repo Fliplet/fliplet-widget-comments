@@ -1,8 +1,8 @@
 [name="comments"].hidden {
-  display: none!important;
+  display: none !important;
 }
 
-[name="comments"] .comments-holder{
+[name="comments"] .comments-holder {
   /* max-height: 400px;
   overflow-y: auto; */
 }
@@ -226,7 +226,7 @@
   margin: 10px 0 0 50px;
 }
 
-[name="comments"] .last-row .actions > div {
+[name="comments"] .last-row .actions>div {
   cursor: pointer;
   margin-right: 10px;
   color: #474975;
@@ -298,7 +298,7 @@
   outline: none;
 }
 
-[name="comments"] .input-comment:focus + .btn-post-comment {
+[name="comments"] .input-comment:focus+.btn-post-comment {
   display: block;
 }
 
@@ -343,4 +343,17 @@
   font-weight: 600;
   line-height: 15px;
   padding: 0 15px;
+}
+
+[name="comments"] .cancel-btn {
+  cursor: pointer;
+  color: #474975;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 16px;
+}
+
+[name="comments"] .cancel-reply-container {
+  display: flex;
+  justify-content: space-between;
 }

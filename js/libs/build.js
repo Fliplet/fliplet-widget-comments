@@ -1,3 +1,4 @@
+// TODO: Change Entry Id for a entity to be a GUID
 Fliplet.Widget.instance('comments', function(widgetData) {
   const DS_COMMENTS = 'Global Comments';
   const DS_USERS = widgetData.userDataSource ? widgetData.userDataSource.id : null;
@@ -44,13 +45,13 @@ Fliplet.Widget.instance('comments', function(widgetData) {
     'enabled': true
   },
   {
-    'type': ['update', 'delete'],
+    'type': ['delete'],
     'allow': { 'user': { 'Admin': { 'equals': 'Yes' } } },
     'enabled': true
   },
   {
     'type': ['update', 'delete'],
-    'allow': { 'user': { 'Author Email': { 'equals': '{{user.[Email]}}' } } },
+    'allow': { 'user': { 'Author Email': { 'equals': `{{user.[${EMAIL_COLUMN}]}}` } } },
     'enabled': true
   }];
 

@@ -154,7 +154,10 @@
     <p>No comments yet</p>
   </div>
   <div class="fixed-container">
-    <p v-if="commentState" @click="clearState()">Cancel</p>
+    <p class="cancel-reply-container" v-if="commentState && commentState.action === 'reply'">
+      <span>Replying to  <strong>{{commentState.comment.data.userFullName}}</strong></span>
+      <span @click="clearState()" class="cancel-btn">Cancel</span>
+    </p>
     <div class="add-comment-container">
       <input
         @keyup.enter="manageComment()"
