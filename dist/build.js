@@ -227,6 +227,9 @@ Fliplet.Widget.instance('comments', function (widgetData) {
           closeToastProgress: function closeToastProgress() {
             Fliplet.UI.Toast.dismiss();
           },
+          isCommentInActiveMode: function isCommentInActiveMode(comment) {
+            return this.commentState && this.commentState.comment.id === comment.id;
+          },
           flagComment: function flagComment(comment) {
             var _this = this;
             this.showToastProgress('Flagging the comment...');

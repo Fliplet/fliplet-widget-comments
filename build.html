@@ -14,7 +14,7 @@
   <p class="comment-length">\{{comments.length}} COMMENTS</p>
   <div v-if="comments.length" class="comments-holder">
     <div v-for="(comment, index) in commentsData" :key="comment.id">
-      <div class="comment" :class="{flagged: comment.data.flagged, 'thread-shown': comment.showThreads}">
+      <div class="comment" :class="{flagged: comment.data.flagged, 'thread-shown': comment.showThreads, 'active-comment': isCommentInActiveMode(comment)}">
         <div class="flagged-dialog" v-if="comment.data.flagged">
           <div class="close-flagged-dialog">
             <i class="fa fa-times" @click="comment.data.flagged = false"></i>
@@ -86,7 +86,7 @@
       <div>
         <div v-if="comment.threads.length && comment.showThreads">
           <div
-            :class="{flagged: comment.data.flagged}"
+            :class="{flagged: comment.data.flagged, 'active-comment': isCommentInActiveMode(comment)}"
             class="comment answer"
             v-for="(thread, index) in comment.threads"
             :key="'thread' + thread.id"
@@ -155,7 +155,7 @@
   </div>
   <div class="fixed-container">
     <p class="cancel-reply-container" v-if="commentState && commentState.action === 'reply'">
-      <span>Replying to  <strong>{{commentState.comment.data.userFullName}}</strong></span>
+      <span>Replying to  <strong>\{{commentState.comment.data.userFullName}}</strong></span>
       <span @click="clearState()" class="cancel-btn">Cancel</span>
     </p>
     <div class="add-comment-container">

@@ -357,3 +357,7 @@
   display: flex;
   justify-content: space-between;
 }
+
+[name="comments"] .comment.active-comment {
+  background: #F2F2F6;
+}
