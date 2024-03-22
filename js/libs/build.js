@@ -64,7 +64,7 @@ Fliplet.Widget.instance('comments', function(widgetData) {
   function manageGlobalCommentsDataSource() {
     return Fliplet.DataSources.get({
       attributes: ['id', 'name'],
-      where: { APP_ID }
+      where: { appId: APP_ID }
     })
       .then(function(dataSources) {
         const dsExist = dataSources.find(el => el.name === GLOBAL_COMMENTS_DATA_SOURCE);
@@ -127,9 +127,9 @@ Fliplet.Widget.instance('comments', function(widgetData) {
             if (state === 'active') {
               return this.commentState && this.commentState.comment.id === comment.id;
             } else if (state === 'reply') {
-              return this.commentState && this.commentState === 'reply' && this.commentState.comment.id === comment.id;
+              return this.commentState && this.commentState.action === 'reply' && this.commentState.comment.id === comment.id;
             } else if (state === 'edit') {
-              return this.commentState && this.commentState === 'edit' && this.commentState.comment.id === comment.id;
+              return this.commentState && this.commentState.action === 'edit' && this.commentState.comment.id === comment.id;
             }
 
             return false;

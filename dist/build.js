@@ -169,7 +169,7 @@ Fliplet.Widget.instance('comments', function (widgetData) {
     return Fliplet.DataSources.get({
       attributes: ['id', 'name'],
       where: {
-        APP_ID: APP_ID
+        appId: APP_ID
       }
     }).then(function (dataSources) {
       var dsExist = dataSources.find(function (el) {
@@ -231,9 +231,9 @@ Fliplet.Widget.instance('comments', function (widgetData) {
             if (state === 'active') {
               return this.commentState && this.commentState.comment.id === comment.id;
             } else if (state === 'reply') {
-              return this.commentState && this.commentState === 'reply' && this.commentState.comment.id === comment.id;
+              return this.commentState && this.commentState.action === 'reply' && this.commentState.comment.id === comment.id;
             } else if (state === 'edit') {
-              return this.commentState && this.commentState === 'edit' && this.commentState.comment.id === comment.id;
+              return this.commentState && this.commentState.action === 'edit' && this.commentState.comment.id === comment.id;
             }
             return false;
           },

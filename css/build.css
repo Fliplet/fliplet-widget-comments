@@ -348,10 +348,10 @@
   display: flex;
   justify-content: space-between;
   padding: 0 25px;
+  margin-top: 10px;
 }
 
 [name="comments"] .cancel-reply-container p {
-  flex: 0 0 100%;
   cursor: pointer;
   margin-top: 10px;
   margin-bottom: 0;
