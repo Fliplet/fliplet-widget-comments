@@ -14,7 +14,7 @@
   <p class="comment-length">\{{comments.length}} COMMENTS</p>
   <div v-if="comments.length" class="comments-holder">
     <div v-for="(comment, index) in commentsData" :key="comment.id">
-      <div class="comment" :class="{flagged: comment.data.flagged, 'thread-shown': comment.showThreads, 'active-comment': isCommentInActiveMode(comment)}">
+      <div class="comment" :class="{flagged: comment.data.flagged, 'thread-shown': comment.showThreads, 'active-comment': checkCommentState(comment, 'active')}">
         <div class="flagged-dialog" v-if="comment.data.flagged">
           <div class="close-flagged-dialog">
             <i class="fa fa-times" @click="comment.data.flagged = false"></i>
@@ -60,9 +60,9 @@
             </div>
           </div>
           <div v-if="isLoggedUserOwnerOfComment(comment)" class="manage-comment-container">
-            <p v-if="!isCommentInEditMode(comment)" @click="deleteComment(comment)">Delete</p>
-            <p v-if="!isCommentInEditMode(comment)" @click="prepareComment(comment, 'edit')">Edit</p>
-            <p v-if="isCommentInEditMode(comment)" @click="clearState()" class="cancel-btn">Cancel editing</p>
+            <p v-if="!checkCommentState(comment, 'edit')" @click="deleteComment(comment)">Delete</p>
+            <p v-if="!checkCommentState(comment, 'edit')" @click="prepareComment(comment, 'edit')">Edit</p>
+            <p v-if="checkCommentState(comment, 'edit')" @click="clearState()" class="cancel-btn">Cancel editing</p>
           </div>
           <div v-else class="flag-container" @click="comment.data.openDropdown = !comment.data.openDropdown">
             <svg width="28" height="6" viewBox="0 0 28 6" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -87,7 +87,7 @@
       <div>
         <div v-if="comment.threads.length && comment.showThreads">
           <div
-            :class="{flagged: comment.data.flagged, 'active-comment': isCommentInReplyMode(comment)}"
+            :class="{flagged: comment.data.flagged, 'active-comment': checkCommentState(comment, 'reply')}"
             class="comment answer"
             v-for="(thread, index) in comment.threads"
             :key="'thread' + thread.id"
