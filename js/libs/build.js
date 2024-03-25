@@ -62,6 +62,8 @@ Fliplet.Widget.instance('comments', function(widgetData) {
   }
 
   function manageGlobalCommentsDataSource() {
+    this.showToastProgress('Loading comments...');
+
     return Fliplet.DataSources.get({
       attributes: ['id', 'name'],
       where: { appId: APP_ID }
@@ -209,8 +211,6 @@ Fliplet.Widget.instance('comments', function(widgetData) {
               .then(records => records);
           },
           getComments() {
-            this.showToastProgress('Loading comments...');
-
             let entryId = QUERY.dataSourceEntryId;
 
             return Fliplet.DataSources.connectByName(DS_COMMENTS).then(

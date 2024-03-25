@@ -87,7 +87,7 @@
       <div>
         <div v-if="comment.threads.length && comment.showThreads">
           <div
-            :class="{flagged: comment.data.flagged, 'active-comment': checkCommentState(comment, 'reply')}"
+            :class="{flagged: comment.data.flagged, 'active-comment': checkCommentState(thread, 'reply')}"
             class="comment answer"
             v-for="(thread, index) in comment.threads"
             :key="'thread' + thread.id"
