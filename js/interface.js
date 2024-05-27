@@ -6,16 +6,15 @@ Fliplet.Widget.generateInterface({
       type: 'provider',
       label: 'Datasource',
       package: 'com.fliplet.data-source-provider',
+      // TODO w8 for eng to fix the event
       // onEvent: function(event, data) {
       //   debugger;
       // $('#columnEmail').val('');
       // $('#columnUserPhoto').val('');
       // },
-      ready: function(el, value, provider) {
-        debugger;
-
+      ready: function(el, value) {
         if (value) {
-          Fliplet.DataSources.getById(value.id, {
+          return Fliplet.DataSources.getById(value.id, {
             attributes: ['columns']
           }).then(function(columns) {
             $('#columnEmail').html('');

@@ -1,4 +1,6 @@
-// TODO: Change Entry Id for a entity to be a GUID
+// TODO: Change Entry Id for entity to be a GUID
+// TODO Implement tinyMce
+// TODO Implement mention users
 Fliplet.Widget.instance('comments', function(widgetData) {
   const DS_COMMENTS = 'Global Comments';
   const DS_USERS = widgetData.userDataSource ? widgetData.userDataSource.id : null;
@@ -26,7 +28,6 @@ Fliplet.Widget.instance('comments', function(widgetData) {
     return showToastMessage('No data source entry ID provided');
   }
 
-  debugger;
   const EMAILS_TO_NOTIFY_FLAGGED_COMMENT = !FLAGGED_EMAILS
     ? []
     : FLAGGED_EMAILS.split(',')
