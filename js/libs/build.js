@@ -40,6 +40,8 @@ Fliplet.Widget.instance('comments', function(widgetData) {
   const GLOBAL_COMMENTS_DATA_SOURCE_COLUMNS = [
     'GUID', 'Author Email', 'Comment GUID', 'Message', 'Likes', 'Timestamp', 'Flagged', 'Entry Id'
   ];
+
+  // TODO this should be removed and eng should provide DS on app creation
   const ACCESS_RULES = [{
     'type': ['select', 'insert'],
     'allow': 'loggedIn',
@@ -55,7 +57,6 @@ Fliplet.Widget.instance('comments', function(widgetData) {
     'allow': { 'user': { 'Author Email': { 'equals': `{{user.[${EMAIL_COLUMN}]}}` } } },
     'enabled': true
   }];
-
 
   if (!Fliplet.Env.get('interact')) {
     Fliplet.Widget.initializeChildren(this.$el, this);
