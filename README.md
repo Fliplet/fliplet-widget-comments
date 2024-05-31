@@ -1,1 +1,1 @@
-# fliplet-widget-commets
+# fliplet-widget-comments
