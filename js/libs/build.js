@@ -128,12 +128,16 @@ Fliplet.Widget.instance('comments', function(widgetData) {
             Fliplet.UI.Toast.dismiss();
           },
           checkCommentState(comment, state) {
-            if (state === 'active') {
-              return this.commentState && this.commentState.comment.id === comment.id;
-            } else if (state === 'reply') {
-              return this.commentState && this.commentState.action === 'reply' && this.commentState.comment.id === comment.id;
-            } else if (state === 'edit') {
-              return this.commentState && this.commentState.action === 'edit' && this.commentState.comment.id === comment.id;
+            if (this.commentState.comment.id === comment.id) {
+              if (state === 'active') {
+                return this.commentState;
+              } else if (state === 'reply') {
+                return this.commentState && this.commentState.action === 'reply';
+              } else if (state === 'edit') {
+                return this.commentState && this.commentState.action === 'edit';
+              }
+
+              return false;
             }
 
             return false;
