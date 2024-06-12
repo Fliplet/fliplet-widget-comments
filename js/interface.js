@@ -34,12 +34,12 @@ Fliplet.Widget.generateInterface({
         debugger;
 
         if (event === 'dataSourceSelect') {
-          Fliplet.Widget.save(data.dataSourceId).then(function() {
-            Fliplet.Studio.emit('reload-widget-instance', data.dataSourceId);
+          Fliplet.Widget.save(data.id).then(function() {
+            Fliplet.Studio.emit('reload-widget-instance', data.id);
+            $('#columnEmail').val('');
+            $('#columnUserPhoto').val('');
           });
         }
-      // $('#columnEmail').val('');
-      // $('#columnUserPhoto').val('');
       },
       ready: function(el, value) {
         if (value) {
