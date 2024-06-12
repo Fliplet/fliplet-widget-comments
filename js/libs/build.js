@@ -63,8 +63,18 @@ Fliplet.Widget.instance('comments', function(widgetData) {
     manageGlobalCommentsDataSource();
   }
 
+  function showToastProgress(message = 'Processing') {
+    Fliplet.UI.Toast({
+      message,
+      position: 'center',
+      backdrop: true,
+      tapToDismiss: false,
+      duration: false
+    });
+  }
+
   function manageGlobalCommentsDataSource() {
-    this.showToastProgress('Loading comments...');
+    showToastProgress('Loading comments...');
 
     return Fliplet.DataSources.get({
       attributes: ['id', 'name'],
@@ -115,15 +125,6 @@ Fliplet.Widget.instance('comments', function(widgetData) {
             this.commentState = null;
             this.commentInput = '';
           },
-          showToastProgress(message = 'Processing') {
-            Fliplet.UI.Toast({
-              message,
-              position: 'center',
-              backdrop: true,
-              tapToDismiss: false,
-              duration: false
-            });
-          },
           closeToastProgress() {
             Fliplet.UI.Toast.dismiss();
           },
@@ -139,7 +140,7 @@ Fliplet.Widget.instance('comments', function(widgetData) {
             return false;
           },
           flagComment(comment) {
-            this.showToastProgress('Flagging the comment...');
+            showToastProgress('Flagging the comment...');
             comment.data.flagged = true;
 
             Fliplet.DataSources.connectByName(DS_COMMENTS)
@@ -344,7 +345,7 @@ Fliplet.Widget.instance('comments', function(widgetData) {
                 !this.commentState
                 || this.commentState.action === 'reply'
               ) {
-                this.showToastProgress('Adding comment...');
+                showToastProgress('Adding comment...');
                 Fliplet.DataSources.connectByName(DS_COMMENTS).then(connection => {
                   let toInsert = {
                     Message: this.commentInput,
@@ -393,7 +394,7 @@ Fliplet.Widget.instance('comments', function(widgetData) {
                   });
                 });
               } else {
-                this.showToastProgress('Updating comment...');
+                showToastProgress('Updating comment...');
                 Fliplet.DataSources.connectByName(DS_COMMENTS).then(connection => {
                   return connection
                     .update(this.commentState.comment.id, {
@@ -434,7 +435,7 @@ Fliplet.Widget.instance('comments', function(widgetData) {
                 return Promise.reject(''); // Not confirmed!
               }
 
-              this.showToastProgress('Deleting comment...');
+              showToastProgress('Deleting comment...');
 
               let deleteCommentPromise;
 

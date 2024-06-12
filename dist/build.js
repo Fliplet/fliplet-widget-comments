@@ -168,8 +168,18 @@ Fliplet.Widget.instance('comments', function (widgetData) {
     Fliplet.Widget.initializeChildren(this.$el, this);
     manageGlobalCommentsDataSource();
   }
+  function showToastProgress() {
+    var message = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'Processing';
+    Fliplet.UI.Toast({
+      message: message,
+      position: 'center',
+      backdrop: true,
+      tapToDismiss: false,
+      duration: false
+    });
+  }
   function manageGlobalCommentsDataSource() {
-    this.showToastProgress('Loading comments...');
+    showToastProgress('Loading comments...');
     return Fliplet.DataSources.get({
       attributes: ['id', 'name'],
       where: {
@@ -218,16 +228,6 @@ Fliplet.Widget.instance('comments', function (widgetData) {
             this.commentState = null;
             this.commentInput = '';
           },
-          showToastProgress: function showToastProgress() {
-            var message = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'Processing';
-            Fliplet.UI.Toast({
-              message: message,
-              position: 'center',
-              backdrop: true,
-              tapToDismiss: false,
-              duration: false
-            });
-          },
           closeToastProgress: function closeToastProgress() {
             Fliplet.UI.Toast.dismiss();
           },
@@ -243,7 +243,7 @@ Fliplet.Widget.instance('comments', function (widgetData) {
           },
           flagComment: function flagComment(comment) {
             var _this = this;
-            this.showToastProgress('Flagging the comment...');
+            showToastProgress('Flagging the comment...');
             comment.data.flagged = true;
             Fliplet.DataSources.connectByName(DS_COMMENTS).then(function (connection) {
               return connection.update(comment.id, {
@@ -418,7 +418,7 @@ Fliplet.Widget.instance('comments', function (widgetData) {
             var _this3 = this;
             if (this.commentInput) {
               if (!this.commentState || this.commentState.action === 'reply') {
-                this.showToastProgress('Adding comment...');
+                showToastProgress('Adding comment...');
                 Fliplet.DataSources.connectByName(DS_COMMENTS).then(function (connection) {
                   var toInsert = {
                     Message: _this3.commentInput,
@@ -452,7 +452,7 @@ Fliplet.Widget.instance('comments', function (widgetData) {
                   });
                 });
               } else {
-                this.showToastProgress('Updating comment...');
+                showToastProgress('Updating comment...');
                 Fliplet.DataSources.connectByName(DS_COMMENTS).then(function (connection) {
                   return connection.update(_this3.commentState.comment.id, {
                     Message: _this3.commentInput,
@@ -487,7 +487,7 @@ Fliplet.Widget.instance('comments', function (widgetData) {
               if (!result) {
                 return Promise.reject(''); // Not confirmed!
               }
-              _this4.showToastProgress('Deleting comment...');
+              showToastProgress('Deleting comment...');
               var deleteCommentPromise;
               if (isThread) {
                 deleteCommentPromise = Fliplet.DataSources.connectByName(DS_COMMENTS).then(function (connection) {
