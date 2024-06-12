@@ -32,6 +32,12 @@ Fliplet.Widget.generateInterface({
       // TODO w8 for eng to fix the event
       onEvent: function(event, data) {
         debugger;
+
+        if (event === 'dataSourceSelect') {
+          Fliplet.Widget.save(data.dataSourceId).then(function() {
+            Fliplet.Studio.emit('reload-widget-instance', data.dataSourceId);
+          });
+        }
       // $('#columnEmail').val('');
       // $('#columnUserPhoto').val('');
       },
