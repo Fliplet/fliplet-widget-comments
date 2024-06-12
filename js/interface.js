@@ -12,6 +12,18 @@ Fliplet.Widget.generateInterface({
       // $('#columnEmail').val('');
       // $('#columnUserPhoto').val('');
       // },
+      data: function() {
+        return Fliplet.Widget.findParents({ filter: { package: 'com.fliplet.dynamic-container' } }).then((widgets) => {
+          const dynamicContainer = widgets[0];
+
+          return {
+            readonly: true,
+            dataSourceTitle: 'Get data from...',
+            dataSourceId: dynamicContainer && dynamicContainer.dataSourceId,
+            helpText: 'To change this data source, go to the parent <strong>Dynamic container</strong>'
+          };
+        });
+      },
       ready: function(el, value) {
         if (value) {
           return Fliplet.DataSources.getById(value.id, {
