@@ -101,10 +101,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__);
 
 
-// TODO: Change Entry Id for a entity to be a GUID
+// TODO: Change Entry Id for entity to be a GUID
+// TODO Implement tinyMce
+// TODO Implement mention users
 Fliplet.Widget.instance('comments', function (widgetData) {
   var DS_COMMENTS = 'Global Comments';
-  var DS_USERS = widgetData.userDataSource ? widgetData.userDataSource.id : null;
+  var DS_USERS = widgetData.userDataSource;
   var QUERY = Fliplet.Navigate.query;
   var EMAIL_COLUMN = widgetData.columnEmail;
   var USER_PHOTO_COLUMN = widgetData.columnUserPhoto;
@@ -124,7 +126,6 @@ Fliplet.Widget.instance('comments', function (widgetData) {
   if (!QUERY.dataSourceEntryId) {
     return showToastMessage('No data source entry ID provided');
   }
-  debugger;
   var EMAILS_TO_NOTIFY_FLAGGED_COMMENT = !FLAGGED_EMAILS ? [] : FLAGGED_EMAILS.split(',').map(function (el) {
     return el.trim();
   }).filter(function (el) {
@@ -136,6 +137,8 @@ Fliplet.Widget.instance('comments', function (widgetData) {
     'guid': 'GUID'
   };
   var GLOBAL_COMMENTS_DATA_SOURCE_COLUMNS = ['GUID', 'Author Email', 'Comment GUID', 'Message', 'Likes', 'Timestamp', 'Flagged', 'Entry Id'];
+
+  // TODO this should be removed and eng should provide DS on app creation
   var ACCESS_RULES = [{
     'type': ['select', 'insert'],
     'allow': 'loggedIn',
@@ -166,6 +169,7 @@ Fliplet.Widget.instance('comments', function (widgetData) {
     manageGlobalCommentsDataSource();
   }
   function manageGlobalCommentsDataSource() {
+    this.showToastProgress('Loading comments...');
     return Fliplet.DataSources.get({
       attributes: ['id', 'name'],
       where: {
@@ -308,7 +312,6 @@ Fliplet.Widget.instance('comments', function (widgetData) {
           },
           getComments: function getComments() {
             var _this2 = this;
-            this.showToastProgress('Loading comments...');
             var entryId = QUERY.dataSourceEntryId;
             return Fliplet.DataSources.connectByName(DS_COMMENTS).then(function (connection) {
               return connection.find({
@@ -736,7 +739,7 @@ module.exports = _unsupportedIterableToArray, module.exports.__esModule = true, 
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\Users\shyft\Desktop\comments\js\libs\build.js */"./js/libs/build.js");
+module.exports = __webpack_require__(/*! C:\Users\shyft\Desktop\Fliplet Local Setup\fliplet-widget-comments\js\libs\build.js */"./js/libs/build.js");
 
 
 /***/ })
