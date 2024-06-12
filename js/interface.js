@@ -28,7 +28,7 @@ Fliplet.Widget.generateInterface({
       },
       beforeSave: function(value) {
         return value && value.id;
-      }
+      },
       // TODO w8 for eng to fix the event
       // onEvent: function(event, data) {
       //   debugger;
