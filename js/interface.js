@@ -1,3 +1,40 @@
+function manageDataSourceChange(dataSourceId) {
+  if (dataSourceId) {
+    return Fliplet.DataSources.getById(dataSourceId, {
+      attributes: ['columns']
+    }).then(function(columns) {
+      $('#columnEmail').html('');
+      $('#columnUserPhoto').html('');
+      $('#columnEmail').append('<option value="">Select an option</option>');
+      $('#columnUserPhoto').append('<option value="">Select an option</option>');
+      columns.columns.forEach((el) => {
+        $('#columnEmail').append(`<option value="${el}">${el}</option>`);
+        $('#columnUserPhoto').append(`<option value="${el}">${el}</option>`);
+      });
+
+      var instance = Fliplet.UI.Typeahead($('#typeaheadUserName'), {
+        options: columns.columns.map(el => {
+          return { value: el, label: el };
+        }),
+        freeInput: false,
+        maxItems: 2
+      });
+
+      const key = Object.keys(__widgetData)[0];
+      const objValue = __widgetData[key].data;
+
+      instance.set(objValue.userNames, true);
+      instance.change(function(value) {
+        Fliplet.Helper.field('userNames').set(value);
+      });
+
+      $(document).find('.form-group.fl-typeahead .selectize-input').css('margin', 'auto');
+      $(document).find('.form-group.fl-typeahead .selectize-input').css('display', 'block');
+      $(document).find('.form-group.fl-typeahead .selectize-input').css('width', 'calc(100% - 30px)');
+    });
+  }
+}
+
 Fliplet.Widget.generateInterface({
   title: 'Comments',
   fields: [
@@ -34,47 +71,12 @@ Fliplet.Widget.generateInterface({
         debugger;
 
         if (event === 'dataSourceSelect') {
-          Fliplet.Widget.save(data.id).then(function() {
-            Fliplet.Studio.emit('reload-widget-instance', data.id);
-            $('#columnEmail').val('');
-            $('#columnUserPhoto').val('');
-          });
+          return manageDataSourceChange(data.id);
         }
       },
       ready: function(el, value) {
         if (value) {
-          return Fliplet.DataSources.getById(value, {
-            attributes: ['columns']
-          }).then(function(columns) {
-            $('#columnEmail').html('');
-            $('#columnUserPhoto').html('');
-            $('#columnEmail').append('<option value="">Select an option</option>');
-            $('#columnUserPhoto').append('<option value="">Select an option</option>');
-            columns.columns.forEach((el) => {
-              $('#columnEmail').append(`<option value="${el}">${el}</option>`);
-              $('#columnUserPhoto').append(`<option value="${el}">${el}</option>`);
-            });
-
-            var instance = Fliplet.UI.Typeahead($('#typeaheadUserName'), {
-              options: columns.columns.map(el => {
-                return { value: el, label: el };
-              }),
-              freeInput: false,
-              maxItems: 2
-            });
-
-            const key = Object.keys(__widgetData)[0];
-            const objValue = __widgetData[key].data;
-
-            instance.set(objValue.userNames, true);
-            instance.change(function(value) {
-              Fliplet.Helper.field('userNames').set(value);
-            });
-
-            $(document).find('.form-group.fl-typeahead .selectize-input').css('margin', 'auto');
-            $(document).find('.form-group.fl-typeahead .selectize-input').css('display', 'block');
-            $(document).find('.form-group.fl-typeahead .selectize-input').css('width', 'calc(100% - 30px)');
-          });
+          return manageDataSourceChange(value);
         }
       }
     },
