@@ -3,7 +3,7 @@
 // TODO Implement mention users
 Fliplet.Widget.instance('comments', function(widgetData) {
   const DS_COMMENTS = 'Global Comments';
-  const DS_USERS = widgetData.userDataSource ? widgetData.userDataSource.id : null;
+  const DS_USERS = widgetData.userDataSource;
   const QUERY = Fliplet.Navigate.query;
   const EMAIL_COLUMN = widgetData.columnEmail;
   const USER_PHOTO_COLUMN = widgetData.columnUserPhoto;
