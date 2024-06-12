@@ -4,15 +4,15 @@ Fliplet.Widget.generateInterface({
     {
       name: 'userDataSource',
       type: 'provider',
-      label: 'Datasource',
+      // label: 'Datasource',
       package: 'com.fliplet.data-source-provider',
       data: function(value) {
         return {
-          dataSourceTitle: 'Your list data',
+          dataSourceTitle: 'Datasource',
           dataSourceId: value,
           appId: Fliplet.Env.get('appId'),
           default: {
-            name: 'Your list data',
+            name: 'Datasource',
             entries: [],
             columns: []
           },
@@ -30,14 +30,14 @@ Fliplet.Widget.generateInterface({
         return value && value.id;
       },
       // TODO w8 for eng to fix the event
-      // onEvent: function(event, data) {
-      //   debugger;
+      onEvent: function(event, data) {
+        debugger;
       // $('#columnEmail').val('');
       // $('#columnUserPhoto').val('');
-      // },
+      },
       ready: function(el, value) {
         if (value) {
-          return Fliplet.DataSources.getById(value.id, {
+          return Fliplet.DataSources.getById(value, {
             attributes: ['columns']
           }).then(function(columns) {
             $('#columnEmail').html('');
