@@ -6,24 +6,35 @@ Fliplet.Widget.generateInterface({
       type: 'provider',
       label: 'Datasource',
       package: 'com.fliplet.data-source-provider',
+      data: function(value) {
+        return {
+          dataSourceTitle: 'Your list data',
+          dataSourceId: value,
+          appId: Fliplet.Env.get('appId'),
+          default: {
+            name: 'Your list data',
+            entries: [],
+            columns: []
+          },
+          accessRules: [
+            {
+              allow: 'all',
+              type: [
+                'select'
+              ]
+            }
+          ]
+        };
+      },
+      beforeSave: function(value) {
+        return value && value.id;
+      }
       // TODO w8 for eng to fix the event
       // onEvent: function(event, data) {
       //   debugger;
       // $('#columnEmail').val('');
       // $('#columnUserPhoto').val('');
       // },
-      data: function() {
-        return Fliplet.Widget.findParents({ filter: { package: 'com.fliplet.dynamic-container' } }).then((widgets) => {
-          const dynamicContainer = widgets[0];
-
-          return {
-            readonly: true,
-            dataSourceTitle: 'Get data from...',
-            dataSourceId: dynamicContainer && dynamicContainer.dataSourceId,
-            helpText: 'To change this data source, go to the parent <strong>Dynamic container</strong>'
-          };
-        });
-      },
       ready: function(el, value) {
         if (value) {
           return Fliplet.DataSources.getById(value.id, {
