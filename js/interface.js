@@ -21,12 +21,16 @@ function manageDataSourceChange(dataSourceId) {
       });
 
       var instance = Fliplet.UI.Typeahead($('#typeaheadUserName'), {
-        options: columns.columns.map(el => {
-          return { value: el, label: el };
-        }),
+        // options: columns.columns.map(el => {
+        //   return { value: el, label: el };
+        // }),
         freeInput: false,
         maxItems: 2
       });
+
+      instance.options(columns.columns.map(el => {
+        return { value: el, label: el };
+      }));
 
       const key = Object.keys(__widgetData)[0];
       const objValue = __widgetData[key].data;
