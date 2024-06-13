@@ -1,6 +1,12 @@
+function toggleFields(value) {
+  $('#columnEmail').toggle(value);
+  $('#columnUserPhoto').toggle(value);
+  $('#typeaheadUserName').toggle(value);
+}
+
 function manageDataSourceChange(dataSourceId) {
   if (dataSourceId) {
-    $('#typeaheadUserName').show();
+    toggleFields(true);
 
     return Fliplet.DataSources.getById(dataSourceId, {
       attributes: ['columns']
@@ -36,7 +42,7 @@ function manageDataSourceChange(dataSourceId) {
     });
   }
 
-  $('#typeaheadUserName').hide();
+  toggleFields(false);
 }
 
 Fliplet.Widget.generateInterface({
@@ -45,7 +51,6 @@ Fliplet.Widget.generateInterface({
     {
       name: 'userDataSource',
       type: 'provider',
-      // label: 'Datasource',
       package: 'com.fliplet.data-source-provider',
       data: function(value) {
         return {
@@ -80,9 +85,7 @@ Fliplet.Widget.generateInterface({
         }
       },
       ready: function(el, value) {
-        if (value) {
-          return manageDataSourceChange(value);
-        }
+        return manageDataSourceChange(value);
       }
     },
     {
@@ -96,6 +99,20 @@ Fliplet.Widget.generateInterface({
       options: [],
       default: '',
       required: true,
+      change() {
+        Fliplet.Helper.field('columnEmail').toggle(
+          Fliplet.Helper.field('userDataSource').get()
+        );
+
+        if (Fliplet.Helper.field('userDataSource').get()) {
+          setTimeout(() => {
+            const key = Object.keys(__widgetData)[0];
+            const objValue = __widgetData[key].data;
+
+            $('#columnEmail').val(objValue.columnEmail);
+          }, 1000);
+        }
+      },
       ready: function() {
         Fliplet.Helper.field('columnEmail').toggle(
           Fliplet.Helper.field('userDataSource').get()
@@ -117,6 +134,18 @@ Fliplet.Widget.generateInterface({
       label: 'User photo data field',
       options: [],
       default: '',
+      change() {
+        Fliplet.Helper.field('columnUserPhoto').toggle(Fliplet.Helper.field('userDataSource').get());
+
+        if (Fliplet.Helper.field('userDataSource').get()) {
+          setTimeout(() => {
+            const key = Object.keys(__widgetData)[0];
+            const objValue = __widgetData[key].data;
+
+            $('#columnUserPhoto').val(objValue.columnUserPhoto);
+          }, 1000);
+        }
+      },
       ready: function() {
         Fliplet.Helper.field('columnUserPhoto').toggle(
           Fliplet.Helper.field('userDataSource').get()
