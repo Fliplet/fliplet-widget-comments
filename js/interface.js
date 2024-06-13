@@ -85,7 +85,7 @@ Fliplet.Widget.generateInterface({
         }
 
         if (event === 'selected-data-source-loaded') {
-          return manageDataSourceChange(null);
+          return manageDataSourceChange(data.value);
         }
       },
       ready: function(el, value) {
