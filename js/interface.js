@@ -1,5 +1,7 @@
 function manageDataSourceChange(dataSourceId) {
   if (dataSourceId) {
+    $('#typeaheadUserName').show();
+
     return Fliplet.DataSources.getById(dataSourceId, {
       attributes: ['columns']
     }).then(function(columns) {
@@ -33,6 +35,8 @@ function manageDataSourceChange(dataSourceId) {
       $(document).find('.form-group.fl-typeahead .selectize-input').css('width', 'calc(100% - 30px)');
     });
   }
+
+  $('#typeaheadUserName').hide();
 }
 
 Fliplet.Widget.generateInterface({
@@ -66,12 +70,13 @@ Fliplet.Widget.generateInterface({
       beforeSave: function(value) {
         return value && value.id;
       },
-      // TODO w8 for eng to fix the event
       onEvent: function(event, data) {
-        debugger;
-
         if (event === 'dataSourceSelect') {
           return manageDataSourceChange(data.id);
+        }
+
+        if (event === 'selected-data-source-loaded') {
+          return manageDataSourceChange(null);
         }
       },
       ready: function(el, value) {
