@@ -1,6 +1,7 @@
 function toggleFields(value) {
   Fliplet.Helper.field('columnUserPhoto').toggle(value);
   Fliplet.Helper.field('columnEmail').toggle(value);
+  $('#typeaheadUserName').closest('span').toggle(value);
 }
 
 function manageDataSourceChange(dataSourceId) {
