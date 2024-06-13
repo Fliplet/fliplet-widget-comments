@@ -41,9 +41,6 @@ function manageDataSourceChange(dataSourceId) {
     });
   }
 
-  Fliplet.UI.Typeahead($('#typeaheadUserName'), {
-    options: []
-  });
   toggleFields(false);
 }
 
@@ -152,8 +149,7 @@ Fliplet.Widget.generateInterface({
       name: 'flaggedEmails',
       label: 'Enter admin email for flagged comments',
       description: "Note that it's important to have if you're publishing your app to app store",
-      placeholder: 'email.com, email.com, email.com',
-      required: true
+      placeholder: 'email.com, email.com, email.com'
     },
     {
       type: 'textarea',
