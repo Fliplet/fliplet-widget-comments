@@ -1,4 +1,4 @@
-function toggleFields(value) {
+function toggleFields(value = false) {
   Fliplet.Helper.field('columnUserPhoto').toggle(value);
   Fliplet.Helper.field('columnEmail').toggle(value);
   $('#typeaheadUserName').closest('span').toggle(value);
@@ -36,6 +36,9 @@ function manageDataSourceChange(dataSourceId) {
       const objValue = __widgetData[key].data;
 
       instance.set(objValue.userNames, true);
+      $('#columnUserPhoto').val(objValue.columnUserPhoto);
+      $('#columnEmail').val(objValue.columnEmail);
+
       instance.change(function(value) {
         Fliplet.Helper.field('userNames').set(value);
       });
@@ -46,7 +49,7 @@ function manageDataSourceChange(dataSourceId) {
     });
   }
 
-  toggleFields(false);
+  toggleFields();
 }
 
 Fliplet.Widget.generateInterface({
