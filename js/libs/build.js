@@ -2,7 +2,6 @@
 // TODO Implement tinyMce
 // TODO Implement mention users
 Fliplet.Widget.instance('comments', function(widgetData) {
-  const DS_COMMENTS = 'Global Comments';
   const DS_USERS = widgetData.userDataSource;
   const QUERY = Fliplet.Navigate.query;
   const EMAIL_COLUMN = widgetData.columnEmail;
@@ -10,6 +9,7 @@ Fliplet.Widget.instance('comments', function(widgetData) {
   const FLAGGED_EMAILS = widgetData.flaggedEmails;
   const FLAGGED_MAIL_CONTENT = widgetData.flaggedMailContent;
   const USER_NAMES = widgetData.userNames;
+  const COMMENTS_DS_ID = widgetData.commentsDataSourceId;
   let loggedUser = null;
 
   if (!DS_USERS) {
@@ -34,30 +34,6 @@ Fliplet.Widget.instance('comments', function(widgetData) {
       .map((el) => el.trim())
       .filter((el) => RegExp(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/).test(el));
 
-  const APP_ID = Fliplet.Env.get('appId');
-  const GLOBAL_COMMENTS_DATA_SOURCE = 'Global Comments';
-  const DS_DEFINITION = { 'guid': 'GUID' };
-  const GLOBAL_COMMENTS_DATA_SOURCE_COLUMNS = [
-    'GUID', 'Author Email', 'Comment GUID', 'Message', 'Likes', 'Timestamp', 'Flagged', 'Entry Id'
-  ];
-
-  // TODO this should be removed and eng should provide DS on app creation
-  const ACCESS_RULES = [{
-    'type': ['select', 'insert'],
-    'allow': 'loggedIn',
-    'enabled': true
-  },
-  {
-    'type': ['delete'],
-    'allow': { 'user': { 'Admin': { 'equals': 'Yes' } } },
-    'enabled': true
-  },
-  {
-    'type': ['update', 'delete'],
-    'allow': { 'user': { 'Author Email': { 'equals': `{{user.[${EMAIL_COLUMN}]}}` } } },
-    'enabled': true
-  }];
-
   if (!Fliplet.Env.get('interact')) {
     Fliplet.Widget.initializeChildren(this.$el, this);
     manageGlobalCommentsDataSource();
@@ -75,29 +51,7 @@ Fliplet.Widget.instance('comments', function(widgetData) {
 
   function manageGlobalCommentsDataSource() {
     showToastProgress('Loading comments...');
-
-    return Fliplet.DataSources.get({
-      attributes: ['id', 'name'],
-      where: { appId: APP_ID }
-    })
-      .then(function(dataSources) {
-        const dsExist = dataSources.find(el => el.name === GLOBAL_COMMENTS_DATA_SOURCE);
-
-        if (!dsExist) {
-          return Fliplet.DataSources.create({
-            name: GLOBAL_COMMENTS_DATA_SOURCE,
-            appId: APP_ID,
-            columns: GLOBAL_COMMENTS_DATA_SOURCE_COLUMNS,
-            accessRules: ACCESS_RULES,
-            'definition': DS_DEFINITION
-          }).then(function(newDataSource) {
-            // newDataSource.id
-            initVue();
-          });
-        }
-
-        initVue();
-      });
+    initVue();
   }
 
   function showToastMessage(message) {
@@ -143,7 +97,7 @@ Fliplet.Widget.instance('comments', function(widgetData) {
             showToastProgress('Flagging the comment...');
             comment.data.flagged = true;
 
-            Fliplet.DataSources.connectByName(DS_COMMENTS)
+            Fliplet.DataSources.connect(COMMENTS_DS_ID)
               .then(connection => {
                 return connection.update(comment.id, {
                   Flagged: comment.data.flagged,
@@ -216,7 +170,7 @@ Fliplet.Widget.instance('comments', function(widgetData) {
           getComments() {
             let entryId = QUERY.dataSourceEntryId;
 
-            return Fliplet.DataSources.connectByName(DS_COMMENTS).then(
+            return Fliplet.DataSources.connect(COMMENTS_DS_ID).then(
               connection => {
                 return connection
                   .find({ where: { 'Entry Id': entryId } })
@@ -316,7 +270,7 @@ Fliplet.Widget.instance('comments', function(widgetData) {
               comment.data.Likes.push(loggedUser[EMAIL_COLUMN]);
             }
 
-            return Fliplet.DataSources.connectByName(DS_COMMENTS).then(
+            return Fliplet.DataSources.connect(COMMENTS_DS_ID).then(
               connection => {
                 return connection.update(comment.id, {
                   Likes: comment.data.Likes,
@@ -346,7 +300,7 @@ Fliplet.Widget.instance('comments', function(widgetData) {
                 || this.commentState.action === 'reply'
               ) {
                 showToastProgress('Adding comment...');
-                Fliplet.DataSources.connectByName(DS_COMMENTS).then(connection => {
+                Fliplet.DataSources.connect(COMMENTS_DS_ID).then(connection => {
                   let toInsert = {
                     Message: this.commentInput,
                     'Author Email': loggedUser[EMAIL_COLUMN],
@@ -395,7 +349,7 @@ Fliplet.Widget.instance('comments', function(widgetData) {
                 });
               } else {
                 showToastProgress('Updating comment...');
-                Fliplet.DataSources.connectByName(DS_COMMENTS).then(connection => {
+                Fliplet.DataSources.connect(COMMENTS_DS_ID).then(connection => {
                   return connection
                     .update(this.commentState.comment.id, {
                       Message: this.commentInput,
@@ -440,8 +394,8 @@ Fliplet.Widget.instance('comments', function(widgetData) {
               let deleteCommentPromise;
 
               if (isThread) {
-                deleteCommentPromise = Fliplet.DataSources.connectByName(
-                  DS_COMMENTS
+                deleteCommentPromise = Fliplet.DataSources.connect(
+                  COMMENTS_DS_ID
                 ).then(connection => {
                   return connection.removeById(comment.id).then(() => {
                     this.comments = this.comments.map((el) => {
@@ -458,8 +412,8 @@ Fliplet.Widget.instance('comments', function(widgetData) {
                   });
                 });
               } else {
-                deleteCommentPromise = Fliplet.DataSources.connectByName(
-                  DS_COMMENTS
+                deleteCommentPromise = Fliplet.DataSources.connect(
+                  COMMENTS_DS_ID
                 ).then(connection => {
                   return connection
                     .find({ where: { 'Comment GUID': comment.data.GUID } })
