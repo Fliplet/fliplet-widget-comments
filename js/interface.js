@@ -59,6 +59,7 @@ const GLOBAL_COMMENTS_DATA_SOURCE_COLUMNS = [
   'GUID', 'Author Email', 'Comment GUID', 'Message', 'Likes', 'Timestamp', 'Flagged', 'Entry Id'
 ];
 
+// TODO change
 const ACCESS_RULES = [{
   'type': ['select', 'insert'],
   'allow': 'loggedIn',
@@ -71,7 +72,8 @@ const ACCESS_RULES = [{
 },
 {
   'type': ['update', 'delete'],
-  'allow': { 'user': { 'Author Email': { 'equals': `{{user.[${EMAIL_COLUMN}]}}` } } },
+  'allow': 'loggedIn',
+  // 'allow': { 'user': { 'Author Email': { 'equals': `{{user.[${EMAIL_COLUMN}]}}` } } },
   'enabled': true
 }];
 
