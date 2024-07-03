@@ -209,12 +209,6 @@ Fliplet.DataSources.get({
               }),
               headers: {
                 'Content-Type': 'application/json'
-              },
-              success: function() {
-                console.log('success');
-              },
-              error: function() {
-                console.log('error');
               }
             });
           }
