@@ -116,6 +116,8 @@ Fliplet.DataSources.get({
         return Promise.resolve(newDataSource.id);
       });
     }
+
+    return Promise.resolve(dsExist.id);
   })
   .then((dsId) => {
     Fliplet.Widget.generateInterface({
