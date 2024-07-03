@@ -241,12 +241,10 @@ Fliplet.DataSources.get({
           html: `
       <div>
         <label for="typeaheadUserName">User profile data (visible in comments)</label>
+        <p class="help-block">Select column in the linked data source with user First Name, Last Name or Full name</p>
       </div>
       <div class="form-group fl-typeahead" id="typeaheadUserName">
         <select placeholder="Start typing..."></select>
-      </div>
-      <div>
-        <label>Select column in the linked data source with user First Name, Last Name or Full name</label>
       </div>
       `
         },
