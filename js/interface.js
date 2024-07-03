@@ -178,7 +178,8 @@ Fliplet.DataSources.get({
         {
           name: 'columnEmail',
           type: 'dropdown',
-          label: 'User email data field (Required)',
+          label: 'Email data',
+          description: 'select the column in the linked datasource where user emails are stored',
           options: [],
           default: '',
           required: true,
@@ -216,7 +217,8 @@ Fliplet.DataSources.get({
         {
           name: 'columnUserPhoto',
           type: 'dropdown',
-          label: 'User photo data field',
+          label: 'Profile photo data',
+          description: 'select the column in the linked datasource where user photos are stored',
           options: [],
           default: '',
           ready: function() {
@@ -238,11 +240,15 @@ Fliplet.DataSources.get({
           type: 'html',
           html: `
       <div>
-        <label for="typeaheadUserName">User data fields (Required)</label>
+        <label for="typeaheadUserName">User profile data (visible in comments)</label>
       </div>
       <div class="form-group fl-typeahead" id="typeaheadUserName">
         <select placeholder="Start typing..."></select>
-      </div>`
+      </div>
+      <div>
+        <label>Select column in the linked data source with user First Name, Last Name or Full name</label>
+      </div>
+      `
         },
         {
           type: 'text',
