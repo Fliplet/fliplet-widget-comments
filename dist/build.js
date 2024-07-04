@@ -116,25 +116,25 @@ Fliplet.Widget.instance('comments', function (widgetData) {
   var loggedUser = null;
   if (!DS_USERS) {
     if (Fliplet.Env.get('mode') === 'interact') {
-      showContent('non-configured');
+      showContent('not-configured');
     }
     return showToastMessage('Please select Data source');
   }
   if (!EMAIL_COLUMN) {
     if (Fliplet.Env.get('mode') === 'interact') {
-      showContent('non-configured');
+      showContent('not-configured');
     }
     return showToastMessage('Please select column for the email');
   }
   if (!USER_NAMES || !USER_NAMES.length) {
     if (Fliplet.Env.get('mode') === 'interact') {
-      showContent('non-configured');
+      showContent('not-configured');
     }
     return showToastMessage('Please select user names');
   }
   if (!QUERY.dataSourceEntryId) {
     if (Fliplet.Env.get('mode') === 'interact') {
-      showContent('non-configured');
+      showContent('not-configured');
     }
     return showToastMessage('No data source entry ID provided');
   }
