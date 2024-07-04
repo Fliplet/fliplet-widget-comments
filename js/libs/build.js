@@ -28,7 +28,7 @@ Fliplet.Widget.instance('comments', function(widgetData) {
     return showToastMessage('Please select column for the email');
   }
 
-  if (!USER_NAMES) {
+  if (!USER_NAMES || !USER_NAMES.length) {
     if (Fliplet.Env.get('mode') === 'interact') {
       showContent('non-configured');
     }
