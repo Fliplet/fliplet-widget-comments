@@ -154,6 +154,7 @@ Fliplet.Widget.instance('comments', function (widgetData) {
     $('.configured').toggle(mode === 'configured');
     $('.not-configured').toggle(mode === 'not-configured');
     $('.configured-interact').toggle(mode === 'configured-interact');
+    $('[name="comments"]').removeClass('hidden');
   }
   function showToastProgress() {
     var message = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'Processing';
@@ -173,7 +174,6 @@ Fliplet.Widget.instance('comments', function (widgetData) {
     return Fliplet.UI.Toast(message);
   }
   function initVue() {
-    $('[name="comments"]').removeClass('hidden');
     Fliplet().then(function () {
       new Vue({
         el: '#app-comments',

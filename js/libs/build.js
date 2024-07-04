@@ -62,6 +62,7 @@ Fliplet.Widget.instance('comments', function(widgetData) {
     $('.configured').toggle(mode === 'configured');
     $('.not-configured').toggle(mode === 'not-configured');
     $('.configured-interact').toggle(mode === 'configured-interact');
+    $('[name="comments"]').removeClass('hidden');
   }
 
   function showToastProgress(message = 'Processing') {
@@ -84,7 +85,6 @@ Fliplet.Widget.instance('comments', function(widgetData) {
   }
 
   function initVue() {
-    $('[name="comments"]').removeClass('hidden');
     Fliplet().then(() => {
       new Vue({
         el: '#app-comments',
