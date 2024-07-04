@@ -14,7 +14,7 @@ Fliplet.Widget.instance('comments', function(widgetData) {
 
   if (!DS_USERS) {
     if (Fliplet.Env.get('mode') === 'interact') {
-      showNonConfiguredContent(true);
+      showContent('non-configured');
     }
 
     return showToastMessage('Please select Data source');
@@ -22,7 +22,7 @@ Fliplet.Widget.instance('comments', function(widgetData) {
 
   if (!EMAIL_COLUMN) {
     if (Fliplet.Env.get('mode') === 'interact') {
-      showNonConfiguredContent(true);
+      showContent('non-configured');
     }
 
     return showToastMessage('Please select column for the email');
@@ -30,7 +30,7 @@ Fliplet.Widget.instance('comments', function(widgetData) {
 
   if (!USER_NAMES) {
     if (Fliplet.Env.get('mode') === 'interact') {
-      showNonConfiguredContent(true);
+      showContent('non-configured');
     }
 
     return showToastMessage('Please select user names');
@@ -38,13 +38,11 @@ Fliplet.Widget.instance('comments', function(widgetData) {
 
   if (!QUERY.dataSourceEntryId) {
     if (Fliplet.Env.get('mode') === 'interact') {
-      showNonConfiguredContent(true);
+      showContent('non-configured');
     }
 
     return showToastMessage('No data source entry ID provided');
   }
-
-  showNonConfiguredContent(false);
 
   const EMAILS_TO_NOTIFY_FLAGGED_COMMENT = !FLAGGED_EMAILS
     ? []
@@ -53,13 +51,17 @@ Fliplet.Widget.instance('comments', function(widgetData) {
       .filter((el) => RegExp(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/).test(el));
 
   if (!Fliplet.Env.get('interact')) {
+    showContent('configured');
     Fliplet.Widget.initializeChildren(this.$el, this);
     loadComments();
+  } else {
+    showContent('configured-interact');
   }
 
-  function showNonConfiguredContent(value) {
-    $('.configured').toggle(!value);
-    $('.not-configured').toggle(value);
+  function showContent(mode) {
+    $('.configured').toggle(mode === 'configured');
+    $('.not-configured').toggle(mode === 'not-configured');
+    $('.configured-interact').toggle(mode === 'configured-interact');
   }
 
   function showToastProgress(message = 'Processing') {
