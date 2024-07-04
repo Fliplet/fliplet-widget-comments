@@ -11,164 +11,258 @@
   data-comments-id="{{ id }}"
   id="app-comments"
 >
-  <p class="comment-length">\{{comments.length}} COMMENTS</p>
-  <div v-if="comments.length" class="comments-holder">
-    <div v-for="(comment, index) in commentsData" :key="comment.id">
-      <div class="comment" :class="{flagged: comment.data.flagged, 'thread-shown': comment.showThreads, 'active-comment': checkCommentState(comment, 'active')}">
-        <div class="flagged-dialog" v-if="comment.data.flagged">
-          <div class="close-flagged-dialog">
-            <i class="fa fa-times" @click="comment.data.flagged = false"></i>
-          </div>
-          <p>
-            Thank you for flagging this comment.
-            <br>
-            <br>
-            Admin will be notified about it.
-          </p>
-        </div>
-        <div class="comment-avatar">
-          <div
-            v-if="comment.data.userAvatar"
-            class="user-avatar"
-            :style="'background-image: url(' + comment.data.userAvatar + ')'"
-          ></div>
-          <!-- style="background-mage: url({{comment.data.userAvatar}})" -->
-          <div v-else class="user-avatar">
-            <span>\{{comment.data.userInitials}}</span>
-          </div>
-        </div>
-        <div class="comment-data">
-          <div class="comment-first-line">
-            <h5 class="comment-user-name">\{{comment.data.userFullName}}</h5>
-            <h5 class="comment-timestamp">
-              \{{getDateFromTimestamp(comment.data.Timestamp)}} at
-              \{{getTimeFromTimestamp(comment.data.Timestamp)}}
-            </h5>
-          </div>
-          <div class="commentText">\{{comment.data.Message}}</div>
-        </div>
-        <div class="last-row">
-          <div class="actions">
-            <div @click="prepareComment(comment, 'reply')">
-              <i class="fa fa-comment-o"></i>
-              Reply
+  <div class="not-configured">
+    <p>Configure Comments component</p>
+  </div>
+  <div class="configured">
+    <p class="comment-length">\{{comments.length}} COMMENTS</p>
+    <div v-if="comments.length" class="comments-holder">
+      <div v-for="(comment, index) in commentsData" :key="comment.id">
+        <div
+          class="comment"
+          :class="{flagged: comment.data.flagged, 'thread-shown': comment.showThreads, 'active-comment': checkCommentState(comment, 'active')}"
+        >
+          <div class="flagged-dialog" v-if="comment.data.flagged">
+            <div class="close-flagged-dialog">
+              <i class="fa fa-times" @click="comment.data.flagged = false"></i>
             </div>
-            <div @click="manageLike(comment)">
-              <i class="fa" :class="{'fa-heart': isLikedByLoginUser(comment.data.Likes), 'fa-heart-o': !isLikedByLoginUser(comment.data.Likes)}"></i>
-              Like
-              <span v-if="comment.data.Likes.length">(\{{comment.data.Likes.length}})</span>
+            <p>
+              Thank you for flagging this comment.
+              <br />
+              <br />
+              Admin will be notified about it.
+            </p>
+          </div>
+          <div class="comment-avatar">
+            <div
+              v-if="comment.data.userAvatar"
+              class="user-avatar"
+              :style="'background-image: url(' + comment.data.userAvatar + ')'"
+            ></div>
+            <!-- style="background-mage: url({{comment.data.userAvatar}})" -->
+            <div v-else class="user-avatar">
+              <span>\{{comment.data.userInitials}}</span>
             </div>
           </div>
-          <div v-if="isLoggedUserOwnerOfComment(comment)" class="manage-comment-container">
-            <p v-if="!checkCommentState(comment, 'edit')" @click="deleteComment(comment)">Delete</p>
-            <p v-if="!checkCommentState(comment, 'edit')" @click="prepareComment(comment, 'edit')">Edit</p>
-            <p v-if="checkCommentState(comment, 'edit')" @click="clearState()" class="cancel-btn">Cancel editing</p>
+          <div class="comment-data">
+            <div class="comment-first-line">
+              <h5 class="comment-user-name">\{{comment.data.userFullName}}</h5>
+              <h5 class="comment-timestamp">
+                \{{getDateFromTimestamp(comment.data.Timestamp)}} at
+                \{{getTimeFromTimestamp(comment.data.Timestamp)}}
+              </h5>
+            </div>
+            <div class="commentText">\{{comment.data.Message}}</div>
           </div>
-          <div v-else class="flag-container" @click="comment.data.openDropdown = !comment.data.openDropdown">
-            <svg width="28" height="6" viewBox="0 0 28 6" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="3" cy="3" r="3" fill="#D4D4D7"/>
-              <circle cx="14" cy="3" r="3" fill="#D4D4D7"/>
-              <circle cx="25" cy="3" r="3" fill="#D4D4D7"/>
-            </svg>
-            <ul class="comment-dropdown" v-if="comment.data.openDropdown">
-              <li @click="flagComment(comment)">Flag comment</li>
-            </ul>
-          </div>
-        </div>
-        <div class="show-more-less" v-if="comment.threads.length" @click="toggleThreads(comment)">
-          <i class="fa" :class="{'fa-caret-down': !comment.showThreads, 'fa-caret-up': comment.showThreads, }"></i>
-          <span>
-            \{{comment.showThreads ? 'Hide' : 'Show'}} \{{comment.threads.length}}
-          replies
-          </span>
-          <div v-if="comment.showThreads" class="extra-border"></div>
-        </div>
-      </div>
-      <div>
-        <div v-if="comment.threads.length && comment.showThreads">
-          <div
-            :class="{flagged: comment.data.flagged, 'active-comment': checkCommentState(thread, 'active')}"
-            class="comment answer"
-            v-for="(thread, index) in comment.threads"
-            :key="'thread' + thread.id"
-          >
-            <div class="flagged-dialog" v-if="thread.data.flagged">
-              <div class="close-flagged-dialog">
-                <i class="fa fa-times" @click="thread.data.flagged = false"></i>
+          <div class="last-row">
+            <div class="actions">
+              <div @click="prepareComment(comment, 'reply')">
+                <i class="fa fa-comment-o"></i>
+                Reply
               </div>
-              <p>
-                Thank you for flagging this comment.
-                <br>
-                <br>
-                Admin will be notified about it.
+              <div @click="manageLike(comment)">
+                <i
+                  class="fa"
+                  :class="{'fa-heart': isLikedByLoginUser(comment.data.Likes), 'fa-heart-o': !isLikedByLoginUser(comment.data.Likes)}"
+                ></i>
+                Like
+                <span v-if="comment.data.Likes.length"
+                  >(\{{comment.data.Likes.length}})</span
+                >
+              </div>
+            </div>
+            <div
+              v-if="isLoggedUserOwnerOfComment(comment)"
+              class="manage-comment-container"
+            >
+              <p
+                v-if="!checkCommentState(comment, 'edit')"
+                @click="deleteComment(comment)"
+              >
+                Delete
+              </p>
+              <p
+                v-if="!checkCommentState(comment, 'edit')"
+                @click="prepareComment(comment, 'edit')"
+              >
+                Edit
+              </p>
+              <p
+                v-if="checkCommentState(comment, 'edit')"
+                @click="clearState()"
+                class="cancel-btn"
+              >
+                Cancel editing
               </p>
             </div>
-            <div class="comment-avatar">
-              <div
-                v-if="thread.data.userAvatar"
-                class="user-avatar"
-                :style="'background-image: url(' + thread.data.userAvatar + ')'"
-              ></div>
-              <div v-else class="user-avatar">
-                <span>\{{thread.data.userInitials}}</span>
-              </div>
+            <div
+              v-else
+              class="flag-container"
+              @click="comment.data.openDropdown = !comment.data.openDropdown"
+            >
+              <svg
+                width="28"
+                height="6"
+                viewBox="0 0 28 6"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <circle cx="3" cy="3" r="3" fill="#D4D4D7" />
+                <circle cx="14" cy="3" r="3" fill="#D4D4D7" />
+                <circle cx="25" cy="3" r="3" fill="#D4D4D7" />
+              </svg>
+              <ul class="comment-dropdown" v-if="comment.data.openDropdown">
+                <li @click="flagComment(comment)">Flag comment</li>
+              </ul>
             </div>
-            <div class="comment-data">
-              <div class="comment-first-line">
-                <h5 class="comment-user-name">\{{thread.data.userFullName}}</h5>
-                <h5 class="comment-timestamp">
-                  \{{getDateFromTimestamp(thread.data.Timestamp)}} at
-                  \{{getTimeFromTimestamp(thread.data.Timestamp)}}
-                </h5>
+          </div>
+          <div
+            class="show-more-less"
+            v-if="comment.threads.length"
+            @click="toggleThreads(comment)"
+          >
+            <i
+              class="fa"
+              :class="{'fa-caret-down': !comment.showThreads, 'fa-caret-up': comment.showThreads, }"
+            ></i>
+            <span>
+              \{{comment.showThreads ? 'Hide' : 'Show'}}
+              \{{comment.threads.length}} replies
+            </span>
+            <div v-if="comment.showThreads" class="extra-border"></div>
+          </div>
+        </div>
+        <div>
+          <div v-if="comment.threads.length && comment.showThreads">
+            <div
+              :class="{flagged: comment.data.flagged, 'active-comment': checkCommentState(thread, 'active')}"
+              class="comment answer"
+              v-for="(thread, index) in comment.threads"
+              :key="'thread' + thread.id"
+            >
+              <div class="flagged-dialog" v-if="thread.data.flagged">
+                <div class="close-flagged-dialog">
+                  <i
+                    class="fa fa-times"
+                    @click="thread.data.flagged = false"
+                  ></i>
+                </div>
+                <p>
+                  Thank you for flagging this comment.
+                  <br />
+                  <br />
+                  Admin will be notified about it.
+                </p>
               </div>
-              <div class="commentText">\{{thread.data.Message}}</div>
-            </div>
-            <div class="last-row">
-              <div class="actions">
-                <div @click="manageLike(thread)">
-                  <i class="fa" :class="{'fa-heart': isLikedByLoginUser(thread.data.Likes), 'fa-heart-o': !isLikedByLoginUser(thread.data.Likes)}"></i>
-                  Like
-                  <span v-if="thread.data.Likes.length">(\{{thread.data.Likes.length}})</span>
+              <div class="comment-avatar">
+                <div
+                  v-if="thread.data.userAvatar"
+                  class="user-avatar"
+                  :style="'background-image: url(' + thread.data.userAvatar + ')'"
+                ></div>
+                <div v-else class="user-avatar">
+                  <span>\{{thread.data.userInitials}}</span>
                 </div>
               </div>
-              <div v-if="isLoggedUserOwnerOfComment(thread)"  class="manage-comment-container">
-                <p v-if="!checkCommentState(thread, 'edit')" @click="deleteComment(thread)">Delete</p>
-                <p v-if="!checkCommentState(thread, 'edit')" @click="prepareComment(thread, 'edit')">Edit</p>
-                <p v-if="checkCommentState(thread, 'edit')" @click="clearState()" class="cancel-btn">Cancel editing</p>
+              <div class="comment-data">
+                <div class="comment-first-line">
+                  <h5 class="comment-user-name">
+                    \{{thread.data.userFullName}}
+                  </h5>
+                  <h5 class="comment-timestamp">
+                    \{{getDateFromTimestamp(thread.data.Timestamp)}} at
+                    \{{getTimeFromTimestamp(thread.data.Timestamp)}}
+                  </h5>
+                </div>
+                <div class="commentText">\{{thread.data.Message}}</div>
               </div>
-              <div v-else class="flag-container" @click="thread.data.openDropdown = !thread.data.openDropdown">
-                <svg width="28" height="6" viewBox="0 0 28 6" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <circle cx="3" cy="3" r="3" fill="#D4D4D7"/>
-                  <circle cx="14" cy="3" r="3" fill="#D4D4D7"/>
-                  <circle cx="25" cy="3" r="3" fill="#D4D4D7"/>
-                </svg>
-                <ul class="comment-dropdown" v-if="thread.data.openDropdown">
-                  <li @click="flagComment(thread)">Flag comment</li>
-                </ul>
+              <div class="last-row">
+                <div class="actions">
+                  <div @click="manageLike(thread)">
+                    <i
+                      class="fa"
+                      :class="{'fa-heart': isLikedByLoginUser(thread.data.Likes), 'fa-heart-o': !isLikedByLoginUser(thread.data.Likes)}"
+                    ></i>
+                    Like
+                    <span v-if="thread.data.Likes.length"
+                      >(\{{thread.data.Likes.length}})</span
+                    >
+                  </div>
+                </div>
+                <div
+                  v-if="isLoggedUserOwnerOfComment(thread)"
+                  class="manage-comment-container"
+                >
+                  <p
+                    v-if="!checkCommentState(thread, 'edit')"
+                    @click="deleteComment(thread)"
+                  >
+                    Delete
+                  </p>
+                  <p
+                    v-if="!checkCommentState(thread, 'edit')"
+                    @click="prepareComment(thread, 'edit')"
+                  >
+                    Edit
+                  </p>
+                  <p
+                    v-if="checkCommentState(thread, 'edit')"
+                    @click="clearState()"
+                    class="cancel-btn"
+                  >
+                    Cancel editing
+                  </p>
+                </div>
+                <div
+                  v-else
+                  class="flag-container"
+                  @click="thread.data.openDropdown = !thread.data.openDropdown"
+                >
+                  <svg
+                    width="28"
+                    height="6"
+                    viewBox="0 0 28 6"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <circle cx="3" cy="3" r="3" fill="#D4D4D7" />
+                    <circle cx="14" cy="3" r="3" fill="#D4D4D7" />
+                    <circle cx="25" cy="3" r="3" fill="#D4D4D7" />
+                  </svg>
+                  <ul class="comment-dropdown" v-if="thread.data.openDropdown">
+                    <li @click="flagComment(thread)">Flag comment</li>
+                  </ul>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-  <div v-else class="no-comments">
-    <p>No comments yet</p>
-  </div>
-  <div class="fixed-container">
-    <div class="cancel-reply-container" v-if="commentState && commentState.action === 'reply'">
-      <p>Replying to  <strong>\{{commentState.comment.data.userFullName}}</strong></p>
-      <p @click="clearState()" class="cancel-btn">Cancel</p>
+    <div v-else class="no-comments">
+      <p>No comments yet</p>
     </div>
-    <div class="add-comment-container">
-      <input
-        @keyup.enter="manageComment()"
-        class="input-comment"
-        type="text"
-        v-model="commentInput"
-        placeholder="Add a comment..."
-      />
-      <button class="btn-post-comment" @click="manageComment()">Post</button>
+    <div class="fixed-container">
+      <div
+        class="cancel-reply-container"
+        v-if="commentState && commentState.action === 'reply'"
+      >
+        <p>
+          Replying to
+          <strong>\{{commentState.comment.data.userFullName}}</strong>
+        </p>
+        <p @click="clearState()" class="cancel-btn">Cancel</p>
+      </div>
+      <div class="add-comment-container">
+        <input
+          @keyup.enter="manageComment()"
+          class="input-comment"
+          type="text"
+          v-model="commentInput"
+          placeholder="Add a comment..."
+        />
+        <button class="btn-post-comment" @click="manageComment()">Post</button>
+      </div>
     </div>
   </div>
 </div>

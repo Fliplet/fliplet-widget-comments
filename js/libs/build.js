@@ -13,20 +13,38 @@ Fliplet.Widget.instance('comments', function(widgetData) {
   let loggedUser = null;
 
   if (!DS_USERS) {
+    if (Fliplet.Env.get('mode') === 'interact') {
+      showNonConfiguredContent(true);
+    }
+
     return showToastMessage('Please select Data source');
   }
 
   if (!EMAIL_COLUMN) {
+    if (Fliplet.Env.get('mode') === 'interact') {
+      showNonConfiguredContent(true);
+    }
+
     return showToastMessage('Please select column for the email');
   }
 
   if (!USER_NAMES) {
+    if (Fliplet.Env.get('mode') === 'interact') {
+      showNonConfiguredContent(true);
+    }
+
     return showToastMessage('Please select user names');
   }
 
   if (!QUERY.dataSourceEntryId) {
+    if (Fliplet.Env.get('mode') === 'interact') {
+      showNonConfiguredContent(true);
+    }
+
     return showToastMessage('No data source entry ID provided');
   }
+
+  showNonConfiguredContent(false);
 
   const EMAILS_TO_NOTIFY_FLAGGED_COMMENT = !FLAGGED_EMAILS
     ? []
@@ -36,7 +54,12 @@ Fliplet.Widget.instance('comments', function(widgetData) {
 
   if (!Fliplet.Env.get('interact')) {
     Fliplet.Widget.initializeChildren(this.$el, this);
-    manageGlobalCommentsDataSource();
+    loadComments();
+  }
+
+  function showNonConfiguredContent(value) {
+    $('.configured').toggle(!value);
+    $('.not-configured').toggle(value);
   }
 
   function showToastProgress(message = 'Processing') {
@@ -49,7 +72,7 @@ Fliplet.Widget.instance('comments', function(widgetData) {
     });
   }
 
-  function manageGlobalCommentsDataSource() {
+  function loadComments() {
     showToastProgress('Loading comments...');
     initVue();
   }
