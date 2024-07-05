@@ -285,6 +285,16 @@
   padding-left: 15px;
 }
 
+.not-configured {
+  color: #9E9FB7;
+  margin: 10px;
+  padding: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #9E9FB7;
+}
+
 [name="comments"] .input-comment:focus {
   outline: none;
 }
