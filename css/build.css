@@ -292,7 +292,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 1px solid #9E9FB7;
+  border: 1px solid #D4D4D4;
 }
 
 [name="comments"] .input-comment:focus {
