@@ -178,7 +178,7 @@ Fliplet.DataSources.get({
         {
           name: 'columnEmail',
           type: 'dropdown',
-          label: 'Email data',
+          label: 'User email data',
           description: 'select the column in the linked datasource where user emails are stored',
           options: [],
           default: '',
@@ -217,7 +217,7 @@ Fliplet.DataSources.get({
         {
           name: 'columnUserPhoto',
           type: 'dropdown',
-          label: 'Profile photo data',
+          label: 'User profile photo data',
           description: 'select the column in the linked datasource where user photos are stored',
           options: [],
           default: '',
