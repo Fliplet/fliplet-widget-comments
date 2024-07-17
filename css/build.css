@@ -290,13 +290,14 @@
 }
 
 .not-configured {
-  color: #9E9FB7;
+  border: 5px solid #D4D4D4!important;
+  color: #6A6868!important;
+  font-size: 12px!important;
   margin: 10px;
   padding: 15px;
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 1px solid #D4D4D4;
 }
 
 [name="comments"] .input-comment:focus {
