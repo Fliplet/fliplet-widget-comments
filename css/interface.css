@@ -4,4 +4,6 @@
 
 .interface .multi.selectize-dropdown.form-group {
     left: 30px !important;
+    width: 330px !important;
+    min-width: 330px !important;
 }
