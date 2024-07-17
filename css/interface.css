@@ -1,0 +1,7 @@
+.interface .selectize-dropdown-content {
+    width: 330px !important;
+}
+
+.interface .multi.selectize-dropdown.form-group {
+    left: 30px !important;
+}

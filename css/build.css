@@ -258,6 +258,10 @@
   border-bottom: 1px solid #F0F0F4;
 }
 
+[name="comments"] .configured-interact .comment-length {
+  border-top: none;
+}
+
 [name="comments"] .fixed-container {
   display: flex;
   position: fixed;

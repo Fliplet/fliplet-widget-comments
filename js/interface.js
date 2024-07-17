@@ -184,10 +184,6 @@ Fliplet.DataSources.get({
           default: '',
           required: true,
           ready: function() {
-            // Fliplet.Helper.field('columnEmail').toggle(
-            //   Fliplet.Helper.field('userDataSource').get()
-            // );
-
             if (Fliplet.Helper.field('userDataSource').get()) {
               setTimeout(() => {
                 const key = Object.keys(__widgetData)[0];
@@ -220,6 +216,7 @@ Fliplet.DataSources.get({
           label: 'User profile photo data',
           description: 'select the column in the linked datasource where user photos are stored',
           options: [],
+          required: true,
           default: '',
           ready: function() {
             // Fliplet.Helper.field('columnUserPhoto').toggle(
