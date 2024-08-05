@@ -116,6 +116,11 @@ Fliplet.Widget.instance('comments', function (widgetData) {
   var FLAGGED_MAIL_CONTENT = widgetData.flaggedMailContent;
   var USER_NAMES = widgetData.userNames;
   var COMMENTS_DS_ID = widgetData.commentsDataSourceId;
+  var EMAILS_TO_NOTIFY_FLAGGED_COMMENT = !FLAGGED_EMAILS ? [] : FLAGGED_EMAILS.split(',').map(function (el) {
+    return el.trim();
+  }).filter(function (el) {
+    return RegExp(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/).test(el);
+  });
   var loggedUser = null;
   Fliplet.Widget.findParents({
     instanceId: COMMENTS_INSTANCE_ID
@@ -160,11 +165,6 @@ Fliplet.Widget.instance('comments', function (widgetData) {
       }
       return showToastMessage('No data source entry ID provided');
     }
-    var EMAILS_TO_NOTIFY_FLAGGED_COMMENT = !FLAGGED_EMAILS ? [] : FLAGGED_EMAILS.split(',').map(function (el) {
-      return el.trim();
-    }).filter(function (el) {
-      return RegExp(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/).test(el);
-    });
     if (!Fliplet.Env.get('interact')) {
       showContent('configured');
       Fliplet.Widget.initializeChildren(_this.$el, _this);

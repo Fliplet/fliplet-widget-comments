@@ -395,3 +395,8 @@
   height: 30px;
   z-index: 5;
 }
+
+[name="comments"] [data-view-placeholder] {
+  border: none;
+  padding: 10px;
+}

@@ -12,6 +12,12 @@ Fliplet.Widget.instance('comments', function(widgetData) {
   const FLAGGED_MAIL_CONTENT = widgetData.flaggedMailContent;
   const USER_NAMES = widgetData.userNames;
   const COMMENTS_DS_ID = widgetData.commentsDataSourceId;
+
+  const EMAILS_TO_NOTIFY_FLAGGED_COMMENT = !FLAGGED_EMAILS
+    ? []
+    : FLAGGED_EMAILS.split(',')
+      .map((el) => el.trim())
+      .filter((el) => RegExp(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/).test(el));
   let loggedUser = null;
 
 
@@ -70,12 +76,6 @@ Fliplet.Widget.instance('comments', function(widgetData) {
 
       return showToastMessage('No data source entry ID provided');
     }
-
-    const EMAILS_TO_NOTIFY_FLAGGED_COMMENT = !FLAGGED_EMAILS
-      ? []
-      : FLAGGED_EMAILS.split(',')
-        .map((el) => el.trim())
-        .filter((el) => RegExp(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/).test(el));
 
     if (!Fliplet.Env.get('interact')) {
       showContent('configured');
