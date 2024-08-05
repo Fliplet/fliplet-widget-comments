@@ -2,6 +2,8 @@
 // TODO Implement tinyMce
 // TODO Implement mention users
 Fliplet.Widget.instance('comments', function(widgetData) {
+  const COMMENTS = this;
+  const COMMENTS_INSTANCE_ID = COMMENTS.id;
   const DS_USERS = widgetData.userDataSource;
   const QUERY = Fliplet.Navigate.query;
   const EMAIL_COLUMN = widgetData.columnEmail;
@@ -12,50 +14,81 @@ Fliplet.Widget.instance('comments', function(widgetData) {
   const COMMENTS_DS_ID = widgetData.commentsDataSourceId;
   let loggedUser = null;
 
-  if (!DS_USERS) {
-    if (Fliplet.Env.get('mode') === 'interact') {
+
+  Fliplet.Widget.findParents({
+    instanceId: COMMENTS_INSTANCE_ID
+  }).then((widgets) => {
+    let dynamicContainer = null;
+    let recordContainer = null;
+
+    widgets.forEach((widget) => {
+      if (widget.package === 'com.fliplet.dynamic-container') {
+        dynamicContainer = widget;
+      } else if (widget.package === 'com.fliplet.record-container') {
+        recordContainer = widget;
+      }
+    });
+
+    if (!dynamicContainer || !dynamicContainer.dataSourceId) {
       showContent('not-configured');
+
+      return errorMessageStructureNotValid($(COMMENTS.$el), 'This component needs to be placed inside a Dynamic Container and select a data source');
+    } else if (!recordContainer) {
+      showContent('not-configured');
+
+      return errorMessageStructureNotValid($(COMMENTS.$el), 'This component needs to be placed inside a Record component');
     }
 
-    return showToastMessage('Please select Data source');
-  }
+    if (!DS_USERS) {
+      if (Fliplet.Env.get('mode') === 'interact') {
+        showContent('not-configured');
+      }
 
-  if (!EMAIL_COLUMN) {
-    if (Fliplet.Env.get('mode') === 'interact') {
-      showContent('not-configured');
+      return showToastMessage('Please select Data source');
     }
 
-    return showToastMessage('Please select column for the email');
-  }
+    if (!EMAIL_COLUMN) {
+      if (Fliplet.Env.get('mode') === 'interact') {
+        showContent('not-configured');
+      }
 
-  if (!USER_NAMES || !USER_NAMES.length) {
-    if (Fliplet.Env.get('mode') === 'interact') {
-      showContent('not-configured');
+      return showToastMessage('Please select column for the email');
     }
 
-    return showToastMessage('Please select user names');
-  }
+    if (!USER_NAMES || !USER_NAMES.length) {
+      if (Fliplet.Env.get('mode') === 'interact') {
+        showContent('not-configured');
+      }
 
-  if (!QUERY.dataSourceEntryId) {
-    if (Fliplet.Env.get('mode') === 'interact') {
-      showContent('not-configured');
+      return showToastMessage('Please select user names');
     }
 
-    return showToastMessage('No data source entry ID provided');
-  }
+    if (!QUERY.dataSourceEntryId) {
+      if (Fliplet.Env.get('mode') === 'interact') {
+        showContent('not-configured');
+      }
 
-  const EMAILS_TO_NOTIFY_FLAGGED_COMMENT = !FLAGGED_EMAILS
-    ? []
-    : FLAGGED_EMAILS.split(',')
-      .map((el) => el.trim())
-      .filter((el) => RegExp(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/).test(el));
+      return showToastMessage('No data source entry ID provided');
+    }
 
-  if (!Fliplet.Env.get('interact')) {
-    showContent('configured');
-    Fliplet.Widget.initializeChildren(this.$el, this);
-    loadComments();
-  } else {
-    showContent('configured-interact');
+    const EMAILS_TO_NOTIFY_FLAGGED_COMMENT = !FLAGGED_EMAILS
+      ? []
+      : FLAGGED_EMAILS.split(',')
+        .map((el) => el.trim())
+        .filter((el) => RegExp(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/).test(el));
+
+    if (!Fliplet.Env.get('interact')) {
+      showContent('configured');
+      Fliplet.Widget.initializeChildren(this.$el, this);
+      loadComments();
+    } else {
+      showContent('configured-interact');
+    }
+  });
+
+  function errorMessageStructureNotValid($element, message) {
+    $element.addClass('component-error-before');
+    Fliplet.UI.Toast(message);
   }
 
   function showContent(mode) {

@@ -105,6 +105,9 @@ __webpack_require__.r(__webpack_exports__);
 // TODO Implement tinyMce
 // TODO Implement mention users
 Fliplet.Widget.instance('comments', function (widgetData) {
+  var _this = this;
+  var COMMENTS = this;
+  var COMMENTS_INSTANCE_ID = COMMENTS.id;
   var DS_USERS = widgetData.userDataSource;
   var QUERY = Fliplet.Navigate.query;
   var EMAIL_COLUMN = widgetData.columnEmail;
@@ -114,41 +117,65 @@ Fliplet.Widget.instance('comments', function (widgetData) {
   var USER_NAMES = widgetData.userNames;
   var COMMENTS_DS_ID = widgetData.commentsDataSourceId;
   var loggedUser = null;
-  if (!DS_USERS) {
-    if (Fliplet.Env.get('mode') === 'interact') {
+  Fliplet.Widget.findParents({
+    instanceId: COMMENTS_INSTANCE_ID
+  }).then(function (widgets) {
+    var dynamicContainer = null;
+    var recordContainer = null;
+    widgets.forEach(function (widget) {
+      if (widget["package"] === 'com.fliplet.dynamic-container') {
+        dynamicContainer = widget;
+      } else if (widget["package"] === 'com.fliplet.record-container') {
+        recordContainer = widget;
+      }
+    });
+    if (!dynamicContainer || !dynamicContainer.dataSourceId) {
       showContent('not-configured');
-    }
-    return showToastMessage('Please select Data source');
-  }
-  if (!EMAIL_COLUMN) {
-    if (Fliplet.Env.get('mode') === 'interact') {
+      return errorMessageStructureNotValid($(COMMENTS.$el), 'This component needs to be placed inside a Dynamic Container and select a data source');
+    } else if (!recordContainer) {
       showContent('not-configured');
+      return errorMessageStructureNotValid($(COMMENTS.$el), 'This component needs to be placed inside a Record component');
     }
-    return showToastMessage('Please select column for the email');
-  }
-  if (!USER_NAMES || !USER_NAMES.length) {
-    if (Fliplet.Env.get('mode') === 'interact') {
-      showContent('not-configured');
+    if (!DS_USERS) {
+      if (Fliplet.Env.get('mode') === 'interact') {
+        showContent('not-configured');
+      }
+      return showToastMessage('Please select Data source');
     }
-    return showToastMessage('Please select user names');
-  }
-  if (!QUERY.dataSourceEntryId) {
-    if (Fliplet.Env.get('mode') === 'interact') {
-      showContent('not-configured');
+    if (!EMAIL_COLUMN) {
+      if (Fliplet.Env.get('mode') === 'interact') {
+        showContent('not-configured');
+      }
+      return showToastMessage('Please select column for the email');
     }
-    return showToastMessage('No data source entry ID provided');
-  }
-  var EMAILS_TO_NOTIFY_FLAGGED_COMMENT = !FLAGGED_EMAILS ? [] : FLAGGED_EMAILS.split(',').map(function (el) {
-    return el.trim();
-  }).filter(function (el) {
-    return RegExp(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/).test(el);
+    if (!USER_NAMES || !USER_NAMES.length) {
+      if (Fliplet.Env.get('mode') === 'interact') {
+        showContent('not-configured');
+      }
+      return showToastMessage('Please select user names');
+    }
+    if (!QUERY.dataSourceEntryId) {
+      if (Fliplet.Env.get('mode') === 'interact') {
+        showContent('not-configured');
+      }
+      return showToastMessage('No data source entry ID provided');
+    }
+    var EMAILS_TO_NOTIFY_FLAGGED_COMMENT = !FLAGGED_EMAILS ? [] : FLAGGED_EMAILS.split(',').map(function (el) {
+      return el.trim();
+    }).filter(function (el) {
+      return RegExp(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/).test(el);
+    });
+    if (!Fliplet.Env.get('interact')) {
+      showContent('configured');
+      Fliplet.Widget.initializeChildren(_this.$el, _this);
+      loadComments();
+    } else {
+      showContent('configured-interact');
+    }
   });
-  if (!Fliplet.Env.get('interact')) {
-    showContent('configured');
-    Fliplet.Widget.initializeChildren(this.$el, this);
-    loadComments();
-  } else {
-    showContent('configured-interact');
+  function errorMessageStructureNotValid($element, message) {
+    $element.addClass('component-error-before');
+    Fliplet.UI.Toast(message);
   }
   function showContent(mode) {
     $('.configured').toggle(mode === 'configured');
@@ -207,7 +234,7 @@ Fliplet.Widget.instance('comments', function (widgetData) {
             return false;
           },
           flagComment: function flagComment(comment) {
-            var _this = this;
+            var _this2 = this;
             showToastProgress('Flagging the comment...');
             comment.data.flagged = true;
             Fliplet.DataSources.connect(COMMENTS_DS_ID).then(function (connection) {
@@ -217,7 +244,7 @@ Fliplet.Widget.instance('comments', function (widgetData) {
               });
             }).then(function () {
               if (EMAILS_TO_NOTIFY_FLAGGED_COMMENT.length) {
-                return _this.getExistingEmailsToNotifyAboutFlag().then(function (existingEmails) {
+                return _this2.getExistingEmailsToNotifyAboutFlag().then(function (existingEmails) {
                   var emails = existingEmails.map(function (user) {
                     var adminName = '';
                     if (USER_NAMES.length === 1) {
@@ -239,7 +266,7 @@ Fliplet.Widget.instance('comments', function (widgetData) {
                     };
                   });
                   return Fliplet.Communicate.batchSendEmail(emails).then(function () {
-                    _this.closeToastProgress();
+                    _this2.closeToastProgress();
                     setTimeout(function () {
                       comment.data.flagged = false;
                     }, 2000);
@@ -276,7 +303,7 @@ Fliplet.Widget.instance('comments', function (widgetData) {
             });
           },
           getComments: function getComments() {
-            var _this2 = this;
+            var _this3 = this;
             var entryId = QUERY.dataSourceEntryId;
             return Fliplet.DataSources.connect(COMMENTS_DS_ID).then(function (connection) {
               return connection.find({
@@ -287,15 +314,15 @@ Fliplet.Widget.instance('comments', function (widgetData) {
                 var userEmails = records.map(function (el) {
                   return el.data['Author Email'];
                 });
-                return _this2.getUserData(userEmails).then(function (users) {
+                return _this3.getUserData(userEmails).then(function (users) {
                   var comments = [];
                   var threads = [];
                   records.forEach(function (el) {
                     var currentUser = users.find(function (user) {
                       return user.data[EMAIL_COLUMN] === el.data['Author Email'];
                     });
-                    el.data.userFullName = _this2.getUserFullName(currentUser.data);
-                    el.data.userInitials = _this2.getUserInitials(currentUser.data);
+                    el.data.userFullName = _this3.getUserFullName(currentUser.data);
+                    el.data.userInitials = _this3.getUserInitials(currentUser.data);
                     el.data.userAvatar = currentUser.data[USER_PHOTO_COLUMN] ? Fliplet.Media.authenticate(currentUser.data[USER_PHOTO_COLUMN]) : null;
                     el.data.flagged = false;
                     el.data.openDropdown = false;
@@ -305,14 +332,14 @@ Fliplet.Widget.instance('comments', function (widgetData) {
                       comments.push(el);
                     }
                   });
-                  _this2.comments = comments.map(function (el) {
+                  _this3.comments = comments.map(function (el) {
                     el.showThreads = false;
                     el.threads = threads.filter(function (thread) {
                       return thread.data['Comment GUID'] === el.data['GUID'];
                     });
                     return el;
                   });
-                  _this2.closeToastProgress();
+                  _this3.closeToastProgress();
                 });
               });
             });
@@ -380,64 +407,64 @@ Fliplet.Widget.instance('comments', function (widgetData) {
             }
           },
           manageComment: function manageComment() {
-            var _this3 = this;
+            var _this4 = this;
             if (this.commentInput) {
               if (!this.commentState || this.commentState.action === 'reply') {
                 showToastProgress('Adding comment...');
                 Fliplet.DataSources.connect(COMMENTS_DS_ID).then(function (connection) {
                   var toInsert = {
-                    Message: _this3.commentInput,
+                    Message: _this4.commentInput,
                     'Author Email': loggedUser[EMAIL_COLUMN],
                     Timestamp: new Date().toISOString(),
                     'Entry Id': QUERY.dataSourceEntryId,
                     Likes: []
                   };
-                  if (_this3.commentState && _this3.commentState.action === 'reply') {
-                    toInsert['Comment GUID'] = _this3.commentState.comment.data['GUID'];
+                  if (_this4.commentState && _this4.commentState.action === 'reply') {
+                    toInsert['Comment GUID'] = _this4.commentState.comment.data['GUID'];
                   }
                   return connection.insert(toInsert).then(function (record) {
-                    record.data.userInitials = _this3.getUserInitials(loggedUser);
-                    record.data.userFullName = _this3.getUserFullName(loggedUser);
+                    record.data.userInitials = _this4.getUserInitials(loggedUser);
+                    record.data.userFullName = _this4.getUserFullName(loggedUser);
                     record.data.flagged = false;
                     record.data.openDropdown = false;
                     record.showThreads = false;
                     record.threads = [];
-                    if (_this3.commentState && _this3.commentState.action === 'reply') {
-                      _this3.comments = _this3.comments.map(function (el) {
-                        if (el.data['GUID'] === _this3.commentState.comment.data['GUID']) {
+                    if (_this4.commentState && _this4.commentState.action === 'reply') {
+                      _this4.comments = _this4.comments.map(function (el) {
+                        if (el.data['GUID'] === _this4.commentState.comment.data['GUID']) {
                           el.threads.push(record);
                         }
                         return el;
                       });
                     } else {
-                      _this3.comments.unshift(record);
+                      _this4.comments.unshift(record);
                     }
-                    _this3.closeToastProgress();
-                    _this3.clearCommentState();
+                    _this4.closeToastProgress();
+                    _this4.clearCommentState();
                   });
                 });
               } else {
                 showToastProgress('Updating comment...');
                 Fliplet.DataSources.connect(COMMENTS_DS_ID).then(function (connection) {
-                  return connection.update(_this3.commentState.comment.id, {
-                    Message: _this3.commentInput,
-                    GUID: _this3.commentState.comment.data['GUID']
+                  return connection.update(_this4.commentState.comment.id, {
+                    Message: _this4.commentInput,
+                    GUID: _this4.commentState.comment.data['GUID']
                   }).then(function () {
-                    _this3.comments = _this3.comments.map(function (el) {
-                      if (el.id === _this3.commentState.comment.id) {
-                        el.data.Message = _this3.commentInput;
+                    _this4.comments = _this4.comments.map(function (el) {
+                      if (el.id === _this4.commentState.comment.id) {
+                        el.data.Message = _this4.commentInput;
                       }
                       return el;
                     });
-                    _this3.clearCommentState();
-                    _this3.closeToastProgress();
+                    _this4.clearCommentState();
+                    _this4.closeToastProgress();
                   });
                 });
               }
             }
           },
           deleteComment: function deleteComment(comment) {
-            var _this4 = this;
+            var _this5 = this;
             var isThread = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
             var message = 'Are you sure you want to delete this comment? Note that all the threads will be deleted as well.';
             if (isThread) {
@@ -457,7 +484,7 @@ Fliplet.Widget.instance('comments', function (widgetData) {
               if (isThread) {
                 deleteCommentPromise = Fliplet.DataSources.connect(COMMENTS_DS_ID).then(function (connection) {
                   return connection.removeById(comment.id).then(function () {
-                    _this4.comments = _this4.comments.map(function (el) {
+                    _this5.comments = _this5.comments.map(function (el) {
                       if (el.data['GUID'] === comment.data['Comment GUID']) {
                         el.threads = el.threads.filter(function (el) {
                           return el.id !== comment.id;
@@ -465,7 +492,7 @@ Fliplet.Widget.instance('comments', function (widgetData) {
                       }
                       return el;
                     });
-                    _this4.closeToastProgress();
+                    _this5.closeToastProgress();
                   });
                 });
               } else {
@@ -484,10 +511,10 @@ Fliplet.Widget.instance('comments', function (widgetData) {
                       extend: true
                     }).then(function () {
                       return connection.removeById(comment.id).then(function () {
-                        _this4.comments = _this4.comments.filter(function (el) {
+                        _this5.comments = _this5.comments.filter(function (el) {
                           return el.id !== comment.id;
                         });
-                        _this4.closeToastProgress();
+                        _this5.closeToastProgress();
                       });
                     });
                   });
@@ -498,11 +525,11 @@ Fliplet.Widget.instance('comments', function (widgetData) {
           }
         },
         mounted: function mounted() {
-          var _this5 = this;
+          var _this6 = this;
           Fliplet.Session.get().then(function (session) {
             loggedUser = _.get(session, 'entries.dataSource.data');
             if (loggedUser) {
-              _this5.getComments();
+              _this6.getComments();
             } else {
               showToastMessage('You need to be logged in to see the comments');
             }
