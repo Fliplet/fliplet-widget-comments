@@ -12,6 +12,7 @@ Fliplet.Widget.instance('comments', function(widgetData) {
   const FLAGGED_MAIL_CONTENT = widgetData.flaggedMailContent;
   const USER_NAMES = widgetData.userNames;
   const COMMENTS_DS_ID = widgetData.commentsDataSourceId;
+  const MODE_INTERACT = Fliplet.Env.get('mode') === 'interact';
 
   const EMAILS_TO_NOTIFY_FLAGGED_COMMENT = !FLAGGED_EMAILS
     ? []
@@ -46,38 +47,46 @@ Fliplet.Widget.instance('comments', function(widgetData) {
     }
 
     if (!DS_USERS) {
-      if (Fliplet.Env.get('mode') === 'interact') {
+      if (MODE_INTERACT) {
         showContent('not-configured');
+      } else {
+        showContent('configured');
       }
 
       return showToastMessage('Please select Data source');
     }
 
     if (!EMAIL_COLUMN) {
-      if (Fliplet.Env.get('mode') === 'interact') {
+      if (MODE_INTERACT) {
         showContent('not-configured');
+      } else {
+        showContent('configured');
       }
 
       return showToastMessage('Please select column for the email');
     }
 
     if (!USER_NAMES || !USER_NAMES.length) {
-      if (Fliplet.Env.get('mode') === 'interact') {
+      if (MODE_INTERACT) {
         showContent('not-configured');
+      } else {
+        showContent('configured');
       }
 
       return showToastMessage('Please select user names');
     }
 
     if (!QUERY.dataSourceEntryId) {
-      if (Fliplet.Env.get('mode') === 'interact') {
+      if (MODE_INTERACT) {
         showContent('not-configured');
+      } else {
+        showContent('configured');
       }
 
       return showToastMessage('No data source entry ID provided');
     }
 
-    if (!Fliplet.Env.get('interact')) {
+    if (!MODE_INTERACT) {
       showContent('configured');
       Fliplet.Widget.initializeChildren(this.$el, this);
       loadComments();
@@ -86,8 +95,9 @@ Fliplet.Widget.instance('comments', function(widgetData) {
     }
   });
 
+  // TODO remove when product provide solution
   function errorMessageStructureNotValid($element, message) {
-    $element.addClass('component-error-before');
+    $element.addClass('component-error-before-xxx');
     Fliplet.UI.Toast(message);
   }
 
