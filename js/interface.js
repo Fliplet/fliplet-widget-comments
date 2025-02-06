@@ -126,7 +126,7 @@ Fliplet.DataSources.get({
         {
           name: 'commentsDataSourceId',
           type: 'text',
-          label: 'Global Social Actions Data Source ID',
+          label: 'Global Data interactive icon Data Source ID',
           hidden: true,
           default: '',
           ready: function() {
