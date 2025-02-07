@@ -16,10 +16,6 @@
   background: #c7c7c7;
 }
 
-[name="comments"]#app-comments {
-  padding-bottom: 100px;
-}
-
 [name="comments"] .no-comments {
   color: #7D7D7D;
   font-family: Helvetica;
@@ -258,6 +254,10 @@
   border-bottom: 1px solid #F0F0F4;
 }
 
+[name="comments"] .configured-interact .comment-length {
+  border-top: none;
+}
+
 [name="comments"] .fixed-container {
   display: flex;
   position: fixed;
@@ -283,6 +283,18 @@
   flex: 1 0 auto;
   border: none;
   padding-left: 15px;
+}
+
+.not-configured {
+  border: 1px dotted #D4D4D4!important;
+  color: #6A6868!important;
+  font-size: 12px!important;
+  font-family: "Open Sans", sans-serif;
+  margin: 10px;
+  padding: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 [name="comments"] .input-comment:focus {
@@ -361,4 +373,9 @@
 
 [name="comments"] .comment.active-comment {
   background: #F2F2F6;
+}
+
+[name="comments"] [data-view-placeholder] {
+  border: none;
+  padding: 10px;
 }
