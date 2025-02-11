@@ -63,7 +63,7 @@ function manageDataSourceChange(dataSourceId) {
 }
 
 const APP_ID = Fliplet.Env.get('appId');
-const GLOBAL_COMMENTS_DATA_SOURCE = 'Global Comments';
+const GLOBAL_COMMENTS_DATA_SOURCE = 'Global Data comments';
 const DS_DEFINITION = { guid: 'GUID' };
 const GLOBAL_COMMENTS_DATA_SOURCE_COLUMNS = [
   'GUID',
@@ -121,12 +121,12 @@ Fliplet.DataSources.get({
   })
   .then((dsId) => {
     Fliplet.Widget.generateInterface({
-      title: 'Comments',
+      title: 'Data comments',
       fields: [
         {
           name: 'commentsDataSourceId',
           type: 'text',
-          label: 'Global Social Actions Data Source ID',
+          label: 'Global Data interactive icon Data Source ID',
           hidden: true,
           default: '',
           ready: function() {
