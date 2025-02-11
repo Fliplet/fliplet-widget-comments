@@ -1,0 +1,14 @@
+.interface .selectize-dropdown-content {
+    width: 330px !important;
+}
+
+.interface .multi.selectize-dropdown.form-group {
+    left: 30px !important;
+    width: 330px !important;
+    min-width: 330px !important;
+}
+
+.interface .form-group.selectize-control {
+    margin-left: 0!important;
+    margin-right: 0!important;
+}
