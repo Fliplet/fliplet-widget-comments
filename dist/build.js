@@ -137,10 +137,10 @@ Fliplet.Widget.instance('comments', function (widgetData) {
     });
     if (!dynamicContainer || !dynamicContainer.dataSourceId) {
       showContent('not-configured');
-      return errorMessageStructureNotValid($(COMMENTS.$el), 'This component needs to be placed inside a Dynamic Container and select a data source');
+      return errorMessageStructureNotValid($(COMMENTS.$el), 'This component needs to be placed inside a Data container and select a data source');
     } else if (!recordContainer) {
       showContent('not-configured');
-      return errorMessageStructureNotValid($(COMMENTS.$el), 'This component needs to be placed inside a Record component');
+      return errorMessageStructureNotValid($(COMMENTS.$el), 'This component needs to be placed inside a Single record container');
     }
     if (!DS_USERS) {
       if (MODE_INTERACT) {
