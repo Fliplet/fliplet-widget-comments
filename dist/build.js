@@ -107,7 +107,7 @@ __webpack_require__.r(__webpack_exports__);
 Fliplet.Widget.instance('comments', function (widgetData) {
   var _this = this;
   var COMMENTS = this;
-  var COMMENTS_INSTANCE_ID = COMMENTS.id;
+  var COMMENTS_INSTANCE_ID = widgetData.id;
   var DS_USERS = widgetData.userDataSource;
   var QUERY = Fliplet.Navigate.query;
   var EMAIL_COLUMN = widgetData.columnEmail;
@@ -137,10 +137,10 @@ Fliplet.Widget.instance('comments', function (widgetData) {
     });
     if (!dynamicContainer || !dynamicContainer.dataSourceId) {
       showContent('not-configured');
-      return errorMessageStructureNotValid($(COMMENTS.$el), 'This component needs to be placed inside a Dynamic Container and select a data source');
+      return errorMessageStructureNotValid($(COMMENTS.$el), 'This component needs to be placed inside a Data container and select a data source');
     } else if (!recordContainer) {
       showContent('not-configured');
-      return errorMessageStructureNotValid($(COMMENTS.$el), 'This component needs to be placed inside a Record component');
+      return errorMessageStructureNotValid($(COMMENTS.$el), 'This component needs to be placed inside a Single record container');
     }
     if (!DS_USERS) {
       if (MODE_INTERACT) {
