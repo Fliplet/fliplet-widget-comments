@@ -107,7 +107,7 @@ __webpack_require__.r(__webpack_exports__);
 Fliplet.Widget.instance('comments', function (widgetData) {
   var _this = this;
   var COMMENTS = this;
-  var COMMENTS_INSTANCE_ID = COMMENTS.id;
+  var COMMENTS_INSTANCE_ID = widgetData.id;
   var DS_USERS = widgetData.userDataSource;
   var QUERY = Fliplet.Navigate.query;
   var EMAIL_COLUMN = widgetData.columnEmail;

@@ -3,7 +3,7 @@
 // TODO Implement mention users
 Fliplet.Widget.instance('comments', function(widgetData) {
   const COMMENTS = this;
-  const COMMENTS_INSTANCE_ID = COMMENTS.id;
+  const COMMENTS_INSTANCE_ID = widgetData.id;
   const DS_USERS = widgetData.userDataSource;
   const QUERY = Fliplet.Navigate.query;
   const EMAIL_COLUMN = widgetData.columnEmail;
