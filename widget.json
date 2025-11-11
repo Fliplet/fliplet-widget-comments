@@ -35,6 +35,7 @@
       "vue.js",
       "moment",
       "font-awesome",
+      "lodash",
       "fliplet-datasources",
       "fliplet-communicate"
     ],
