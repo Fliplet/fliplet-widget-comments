@@ -178,7 +178,7 @@ Fliplet.Widget.instance('comments', function (widgetData) {
           limit: 1
         });
       }).then(function (records) {
-        ENTRY_ID = _.get(records, '[0].id', null);
+        ENTRY_ID = Array.isArray(records) && records[0] && typeof records[0].id !== 'undefined' ? records[0].id : null;
         return ENTRY_ID;
       });
     };
@@ -552,7 +552,7 @@ Fliplet.Widget.instance('comments', function (widgetData) {
         mounted: function mounted() {
           var _this6 = this;
           Fliplet.Session.get().then(function (session) {
-            loggedUser = _.get(session, 'entries.dataSource.data');
+            loggedUser = session && session.entries && session.entries.dataSource && session.entries.dataSource.data;
             if (loggedUser) {
               _this6.getComments();
             } else {

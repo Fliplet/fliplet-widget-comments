@@ -86,7 +86,9 @@ Fliplet.Widget.instance('comments', function(widgetData) {
       return Fliplet.DataSources.connect(dynamicContainer.dataSourceId)
         .then(connection => connection.find({ limit: 1 }))
         .then(records => {
-          ENTRY_ID = _.get(records, '[0].id', null);
+          ENTRY_ID = (Array.isArray(records) && records[0] && typeof records[0].id !== 'undefined')
+            ? records[0].id
+            : null;
 
           return ENTRY_ID;
         });
@@ -526,7 +528,10 @@ Fliplet.Widget.instance('comments', function(widgetData) {
         },
         mounted() {
           Fliplet.Session.get().then(session => {
-            loggedUser = _.get(session, 'entries.dataSource.data');
+            loggedUser = session
+              && session.entries
+              && session.entries.dataSource
+              && session.entries.dataSource.data;
 
             if (loggedUser) {
               this.getComments();
