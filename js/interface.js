@@ -76,6 +76,34 @@ const GLOBAL_COMMENTS_DATA_SOURCE_COLUMNS = [
   'Entry Id'
 ];
 
+function initCustomValidationMessage() {
+  function updateGlobalValidationMessage() {
+    var hasError = $('.interface .form-group.has-error').length > 0;
+
+    $('#globalValidationMessage').toggle(!!hasError);
+  }
+
+  // Initial check
+  updateGlobalValidationMessage();
+
+  // Watch for input interactions
+  $(document).on('change blur keyup', '.interface :input', function() {
+    updateGlobalValidationMessage();
+  });
+
+  // Watch DOM for validation class changes
+  var observer = new MutationObserver(function() {
+    updateGlobalValidationMessage();
+  });
+
+  observer.observe(document.body, {
+    attributes: true,
+    childList: true,
+    subtree: true,
+    attributeFilter: ['class']
+  });
+}
+
 // TODO change
 const ACCESS_RULES = [
   {
@@ -178,8 +206,8 @@ Fliplet.DataSources.get({
         {
           name: 'columnEmail',
           type: 'dropdown',
-          label: 'User email data',
-          description: 'select the column in the linked datasource where user emails are stored',
+          label: 'User email data (Required)',
+          description: 'Select column in the linked data source with user emails',
           options: [],
           default: '',
           required: true,
@@ -213,8 +241,8 @@ Fliplet.DataSources.get({
         {
           name: 'columnUserPhoto',
           type: 'dropdown',
-          label: 'User profile photo data',
-          description: 'select the column in the linked datasource where user photos are stored',
+          label: 'User profile photo data (Required)',
+          description: 'Select column in the linked data source with user photo',
           options: [],
           required: true,
           default: '',
@@ -262,7 +290,16 @@ Fliplet.DataSources.get({
           placeholder:
             'Comment below was flagged. Please take an action on it.',
           rows: 5
+        },
+        {
+          type: 'html',
+          html: `
+      <div id="globalValidationMessage" class="custom-validation-message" style="display:none;">
+        Please select a value on the fields marked as required.
+      </div>
+      `
         }
       ]
     });
+    setTimeout(initCustomValidationMessage, 0);
   });
