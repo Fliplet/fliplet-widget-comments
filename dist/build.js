@@ -117,6 +117,7 @@ Fliplet.Widget.instance('comments', function (widgetData) {
   var USER_NAMES = widgetData.userNames;
   var COMMENTS_DS_ID = widgetData.commentsDataSourceId;
   var MODE_INTERACT = Fliplet.Env.get('mode') === 'interact';
+  var ENTRY_ID = Fliplet.Navigate.query.dataSourceEntryId || null;
   var EMAILS_TO_NOTIFY_FLAGGED_COMMENT = !FLAGGED_EMAILS ? [] : FLAGGED_EMAILS.split(',').map(function (el) {
     return el.trim();
   }).filter(function (el) {
@@ -166,21 +167,34 @@ Fliplet.Widget.instance('comments', function (widgetData) {
       }
       return showToastMessage('Please select user names');
     }
-    if (!QUERY.dataSourceEntryId) {
-      if (MODE_INTERACT) {
-        showContent('not-configured');
-      } else {
-        showContent('configured');
+    var resolveEntryId = function resolveEntryId() {
+      if (ENTRY_ID) {
+        return Promise.resolve(ENTRY_ID);
       }
-      return showToastMessage('No data source entry ID provided');
-    }
-    if (!MODE_INTERACT) {
-      showContent('configured');
-      Fliplet.Widget.initializeChildren(_this.$el, _this);
-      loadComments();
-    } else {
-      showContent('configured-interact');
-    }
+
+      // Fallback: fetch first entry from the parent data source
+      return Fliplet.DataSources.connect(dynamicContainer.dataSourceId).then(function (connection) {
+        return connection.find({
+          limit: 1
+        });
+      }).then(function (records) {
+        ENTRY_ID = Array.isArray(records) && records[0] && typeof records[0].id !== 'undefined' ? records[0].id : null;
+        return ENTRY_ID;
+      });
+    };
+    return resolveEntryId().then(function (id) {
+      if (!id) {
+        showContent('configured-interact');
+        return showToastMessage('No data entries found in the data source');
+      }
+      if (!MODE_INTERACT) {
+        showContent('configured');
+        Fliplet.Widget.initializeChildren(_this.$el, _this);
+        loadComments();
+      } else {
+        showContent('configured-interact');
+      }
+    });
   });
 
   // TODO remove when product provide solution
@@ -315,7 +329,7 @@ Fliplet.Widget.instance('comments', function (widgetData) {
           },
           getComments: function getComments() {
             var _this3 = this;
-            var entryId = QUERY.dataSourceEntryId;
+            var entryId = ENTRY_ID;
             return Fliplet.DataSources.connect(COMMENTS_DS_ID).then(function (connection) {
               return connection.find({
                 where: {
@@ -427,7 +441,7 @@ Fliplet.Widget.instance('comments', function (widgetData) {
                     Message: _this4.commentInput,
                     'Author Email': loggedUser[EMAIL_COLUMN],
                     Timestamp: new Date().toISOString(),
-                    'Entry Id': QUERY.dataSourceEntryId,
+                    'Entry Id': ENTRY_ID,
                     Likes: []
                   };
                   if (_this4.commentState && _this4.commentState.action === 'reply') {
@@ -538,7 +552,7 @@ Fliplet.Widget.instance('comments', function (widgetData) {
         mounted: function mounted() {
           var _this6 = this;
           Fliplet.Session.get().then(function (session) {
-            loggedUser = _.get(session, 'entries.dataSource.data');
+            loggedUser = session && session.entries && session.entries.dataSource && session.entries.dataSource.data;
             if (loggedUser) {
               _this6.getComments();
             } else {
@@ -742,7 +756,7 @@ module.exports = _unsupportedIterableToArray, module.exports.__esModule = true, 
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\Users\shyft\Desktop\Fliplet Local Setup\fliplet-widget-comments\js\libs\build.js */"./js/libs/build.js");
+module.exports = __webpack_require__(/*! /home/user/fliplet-widget-comments/js/libs/build.js */"./js/libs/build.js");
 
 
 /***/ })

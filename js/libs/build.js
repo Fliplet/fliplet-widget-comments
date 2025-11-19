@@ -13,6 +13,7 @@ Fliplet.Widget.instance('comments', function(widgetData) {
   const USER_NAMES = widgetData.userNames;
   const COMMENTS_DS_ID = widgetData.commentsDataSourceId;
   const MODE_INTERACT = Fliplet.Env.get('mode') === 'interact';
+  let ENTRY_ID = Fliplet.Navigate.query.dataSourceEntryId || null;
 
   const EMAILS_TO_NOTIFY_FLAGGED_COMMENT = !FLAGGED_EMAILS
     ? []
@@ -76,23 +77,38 @@ Fliplet.Widget.instance('comments', function(widgetData) {
       return showToastMessage('Please select user names');
     }
 
-    if (!QUERY.dataSourceEntryId) {
-      if (MODE_INTERACT) {
-        showContent('not-configured');
-      } else {
-        showContent('configured');
+    const resolveEntryId = () => {
+      if (ENTRY_ID) {
+        return Promise.resolve(ENTRY_ID);
       }
 
-      return showToastMessage('No data source entry ID provided');
-    }
+      // Fallback: fetch first entry from the parent data source
+      return Fliplet.DataSources.connect(dynamicContainer.dataSourceId)
+        .then(connection => connection.find({ limit: 1 }))
+        .then(records => {
+          ENTRY_ID = (Array.isArray(records) && records[0] && typeof records[0].id !== 'undefined')
+            ? records[0].id
+            : null;
 
-    if (!MODE_INTERACT) {
-      showContent('configured');
-      Fliplet.Widget.initializeChildren(this.$el, this);
-      loadComments();
-    } else {
-      showContent('configured-interact');
-    }
+          return ENTRY_ID;
+        });
+    };
+
+    return resolveEntryId().then(id => {
+      if (!id) {
+        showContent('configured-interact');
+
+        return showToastMessage('No data entries found in the data source');
+      }
+
+      if (!MODE_INTERACT) {
+        showContent('configured');
+        Fliplet.Widget.initializeChildren(this.$el, this);
+        loadComments();
+      } else {
+        showContent('configured-interact');
+      }
+    });
   });
 
   // TODO remove when product provide solution
@@ -236,7 +252,7 @@ Fliplet.Widget.instance('comments', function(widgetData) {
               .then(records => records);
           },
           getComments() {
-            let entryId = QUERY.dataSourceEntryId;
+            let entryId = ENTRY_ID;
 
             return Fliplet.DataSources.connect(COMMENTS_DS_ID).then(
               connection => {
@@ -373,7 +389,7 @@ Fliplet.Widget.instance('comments', function(widgetData) {
                     Message: this.commentInput,
                     'Author Email': loggedUser[EMAIL_COLUMN],
                     Timestamp: new Date().toISOString(),
-                    'Entry Id': QUERY.dataSourceEntryId,
+                    'Entry Id': ENTRY_ID,
                     Likes: []
                   };
 
@@ -512,7 +528,10 @@ Fliplet.Widget.instance('comments', function(widgetData) {
         },
         mounted() {
           Fliplet.Session.get().then(session => {
-            loggedUser = _.get(session, 'entries.dataSource.data');
+            loggedUser = session
+              && session.entries
+              && session.entries.dataSource
+              && session.entries.dataSource.data;
 
             if (loggedUser) {
               this.getComments();

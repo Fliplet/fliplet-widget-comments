@@ -1,14 +1,32 @@
 .interface .selectize-dropdown-content {
-    width: 330px !important;
+  width: 330px !important;
 }
 
 .interface .multi.selectize-dropdown.form-group {
-    left: 30px !important;
-    width: 330px !important;
-    min-width: 330px !important;
+  left: 30px !important;
+  width: 330px !important;
+  min-width: 330px !important;
 }
 
 .interface .form-group.selectize-control {
-    margin-left: 0!important;
-    margin-right: 0!important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+.interface .help-block {
+  color: #333 !important;
+}
+
+.interface .alert-danger {
+  display: none !important;
+}
+
+/* Custom global validation message at the end of the form */
+.interface .custom-validation-message {
+  margin-top: 10px;
+  background: #f8d7da;
+  color: #a94442;
+  padding: 10px 12px;
+  border-radius: 4px;
+  display: none;
 }
