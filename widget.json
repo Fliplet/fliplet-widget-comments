@@ -31,6 +31,7 @@
       "jquery",
       "bootstrap",
       "fliplet-core",
+      "fliplet-utils",
       "fliplet-helper",
       "vue.js",
       "moment",
