@@ -538,7 +538,7 @@ Fliplet.Widget.instance('comments', function (widgetData) {
         mounted: function mounted() {
           var _this6 = this;
           Fliplet.Session.get().then(function (session) {
-            loggedUser = _.get(session, 'entries.dataSource.data');
+            loggedUser = Fliplet.Utils.get(session, 'entries.dataSource.data');
             if (loggedUser) {
               _this6.getComments();
             } else {
